@@ -131,7 +131,7 @@ canvas {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 16px;
   color: rgba(248, 242, 223, 0.74);
 }
 
@@ -346,7 +346,9 @@ canvas {
 }
 
 .current,
-.work {
+.work,
+.offer,
+.blog {
   width: 100%;
   max-width: none;
   border-bottom: 1px solid var(--line);
@@ -472,10 +474,33 @@ canvas {
   padding: 20px;
 }
 
+.service-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.service-card::after {
+  content: "";
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  width: 42px;
+  height: 42px;
+  border-right: 1px solid rgba(216, 255, 61, 0.32);
+  border-bottom: 1px solid rgba(216, 255, 61, 0.32);
+}
+
+.service-card--soon {
+  background:
+    repeating-linear-gradient(135deg, rgba(216, 255, 61, 0.06) 0 1px, transparent 1px 10px),
+    rgba(17, 20, 20, 0.74);
+}
+
 .service-card h3,
 .fit-card h3,
 .case-copy h3,
-.person-card h3 {
+.person-card h3,
+.blog-card h3 {
   margin: 0;
   font-size: 1.24rem;
   line-height: 1.16;
@@ -485,7 +510,8 @@ canvas {
 .service-card p,
 .fit-card p,
 .case-copy p,
-.person-card p {
+.person-card p,
+.blog-card p {
   margin: 16px 0 0;
   color: rgba(248, 242, 223, 0.72);
   line-height: 1.56;
@@ -556,6 +582,49 @@ canvas {
 
 .fit {
   border-bottom: 1px solid var(--line);
+}
+
+.lab-card {
+  position: relative;
+  min-height: 230px;
+}
+
+.status-chip,
+.blog-card span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  margin-bottom: 18px;
+  border: 1px solid rgba(216, 255, 61, 0.32);
+  border-radius: 4px;
+  padding: 6px 9px;
+  color: var(--acid);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.blog {
+  background:
+    linear-gradient(90deg, rgba(66, 232, 220, 0.07), transparent 36%),
+    var(--black);
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.blog-card {
+  min-height: 230px;
+  border: 1px solid rgba(248, 242, 223, 0.16);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(248, 242, 223, 0.05), rgba(248, 242, 223, 0)),
+    rgba(17, 20, 20, 0.76);
+  padding: 20px;
 }
 
 .team-grid {
@@ -668,7 +737,8 @@ canvas {
   .nav-links {
     flex-wrap: wrap;
     justify-content: flex-end;
-    gap: 10px 14px;
+    gap: 8px 11px;
+    font-size: 0.7rem;
   }
 
   .hero-grid {
@@ -730,6 +800,7 @@ canvas {
   .service-grid,
   .fit-grid,
   .case-grid,
+  .blog-grid,
   .team-grid {
     grid-template-columns: 1fr;
   }

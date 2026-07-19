@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
       (function () {
-        var directSections = ["work", "collaborate", "frameworks", "learn", "research", "about", "contact"];
-        var initialHash = window.location.hash.replace("#", "");
+        var directSections = ["work", "collaborate", "education", "research", "about", "contact"];
+        var aliases = { frameworks: "collaborate", learn: "education" };
+        var requestedHash = window.location.hash.replace("#", "");
+        var initialHash = aliases[requestedHash] || requestedHash;
         document.documentElement.className = directSections.indexOf(initialHash) > -1
           ? "js is-revealed is-quiet-reveal is-route-pending"
           : "js is-ritual";
@@ -15,12 +17,12 @@
     <title>Protopica - Creative and Technical Research Lab</title>
     <meta
       name="description"
-      content="Protopica is a creative and technical research lab helping creators and organizations turn emerging technology into original worlds, practical frameworks and experiences people can enter."
+      content="Protopica is a creative and technical research lab helping creators and organizations build original worlds, preserve cultural memory and create meaningful public experiences."
     />
     <meta property="og:title" content="Protopica - Creative and Technical Research Lab" />
     <meta
       property="og:description"
-      content="Build what comes next without losing what makes it human. Research, strategy, prototyping, worldbuilding, education and public experiences."
+      content="We turn stories into worlds people can enter. Worldbuilding, cultural preservation, education and public experiences."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://protopica.com/2026-beta/" />
@@ -31,13 +33,16 @@
     <meta name="twitter:title" content="Protopica - Creative and Technical Research Lab" />
     <meta
       name="twitter:description"
-      content="Build what comes next without losing what makes it human. Research, strategy, prototyping, worldbuilding, education and public experiences."
+      content="We turn stories into worlds people can enter. Worldbuilding, cultural preservation, education and public experiences."
     />
     <meta name="twitter:image" content="https://protopica.com/2026-beta/protopica/og.png" />
     <link rel="icon" href="favicon.png" />
-    <link rel="stylesheet" href="styles.css?v=20260719-section-path1" />
-    <script defer src="dither.js?v=20260719-intro1"></script>
-    <script defer src="blog.js?v=20260719-researchnotes1"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&amp;family=Fragment+Mono:ital@0;1&amp;family=Spline+Sans:wght@400..700&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css?v=20260719-purple-type1" />
+    <script defer src="dither.js?v=20260719-sections1"></script>
+    <script defer src="blog.js?v=20260719-availability1"></script>
   </head>
   <body>
     <audio data-fire-audio src="protopica/firepit-loop.m4a" autoplay loop preload="auto"></audio>
@@ -77,9 +82,8 @@
           <button class="nav-link is-active" type="button" data-section-target="home">Home</button>
           <button class="nav-link" type="button" data-section-target="work">Work</button>
           <button class="nav-link" type="button" data-section-target="collaborate">Collaborate</button>
-          <button class="nav-link" type="button" data-section-target="frameworks">Frameworks</button>
-          <button class="nav-link" type="button" data-section-target="learn">Learn</button>
-          <button class="nav-link" type="button" data-section-target="research">Research</button>
+          <button class="nav-link" type="button" data-section-target="education">Education</button>
+          <button class="nav-link" type="button" data-section-target="research" data-research-nav hidden>Research</button>
           <button class="nav-link" type="button" data-section-target="about">About</button>
           <button class="nav-link nav-link--cta" type="button" data-section-target="contact">Let's Build</button>
         </div>
@@ -90,11 +94,11 @@
           <div class="screen__inner home-teaser">
             <div class="home-copy">
               <p class="eyebrow">The fire is now a network</p>
-              <h2 id="home-title">Build what comes next without losing what makes it human.</h2>
+              <h2 id="home-title">We turn stories into worlds people can enter.</h2>
               <p>
                 Protopica is a creative and technical research lab helping creators and
-                organizations turn emerging technology into original worlds, practical
-                frameworks and experiences people can enter.
+                organizations build original worlds, preserve cultural memory and turn
+                emerging technology into meaningful public experiences.
               </p>
               <div class="home-actions">
                 <button class="button button--primary" type="button" data-section-target="work">Explore the Work</button>
@@ -171,7 +175,7 @@
           </div>
         </section>
 
-        <section class="screen screen--research" id="research" data-section="research" aria-labelledby="research-title" hidden>
+        <section class="screen screen--research" id="research" data-section="research" data-research-section aria-labelledby="research-title" hidden>
           <div class="screen__inner research-shell">
             <header class="screen-head screen-head--row">
               <div>
@@ -224,42 +228,17 @@
               <article><span>Access</span><h3>Expand who gets to gather.</h3><p>Learning programs, hardware donations and public-value experiments designed to widen participation.</p></article>
             </div>
             <div class="section-actions" aria-label="Continue from Collaborate">
-              <button class="button button--primary" type="button" data-section-target="frameworks">Explore the Frameworks</button>
+              <button class="button button--primary" type="button" data-section-target="education">Explore Education</button>
               <button class="button" type="button" data-section-target="contact">Let's Build</button>
             </div>
           </div>
         </section>
 
-        <section class="screen" id="frameworks" data-section="frameworks" aria-labelledby="frameworks-title" hidden>
+        <section class="screen" id="education" data-section="education" aria-labelledby="education-title" hidden>
           <div class="screen__inner screen__inner--stack">
             <header class="screen-head">
-              <p class="eyebrow">Frameworks</p>
-              <h2 id="frameworks-title">Better tools begin with better ways of thinking.</h2>
-              <p>
-                Our frameworks help creators and organizations evaluate technology,
-                structure experiments and build with greater intention.
-              </p>
-            </header>
-            <div class="method-grid">
-              <article><span>01</span><h3>Technology Evaluation</h3><p>Understand what a tool does, who it serves and whether it belongs in the project.</p></article>
-              <article><span>02</span><h3>Human-Centred Adoption</h3><p>Introduce technology without removing judgment, authorship or accountability.</p></article>
-              <article><span>03</span><h3>Worldbuilding</h3><p>Move from a core idea toward a coherent story, environment and system.</p></article>
-              <article><span>04</span><h3>Prototyping</h3><p>Define the smallest meaningful version of an idea and what it needs to prove.</p></article>
-              <article><span>05</span><h3>Cultural and Ethical Practice</h3><p>Identify the people, histories and assumptions that should shape the work.</p></article>
-              <article><span>06</span><h3>Knowledge Transfer</h3><p>Document methods so the learning stays with your team after the engagement ends.</p></article>
-            </div>
-            <div class="section-actions" aria-label="Continue from Frameworks">
-              <button class="button button--primary" type="button" data-section-target="learn">See How Knowledge Travels</button>
-              <button class="button" type="button" data-section-target="contact">Let's Build</button>
-            </div>
-          </div>
-        </section>
-
-        <section class="screen" id="learn" data-section="learn" aria-labelledby="learn-title" hidden>
-          <div class="screen__inner screen__inner--stack">
-            <header class="screen-head">
-              <p class="eyebrow">Learn</p>
-              <h2 id="learn-title">Learn how to question, shape and use emerging technology.</h2>
+              <p class="eyebrow">Education</p>
+              <h2 id="education-title">Learn how to question, shape and use emerging technology.</h2>
               <p>
                 We create learning experiences for students, educators, professionals,
                 executives and creative communities.
@@ -277,8 +256,8 @@
               <article><span>Communities</span><h3>Access around the circle.</h3><p>Programs designed to expand participation in emerging technology.</p></article>
               <article><span>Speaking</span><h3>From FITC to VIFF.</h3><p>Talks on worldbuilding, creative technology, AI, cultural preservation and human-centred innovation.</p></article>
             </div>
-            <div class="section-actions" aria-label="Continue from Learn">
-              <button class="button button--primary" type="button" data-section-target="research">Follow the Research</button>
+            <div class="section-actions" aria-label="Continue from Education">
+              <button class="button button--primary" type="button" data-section-target="about" data-education-next>Meet the People Behind It</button>
               <button class="button" type="button" data-section-target="contact">Let's Build</button>
             </div>
           </div>
@@ -320,8 +299,7 @@
               </article>
             </div>
             <div class="section-actions" aria-label="Continue from About">
-              <button class="button button--primary" type="button" data-section-target="contact">Start a Conversation</button>
-              <button class="button" type="button" data-section-target="contact">Let's Build</button>
+              <button class="button button--primary" type="button" data-section-target="contact">Let's Build</button>
             </div>
           </div>
         </section>

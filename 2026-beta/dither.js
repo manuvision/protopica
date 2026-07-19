@@ -15,6 +15,7 @@
   const navLinks = document.querySelector("#nav-links");
   const navButtons = Array.from(document.querySelectorAll("[data-section-target]"));
   const screens = Array.from(document.querySelectorAll("[data-section]"));
+  const sectionAliases = { frameworks: "collaborate", learn: "education" };
 
   const messages = [
     "Since the dawn of humanity, we have gathered around a fire to tell stories.",
@@ -29,7 +30,8 @@
   let isChanging = false;
   let lastInputAt = 0;
   let glyphCounter = 0;
-  const initialHash = window.location.hash.replace("#", "");
+  const requestedHash = window.location.hash.replace("#", "");
+  const initialHash = sectionAliases[requestedHash] || requestedHash;
   const initialSection = screens.some(function (screen) {
     return screen.dataset.section === initialHash;
   })
@@ -42,6 +44,7 @@
   let soundWaiting = false;
   let isIntroTransitioning = false;
   let isRoomTransitioning = false;
+  let researchAvailability = null;
 
   function fireScaleForIndex(index) {
     const progress = index / Math.max(1, messages.length - 1);
@@ -377,6 +380,11 @@
     if (initialSection === "home") {
       return;
     }
+    if (initialSection === "research" && researchAvailability === null) {
+      return;
+    }
+
+    const resolvedSection = initialSection === "research" && !researchAvailability ? "about" : initialSection;
 
     root.classList.remove("is-ritual", "is-route-pending");
     root.classList.add("is-revealed", "is-quiet-reveal");
@@ -386,7 +394,9 @@
     if (ritual) {
       ritual.setAttribute("aria-hidden", "true");
     }
-    showSection(initialSection, { updateHash: false });
+    showSection(resolvedSection, {
+      updateHash: requestedHash === initialHash && resolvedSection === initialSection ? false : true,
+    });
   }
 
   document.addEventListener("pointerdown", handleUserAdvance, true);
@@ -481,6 +491,18 @@
       }
     });
   }
+
+  document.addEventListener("protopica:research-availability", function (event) {
+    const isAvailable = Boolean(event.detail && event.detail.available);
+    researchAvailability = isAvailable;
+    if (initialSection === "research" && root.classList.contains("is-route-pending")) {
+      revealInitialSectionFromHash();
+      return;
+    }
+    if (!isAvailable && activeSection === "research") {
+      transitionToSection("about");
+    }
+  });
 
   navButtons.forEach(function (button) {
     button.addEventListener("click", function () {
@@ -577,7 +599,7 @@
     const base = height * (isNarrow ? 0.78 + currentFireScale * 0.04 : 0.81 + currentFireScale * 0.05);
     const flameHeight = Math.min(height * (isNarrow ? 0.38 : 0.5), isNarrow ? 340 : 430) * currentFireScale;
     const flameWidth = Math.min(width * (isNarrow ? 0.72 : 0.32), isNarrow ? 350 : 360) * (0.8 + currentFireScale * 0.2);
-    const colors = ["#5b1f15", "#ff4d2d", "#ff8a3d", "#d8ff3d", "#f7f0dc"];
+    const colors = ["#5b1f15", "#ff4d2d", "#ff8a3d", "#ffd166", "#f7f0dc"];
 
     for (let y = 0; y < height; y += cell) {
       for (let x = 0; x < width; x += cell) {
@@ -613,7 +635,7 @@
       const y = base - flameHeight * 0.18 - i * 4 * currentFireScale + ((time * 0.3 + i * 11) % 26);
       const x = center + drift + Math.sin(i * 2.1) * 78 * currentFireScale;
       if (y > base - flameHeight * 0.92 && y < base + 8) {
-        pixel(x, y, isNarrow ? 4 : 3, i % 3 === 0 ? "#d8ff3d" : "#ff8a3d", 0.05 + (i % 5) * 0.012);
+        pixel(x, y, isNarrow ? 4 : 3, i % 3 === 0 ? "#ffd166" : "#ff8a3d", 0.05 + (i % 5) * 0.012);
       }
     }
     ctx.globalAlpha = 1;

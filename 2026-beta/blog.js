@@ -11,6 +11,8 @@
   const readerMeta = document.querySelector("[data-blog-meta]");
   const readerTitle = document.querySelector("[data-blog-title]");
   const readerContent = document.querySelector("[data-blog-content]");
+  const researchNav = document.querySelector("[data-research-nav]");
+  const educationNext = document.querySelector("[data-education-next]");
   const allowedTags = new Set([
     "A",
     "B",
@@ -38,6 +40,21 @@
     IMG: new Set(["src", "alt", "loading"]),
   };
   let articles = [];
+
+  function setResearchAvailability(isAvailable) {
+    if (researchNav) {
+      researchNav.hidden = !isAvailable;
+    }
+    if (educationNext) {
+      educationNext.dataset.sectionTarget = isAvailable ? "research" : "about";
+      educationNext.textContent = isAvailable ? "Follow the Research" : "Meet the People Behind It";
+    }
+    document.dispatchEvent(
+      new CustomEvent("protopica:research-availability", {
+        detail: { available: isAvailable },
+      })
+    );
+  }
 
   function formatDate(value) {
     if (!value) {
@@ -168,6 +185,7 @@
   function renderArticles() {
     list.textContent = "";
     articles = sortArticles(articles);
+    setResearchAvailability(articles.length > 0);
 
     if (!articles.length) {
       showEmpty();
@@ -230,6 +248,7 @@
       renderArticles();
     })
     .catch(function () {
+      setResearchAvailability(false);
       showEmpty();
     });
 })();

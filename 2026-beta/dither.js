@@ -7,7 +7,6 @@
   const site = document.querySelector("#site-content");
   const audio = document.querySelector("[data-fire-audio]");
   const soundToggle = document.querySelector("[data-sound-toggle]");
-  const wipeCanvas = document.querySelector("[data-dither-wipe]");
   const navButtons = Array.from(document.querySelectorAll("[data-section-target]"));
   const screens = Array.from(document.querySelectorAll("[data-section]"));
 
@@ -21,7 +20,6 @@
   ];
 
   const bayer = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
-  const fireColors = ["#5b1f15", "#ff4d2d", "#ff8a3d", "#d8ff3d", "#f7f0dc"];
 
   let messageIndex = 0;
   let isChanging = false;
@@ -32,18 +30,8 @@
   let activeSection = "home";
   let soundMuted = window.localStorage.getItem("protopicaFireMuted") === "true";
   let soundWaiting = false;
-  let isWiping = false;
+  let isIntroTransitioning = false;
   let isRoomTransitioning = false;
-  let wipeCtx = null;
-  let wipeWidth = 0;
-  let wipeHeight = 0;
-  let wipeDpr = 1;
-  let wipeRaf = 0;
-  let transitionSeed = 0;
-
-  if (wipeCanvas && typeof wipeCanvas.getContext === "function") {
-    wipeCtx = wipeCanvas.getContext("2d");
-  }
 
   function fireScaleForIndex(index) {
     const progress = index / Math.max(1, messages.length - 1);
@@ -135,7 +123,6 @@
       const isActive = screen === nextSection;
       screen.hidden = false;
       screen.classList.toggle("is-active", isActive);
-      screen.classList.remove("is-dissolve-under", "is-dissolving-out");
       screen.setAttribute("aria-hidden", String(!isActive));
       if (!isActive) {
         window.setTimeout(function () {
@@ -160,7 +147,7 @@
     showSection(activeSection || "home");
   }
 
-  function finishDitherReveal() {
+  function finishIntroReveal() {
     root.classList.add("is-quiet-reveal");
     root.classList.remove("is-ritual");
     root.classList.add("is-revealed");
@@ -170,288 +157,16 @@
     showSection("home", { updateHash: false });
   }
 
-  function revealWithDitherDissolve() {
-    if (isWiping) {
-      return;
-    }
-    isWiping = true;
-    activeSection = "home";
-    setFireScale(messages.length - 1);
-    startDitherDissolve();
-  }
-
-  function resizeWipeCanvas() {
-    wipeDpr = Math.min(window.devicePixelRatio || 1, 2);
-    wipeWidth = Math.max(1, window.innerWidth);
-    wipeHeight = Math.max(1, window.innerHeight);
-    if (!wipeCanvas || !wipeCtx) {
-      return;
-    }
-    wipeCanvas.width = Math.floor(wipeWidth * wipeDpr);
-    wipeCanvas.height = Math.floor(wipeHeight * wipeDpr);
-    wipeCtx.setTransform(wipeDpr, 0, 0, wipeDpr, 0, 0);
-  }
-
-  function clearDitherOverlay() {
-    window.cancelAnimationFrame(wipeRaf);
-    if (wipeCtx) {
-      wipeCtx.clearRect(0, 0, wipeWidth, wipeHeight);
-    }
-  }
-
-  function cellNoise(col, row, seed) {
-    const value = Math.sin((col + seed * 17) * 12.9898 + (row - seed * 11) * 78.233) * 43758.5453;
-    return value - Math.floor(value);
-  }
-
   function smoothstep(edge0, edge1, value) {
     const t = Math.max(0, Math.min(1, (value - edge0) / (edge1 - edge0)));
     return t * t * (3 - 2 * t);
   }
 
-  function buildDitherCells(seed) {
-    const cellSize = wipeWidth > 1500 ? 8 : wipeWidth > 760 ? 7 : 6;
-    const cols = Math.ceil(wipeWidth / cellSize);
-    const rows = Math.ceil(wipeHeight / cellSize);
-    const cells = [];
-    const center = wipeWidth * 0.5;
-    const base = wipeHeight + cellSize * 2;
-    const flameHeight = wipeHeight * 1.06;
-    const flameWidth = wipeWidth * 1.42;
-
-    for (let row = 0; row < rows; row += 1) {
-      for (let col = 0; col < cols; col += 1) {
-        const x = col * cellSize;
-        const y = row * cellSize;
-        const nx = (x + cellSize * 0.5 - center) / flameWidth;
-        const ny = (base - y - cellSize * 0.5) / flameHeight;
-        const ordered = bayer[(col % 4) + ((row % 4) * 4)] / 15;
-        const grain = cellNoise(col, row, seed);
-        const taper = Math.max(0.06, 1 - ny * 0.62);
-        const sway = Math.sin(ny * 6 + seed * 0.41) * 0.14 + Math.sin(ny * 11 - seed * 0.33) * 0.08;
-        const shape = taper - Math.abs(nx + sway);
-        const flicker = Math.sin(seed * 0.37 + x * 0.04 + y * 0.03) * 0.15 + grain * 0.24;
-        const emberFoot = Math.max(0, 0.34 - Math.abs(nx * 0.55)) * Math.max(0, 1 - Math.abs(ny - 0.02) * 4);
-        const topFade = 1 - smoothstep(0.72, 1.18, ny);
-        const bottomFade = smoothstep(-0.08, 0.08, ny);
-        const edgeFade = topFade * bottomFade;
-        const intensity = Math.max(
-          0,
-          shape + flicker + emberFoot - ordered * (0.16 + (1 - edgeFade) * 0.42)
-        );
-        const upward = 1 - (y + cellSize * 0.5) / wipeHeight;
-        const heat = Math.min(1, intensity * 0.85 + edgeFade * 0.14);
-        const score = Math.max(0, Math.min(0.995, upward * 0.96 - heat * 0.2 + ordered * 0.07 + grain * 0.06));
-        const core = Math.max(0, 1 - Math.abs(nx * 3.1));
-        const colorHeat = intensity * (0.28 + core * 0.88) + grain * 0.06;
-        const colorIndex =
-          colorHeat > 1.04 && grain > 0.42
-            ? 4
-            : colorHeat > 0.78
-              ? 3
-              : colorHeat > 0.44
-                ? 2
-                : colorHeat > 0.18
-                  ? 1
-                  : 0;
-        cells.push({
-          x: x,
-          y: y,
-          size: cellSize + 0.6,
-          score: score,
-          color: fireColors[colorIndex],
-          alpha: Math.min(0.86, 0.18 + colorHeat * 0.55 + grain * 0.08),
-        });
-      }
+  function runClassicTransition(settings) {
+    const classNames = ["is-classic-transitioning"];
+    if (settings.className) {
+      classNames.push(settings.className);
     }
-
-    cells.sort(function (a, b) {
-      return a.score - b.score;
-    });
-    return cells;
-  }
-
-  function prepareTransitionClone(clonedDoc, targetSectionId) {
-    const clonedRoot = clonedDoc.documentElement;
-    const clonedSite = clonedDoc.querySelector("#site-content");
-    const clonedRitual = clonedDoc.querySelector("#ritual");
-    const clonedWipe = clonedDoc.querySelector("[data-dither-wipe]");
-
-    clonedRoot.classList.remove(
-      "no-js",
-      "is-ritual",
-      "is-pixel-transitioning",
-      "is-dissolving",
-      "is-room-dissolving",
-      "is-intro-swap",
-      "is-room-swap"
-    );
-    clonedRoot.classList.add("js", "is-revealed", "is-quiet-reveal");
-
-    if (clonedRitual) {
-      clonedRitual.style.display = "none";
-    }
-    if (clonedWipe) {
-      clonedWipe.style.display = "none";
-    }
-    if (clonedSite) {
-      clonedSite.removeAttribute("aria-hidden");
-      clonedSite.style.opacity = "1";
-      clonedSite.style.pointerEvents = "auto";
-      clonedSite.style.animation = "none";
-    }
-
-    Array.from(clonedDoc.querySelectorAll("[data-section]")).forEach(function (screen) {
-      const isActive = screen.dataset.section === targetSectionId;
-      screen.hidden = !isActive;
-      screen.classList.toggle("is-active", isActive);
-      screen.classList.remove("is-dissolve-under", "is-dissolving-out");
-      screen.setAttribute("aria-hidden", String(!isActive));
-      screen.style.transition = "none";
-    });
-
-    Array.from(clonedDoc.querySelectorAll("[data-section-target]")).forEach(function (button) {
-      const isActive = button.dataset.sectionTarget === targetSectionId;
-      button.classList.toggle("is-active", isActive);
-      if (button.classList.contains("nav-link")) {
-        button.setAttribute("aria-current", isActive ? "page" : "false");
-      }
-    });
-  }
-
-  function captureDestinationViewport(targetSectionId) {
-    if (typeof window.html2canvas !== "function") {
-      return Promise.reject(new Error("html2canvas unavailable"));
-    }
-
-    resizeWipeCanvas();
-    return window.html2canvas(document.body, {
-      backgroundColor: "#030404",
-      scale: wipeDpr,
-      width: wipeWidth,
-      height: wipeHeight,
-      windowWidth: wipeWidth,
-      windowHeight: wipeHeight,
-      scrollX: 0,
-      scrollY: 0,
-      useCORS: true,
-      logging: false,
-      ignoreElements: function (element) {
-        return element === wipeCanvas;
-      },
-      onclone: function (clonedDoc) {
-        prepareTransitionClone(clonedDoc, targetSectionId);
-      },
-    });
-  }
-
-  function captureCurrentViewport() {
-    if (typeof window.html2canvas !== "function") {
-      return Promise.reject(new Error("html2canvas unavailable"));
-    }
-
-    resizeWipeCanvas();
-    return window.html2canvas(document.body, {
-      backgroundColor: "#030404",
-      scale: wipeDpr,
-      width: wipeWidth,
-      height: wipeHeight,
-      windowWidth: wipeWidth,
-      windowHeight: wipeHeight,
-      scrollX: 0,
-      scrollY: 0,
-      useCORS: true,
-      logging: false,
-      ignoreElements: function (element) {
-        return element === wipeCanvas;
-      },
-    });
-  }
-
-  function paintCurrentSnapshot(snapshot) {
-    if (!wipeCtx) {
-      return;
-    }
-    wipeCtx.globalAlpha = 1;
-    wipeCtx.globalCompositeOperation = "source-over";
-    wipeCtx.imageSmoothingEnabled = true;
-    wipeCtx.clearRect(0, 0, wipeWidth, wipeHeight);
-    wipeCtx.drawImage(snapshot, 0, 0, snapshot.width, snapshot.height, 0, 0, wipeWidth, wipeHeight);
-  }
-
-  function drawDestinationCell(snapshot, cell) {
-    if (!wipeCtx) {
-      return;
-    }
-    const scaleX = snapshot.width / wipeWidth;
-    const scaleY = snapshot.height / wipeHeight;
-    wipeCtx.drawImage(
-      snapshot,
-      cell.x * scaleX,
-      cell.y * scaleY,
-      cell.size * scaleX,
-      cell.size * scaleY,
-      cell.x,
-      cell.y,
-      cell.size,
-      cell.size
-    );
-  }
-
-  function paintDestinationSnapshot(snapshot) {
-    if (!wipeCtx) {
-      return;
-    }
-    wipeCtx.globalAlpha = 1;
-    wipeCtx.globalCompositeOperation = "source-over";
-    wipeCtx.imageSmoothingEnabled = true;
-    wipeCtx.clearRect(0, 0, wipeWidth, wipeHeight);
-    wipeCtx.drawImage(snapshot, 0, 0, snapshot.width, snapshot.height, 0, 0, wipeWidth, wipeHeight);
-  }
-
-  function animatePixelReplacement(snapshot, duration, seed, onComplete) {
-    const cells = buildDitherCells(seed);
-    const startedAt = performance.now();
-    let ignited = 0;
-    let revealed = 0;
-
-    function frame(now) {
-      const progress = Math.min(1, (now - startedAt) / duration);
-      const igniteTarget = Math.min(cells.length, Math.floor(smoothstep(0, 0.94, progress) * cells.length));
-      const revealTarget = Math.min(igniteTarget, Math.floor(smoothstep(0.38, 1, progress) * cells.length));
-
-      wipeCtx.globalCompositeOperation = "source-over";
-      wipeCtx.imageSmoothingEnabled = false;
-      while (ignited < igniteTarget) {
-        const cell = cells[ignited];
-        wipeCtx.globalAlpha = cell.alpha;
-        wipeCtx.fillStyle = cell.color;
-        wipeCtx.fillRect(cell.x, cell.y, cell.size, cell.size);
-        ignited += 1;
-      }
-
-      wipeCtx.globalAlpha = 1;
-      while (revealed < revealTarget) {
-        drawDestinationCell(snapshot, cells[revealed]);
-        revealed += 1;
-      }
-
-      if (progress < 1) {
-        wipeRaf = window.requestAnimationFrame(frame);
-        return;
-      }
-
-      paintDestinationSnapshot(snapshot);
-      onComplete();
-    }
-
-    wipeRaf = window.requestAnimationFrame(frame);
-  }
-
-  function runDitherTransition(settings) {
-    const duration = settings.duration;
-    const className = settings.className;
-    window.cancelAnimationFrame(wipeRaf);
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       settings.onSwap();
@@ -459,38 +174,37 @@
       return;
     }
 
-    Promise.all([captureCurrentViewport(), captureDestinationViewport(settings.targetSection)]).then(function (snapshots) {
-      const currentSnapshot = snapshots[0];
-      const destinationSnapshot = snapshots[1];
-      paintCurrentSnapshot(currentSnapshot);
-      transitionSeed = (transitionSeed + 1) % 997;
-      root.classList.add("is-pixel-transitioning", className);
+    root.classList.remove("is-classic-out", "is-classic-in");
+    root.classList.add(...classNames, "is-classic-out");
+
+    window.setTimeout(function () {
       settings.onSwap();
-      animatePixelReplacement(destinationSnapshot, duration, transitionSeed, function () {
-        window.requestAnimationFrame(function () {
-          root.classList.remove("is-pixel-transitioning", className);
-          clearDitherOverlay();
-          settings.onComplete();
-        });
-      });
-    }).catch(function () {
-      settings.onSwap();
-      root.classList.remove("is-pixel-transitioning", className);
-      clearDitherOverlay();
-      settings.onComplete();
-    });
+      root.classList.remove("is-classic-out");
+      root.classList.add("is-classic-in");
+
+      window.setTimeout(function () {
+        root.classList.remove(...classNames, "is-classic-in");
+        settings.onComplete();
+      }, settings.enterDuration || 360);
+    }, settings.exitDuration || 170);
   }
 
-  function startDitherDissolve() {
-    runDitherTransition({
-      targetSection: "home",
-      className: "is-dissolving",
-      duration: 1750,
+  function revealWithClassicTransition() {
+    if (isIntroTransitioning) {
+      return;
+    }
+    isIntroTransitioning = true;
+    activeSection = "home";
+    setFireScale(messages.length - 1);
+    runClassicTransition({
+      className: "is-intro-fade",
+      exitDuration: 190,
+      enterDuration: 430,
       onSwap: function () {
-        finishDitherReveal();
+        finishIntroReveal();
       },
       onComplete: function () {
-        isWiping = false;
+        isIntroTransitioning = false;
       },
     });
   }
@@ -503,7 +217,7 @@
       return screen.classList.contains("is-active");
     });
 
-    if (!nextSection || nextSection === currentSection || isWiping || isRoomTransitioning) {
+    if (!nextSection || nextSection === currentSection || isIntroTransitioning || isRoomTransitioning) {
       return;
     }
 
@@ -513,10 +227,10 @@
     }
 
     isRoomTransitioning = true;
-    runDitherTransition({
-      targetSection: sectionId,
-      className: "is-room-dissolving",
-      duration: 1550,
+    runClassicTransition({
+      className: "is-section-fade",
+      exitDuration: 140,
+      enterDuration: 330,
       onSwap: function () {
         showSection(sectionId);
       },
@@ -529,23 +243,21 @@
   function resetRitual() {
     messageIndex = 0;
     isChanging = false;
+    isIntroTransitioning = false;
+    isRoomTransitioning = false;
     activeSection = "home";
     setFireScale(messageIndex);
     renderMessage(messages[messageIndex]);
     root.classList.add("is-ritual");
     root.classList.remove(
       "is-revealed",
-      "is-pixel-transitioning",
-      "is-dissolving",
-      "is-room-dissolving",
-      "is-intro-swap",
-      "is-room-swap",
+      "is-classic-transitioning",
+      "is-classic-out",
+      "is-classic-in",
+      "is-intro-fade",
+      "is-section-fade",
       "is-quiet-reveal"
     );
-    screens.forEach(function (screen) {
-      screen.classList.remove("is-dissolve-under", "is-dissolving-out");
-    });
-    clearDitherOverlay();
     if (site) {
       site.setAttribute("aria-hidden", "true");
     }
@@ -558,7 +270,7 @@
     }
 
     if (messageIndex >= messages.length - 1) {
-      revealWithDitherDissolve();
+      revealWithClassicTransition();
       return;
     }
 

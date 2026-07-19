@@ -138,23 +138,6 @@ video {
   transform: scaleX(1);
 }
 
-.fire-wipe {
-  position: fixed;
-  inset: 0;
-  z-index: 70;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  pointer-events: none;
-  image-rendering: pixelated;
-  background: transparent;
-  contain: strict;
-}
-
-.js.is-pixel-transitioning .fire-wipe {
-  opacity: 1;
-}
-
 .ritual {
   position: fixed;
   inset: 0;
@@ -424,9 +407,50 @@ video {
   pointer-events: none;
 }
 
-.js.is-pixel-transitioning .site,
-.js.is-pixel-transitioning .ritual {
+.js.is-classic-transitioning .site,
+.js.is-classic-transitioning .ritual,
+.js.is-classic-transitioning .screen {
   pointer-events: none;
+}
+
+.js.is-classic-transitioning .screen {
+  transition: none;
+}
+
+.js.is-classic-transitioning.is-classic-out.is-intro-fade .ritual,
+.js.is-classic-transitioning.is-classic-out.is-section-fade .screen.is-active {
+  animation: fadeThroughOut 190ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+.js.is-classic-transitioning.is-classic-in.is-intro-fade .site,
+.js.is-classic-transitioning.is-classic-in.is-section-fade .screen.is-active {
+  animation: fadeThroughIn 360ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+@keyframes fadeThroughOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.992);
+    filter: blur(1px);
+  }
+}
+
+@keyframes fadeThroughIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+    filter: blur(1px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
 }
 
 .js.is-revealed:not(.is-quiet-reveal) .site {
@@ -516,16 +540,6 @@ video {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
-}
-
-.screen.is-dissolve-under,
-.screen.is-dissolving-out {
-  pointer-events: none;
-  transition: none;
-}
-
-.js.is-pixel-transitioning .screen {
-  transition: none;
 }
 
 .screen__inner {

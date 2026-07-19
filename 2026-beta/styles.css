@@ -77,60 +77,65 @@ video {
   z-index: 40;
   width: 42px;
   height: 42px;
+  display: grid;
+  place-items: center;
   border: 1px solid rgba(247, 240, 220, 0.2);
   border-radius: 50%;
   background: rgba(3, 4, 4, 0.58);
+  color: var(--bone);
   backdrop-filter: blur(14px);
   cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
 }
 
-.sound-toggle span,
-.sound-toggle span::before,
-.sound-toggle span::after {
-  position: absolute;
-  display: block;
-  content: "";
+.sound-toggle:hover,
+.sound-toggle:focus-visible {
+  border-color: rgba(216, 255, 61, 0.62);
+  background: rgba(3, 4, 4, 0.78);
+  color: var(--acid);
+  outline: none;
 }
 
-.sound-toggle span {
-  left: 13px;
-  top: 14px;
-  width: 9px;
-  height: 14px;
-  border-left: 6px solid var(--bone);
-  border-top: 4px solid transparent;
-  border-bottom: 4px solid transparent;
+.sound-icon {
+  width: 23px;
+  height: 23px;
+  overflow: visible;
 }
 
-.sound-toggle span::before {
-  left: 9px;
-  top: -4px;
-  width: 10px;
-  height: 18px;
-  border: 1px solid var(--acid);
-  border-left: 0;
-  border-radius: 0 14px 14px 0;
-  opacity: 0.9;
+.sound-icon path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.85;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity 160ms ease, transform 160ms ease, stroke 160ms ease, fill 160ms ease;
 }
 
-.sound-toggle span::after {
-  left: -2px;
-  top: 6px;
-  width: 25px;
-  height: 2px;
-  background: var(--ember);
+.sound-speaker {
+  fill: rgba(247, 240, 220, 0.18);
+}
+
+.sound-wave {
+  stroke: var(--acid);
+  opacity: 0.92;
+}
+
+.sound-slash {
+  stroke: var(--ember);
   opacity: 0;
-  transform: rotate(-38deg);
+  transform: scaleX(0.72);
+  transform-origin: 50% 50%;
 }
 
-.sound-toggle.is-muted span::before,
-.sound-toggle.is-waiting span::before {
+.sound-toggle.is-muted .sound-wave,
+.sound-toggle.is-waiting .sound-wave {
   opacity: 0.22;
 }
 
-.sound-toggle.is-muted span::after,
-.sound-toggle.is-waiting span::after {
+.sound-toggle.is-muted .sound-slash,
+.sound-toggle.is-waiting .sound-slash {
   opacity: 1;
+  transform: scaleX(1);
 }
 
 .fire-wipe {
@@ -147,6 +152,10 @@ video {
 
 .js.is-fire-wipe .fire-wipe {
   opacity: 1;
+}
+
+.js.is-dissolving .fire-wipe {
+  opacity: 0.68;
 }
 
 .ritual {
@@ -418,6 +427,19 @@ video {
   pointer-events: none;
 }
 
+.js.is-dissolving .site {
+  opacity: 1;
+  pointer-events: none;
+}
+
+.js.is-dissolving .ritual {
+  pointer-events: none;
+}
+
+.js.is-dissolving .ritual-skip {
+  opacity: 0;
+}
+
 .js.is-revealed .site {
   animation: siteReveal 700ms ease both;
 }
@@ -533,20 +555,24 @@ video {
   align-content: center;
 }
 
-.home-grid,
-.contact-grid,
-.soon-grid,
-.playground-grid {
+.home-grid {
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(300px, 0.55fr);
   gap: 46px;
   align-items: center;
 }
 
+.soon-teaser,
+.playground-teaser,
+.contact-teaser {
+  display: grid;
+  align-content: center;
+}
+
 .home-copy h2,
-.soon-grid h2,
-.playground-grid h2,
-.contact-grid h2 {
+.soon-teaser h2,
+.playground-teaser h2,
+.contact-teaser h2 {
   max-width: 980px;
   margin: 0;
   font-size: clamp(2.4rem, 6vw, 5.4rem);
@@ -564,9 +590,9 @@ video {
 
 .home-copy p:not(.eyebrow),
 .screen-head p:not(.eyebrow),
-.soon-grid p,
-.playground-grid p,
-.contact-grid p {
+.soon-teaser p,
+.playground-teaser p,
+.contact-teaser p {
   max-width: 760px;
   margin: 24px 0 0;
   color: rgba(247, 240, 220, 0.72);
@@ -574,8 +600,7 @@ video {
   line-height: 1.62;
 }
 
-.home-ledger,
-.contact-ledger {
+.home-ledger {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1px;
@@ -583,8 +608,7 @@ video {
   background: var(--line);
 }
 
-.home-ledger span,
-.contact-ledger span {
+.home-ledger span {
   min-height: 94px;
   display: grid;
   place-items: center;
@@ -857,10 +881,7 @@ video {
 
 @media (max-width: 1180px) {
   .screen-head--row,
-  .home-grid,
-  .contact-grid,
-  .soon-grid,
-  .playground-grid {
+  .home-grid {
     grid-template-columns: 1fr;
   }
 
@@ -909,15 +930,14 @@ video {
 
   .home-copy h2,
   .screen-head h2,
-  .soon-grid h2,
-  .playground-grid h2,
-  .contact-grid h2 {
+  .soon-teaser h2,
+  .playground-teaser h2,
+  .contact-teaser h2 {
     font-size: 2.3rem;
     line-height: 1.02;
   }
 
   .home-ledger,
-  .contact-ledger,
   .kpi-grid,
   .team-grid,
   .service-grid,

@@ -1,5 +1,6 @@
 (function () {
   const root = document.documentElement;
+  const ritual = document.querySelector("#ritual");
   const canvas = document.querySelector(".ritual-canvas");
   const line = document.querySelector("[data-ritual-line]");
   const skip = document.querySelector("[data-ritual-skip]");
@@ -28,6 +29,7 @@
   let currentFireScale = 0.34;
   let activeSection = "home";
   let soundMuted = window.localStorage.getItem("protopicaFireMuted") === "true";
+  let soundWaiting = false;
   let isWiping = false;
   let wipeCtx = null;
   let wipeWidth = 0;
@@ -144,7 +146,7 @@
     showSection(activeSection || "home");
   }
 
-  function revealWithFireWipe() {
+  function revealWithDitherDissolve() {
     if (isWiping) {
       return;
     }
@@ -152,15 +154,19 @@
     activeSection = "home";
     setFireScale(messages.length - 1);
     if (!wipeCanvas || !wipeCtx) {
-      root.classList.add("is-fire-wipe");
-      window.setTimeout(revealSite, 420);
+      root.classList.add("is-dissolving");
+      if (site) {
+        site.removeAttribute("aria-hidden");
+      }
+      showSection("home", { updateHash: false });
+      window.setTimeout(revealSite, 520);
       window.setTimeout(function () {
-        root.classList.remove("is-fire-wipe");
+        root.classList.remove("is-dissolving");
         isWiping = false;
-      }, 900);
+      }, 760);
       return;
     }
-    startDitherWipe();
+    startDitherDissolve();
   }
 
   function resizeWipeCanvas() {
@@ -175,84 +181,120 @@
     wipeCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  function orderedValue(x, y, cell) {
-    return bayer[((x / cell) % 4 | 0) + (((y / cell) % 4 | 0) * 4)] / 16;
+  function maskScore(col, row, cols, rows, seed) {
+    const x = cols <= 1 ? 0 : col / (cols - 1);
+    const y = rows <= 1 ? 0 : row / (rows - 1);
+    const ordered = bayer[(col % 4) + ((row % 4) * 4)] / 16;
+    const grain = noise(col * 0.173 + seed, row * 0.211 - seed, seed * 900);
+    const secondGrain = noise(col * 0.071 - seed, row * 0.097 + seed, seed * 420);
+    const centerPull = 1 - Math.min(1, Math.hypot(x - 0.5, y - 0.54) * 1.52);
+    const weave = (Math.sin(x * 11.2 + y * 8.6 + seed * 7.4) + 1) * 0.5;
+    return grain * 0.46 + secondGrain * 0.19 + ordered * 0.2 + centerPull * 0.1 + weave * 0.05;
   }
 
-  function drawDitherWipe(progress) {
+  function applyDitherMask(progress, seed) {
+    if (!ritual) {
+      return;
+    }
+
+    const cell = wipeWidth > 1400 ? 26 : wipeWidth > 900 ? 20 : 16;
+    const cols = Math.ceil(wipeWidth / cell);
+    const rows = Math.ceil(wipeHeight / cell);
+    const eased = smoothstep(0.02, 0.98, progress);
+    const threshold = eased * 1.08 - 0.06;
+    let rects = "";
+
+    for (let row = 0; row < rows; row += 1) {
+      for (let col = 0; col < cols; col += 1) {
+        const score = maskScore(col, row, cols, rows, seed);
+        if (progress < 0.01 || score > threshold) {
+          rects += "<rect x='" + (col * cell) + "' y='" + (row * cell) + "' width='" + cell + "' height='" + cell + "'/>";
+        }
+      }
+    }
+
+    const svg =
+      "<svg xmlns='http://www.w3.org/2000/svg' width='" + wipeWidth + "' height='" + wipeHeight + "' viewBox='0 0 " +
+      wipeWidth + " " + wipeHeight + "'><g fill='white'>" + rects + "</g></svg>";
+    const url = "url(\"data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg) + "\")";
+    ritual.style.webkitMaskImage = url;
+    ritual.style.maskImage = url;
+    ritual.style.webkitMaskSize = "100% 100%";
+    ritual.style.maskSize = "100% 100%";
+    ritual.style.webkitMaskRepeat = "no-repeat";
+    ritual.style.maskRepeat = "no-repeat";
+    ritual.style.opacity = String(1 - smoothstep(0.08, 0.92, progress) * 0.16);
+  }
+
+  function clearDitherMask() {
+    if (!ritual) {
+      return;
+    }
+    ritual.style.webkitMaskImage = "";
+    ritual.style.maskImage = "";
+    ritual.style.webkitMaskSize = "";
+    ritual.style.maskSize = "";
+    ritual.style.webkitMaskRepeat = "";
+    ritual.style.maskRepeat = "";
+    ritual.style.opacity = "";
+  }
+
+  function drawDitherDust(progress, seed) {
     if (!wipeCtx) {
       return;
     }
 
     wipeCtx.clearRect(0, 0, wipeWidth, wipeHeight);
-    const cell = wipeWidth > 900 ? 8 : 6;
-    const palette = ["#030404", "#5b1f15", "#ff4d2d", "#ff8a3d", "#d8ff3d", "#f7f0dc"];
-    const waveCenter = wipeHeight * 1.38 - progress * wipeHeight * 2.45;
-    const waveDepth = wipeHeight * 1.28;
-    const topBase = waveCenter - waveDepth * 0.52;
-    const bottomBase = waveCenter + waveDepth * 0.52;
+    const cell = wipeWidth > 1400 ? 26 : wipeWidth > 900 ? 20 : 16;
+    const cols = Math.ceil(wipeWidth / cell);
+    const rows = Math.ceil(wipeHeight / cell);
+    const threshold = smoothstep(0.02, 0.98, progress) * 1.08 - 0.06;
+    const fade = smoothstep(0.02, 0.22, progress) * (1 - smoothstep(0.72, 1, progress));
+    const palette = ["#35110c", "#6f2115", "#b63a20", "#ff7a35"];
 
-    for (let y = -cell; y < wipeHeight + cell; y += cell) {
-      for (let x = -cell; x < wipeWidth + cell; x += cell) {
-        const wave =
-          Math.sin(x * 0.014 + progress * 10.8) * 42 +
-          Math.sin(x * 0.037 - progress * 8.2) * 19 +
-          Math.sin((x + y) * 0.011 + progress * 13.5) * 11;
-        const top = topBase + wave;
-        const bottom = bottomBase + wave * 0.36 + Math.sin(x * 0.02 - progress * 7) * 24;
-        const topEdge = smoothstep(top - 88, top + 54, y);
-        const bottomEdge = 1 - smoothstep(bottom - 64, bottom + 90, y);
-        const coverage = topEdge * bottomEdge;
-
-        if (coverage <= 0.02) {
+    for (let row = 0; row < rows; row += 1) {
+      for (let col = 0; col < cols; col += 1) {
+        const score = maskScore(col, row, cols, rows, seed);
+        const edge = Math.abs(score - threshold);
+        if (edge > 0.045 || noise(col * 0.41, row * 0.37, seed * 500 + progress * 30) < 0.38) {
           continue;
         }
 
-        const ordered = orderedValue(x, y, cell);
-        const turbulence = noise(x * 0.018, y * 0.02, progress * 900);
-        const threshold = coverage + turbulence * 0.22 - ordered * 0.45;
-
-        if (threshold <= 0.18) {
-          continue;
-        }
-
-        const heat = Math.max(0, Math.min(1, (y - top) / Math.max(1, bottom - top)));
-        const colorIndex = Math.max(0, Math.min(palette.length - 1, Math.floor((1 - heat) * 2.1 + heat * 5.2 + turbulence * 1.2)));
-        const alpha = Math.min(0.98, 0.35 + coverage * 0.68);
-        const size = threshold > 0.78 ? cell : Math.max(2, cell - 2);
-        wipeCtx.globalAlpha = alpha;
+        const intensity = (1 - edge / 0.045) * fade;
+        const colorIndex = Math.min(palette.length - 1, Math.floor(noise(col * 0.19, row * 0.23, seed * 300) * palette.length));
+        const size = Math.max(3, Math.floor(cell * 0.58));
+        wipeCtx.globalAlpha = 0.18 * intensity;
         wipeCtx.fillStyle = palette[colorIndex];
-        wipeCtx.fillRect(x, y, size, size);
+        wipeCtx.fillRect(col * cell, row * cell, size, size);
       }
-    }
-
-    wipeCtx.globalAlpha = 0.22;
-    wipeCtx.fillStyle = "#f7f0dc";
-    for (let y = 0; y < wipeHeight; y += cell * 3) {
-      wipeCtx.fillRect(0, y, wipeWidth, 1);
     }
     wipeCtx.globalAlpha = 1;
   }
 
-  function startDitherWipe() {
-    root.classList.add("is-fire-wipe");
+  function startDitherDissolve() {
+    root.classList.add("is-fire-wipe", "is-dissolving");
+    if (site) {
+      site.removeAttribute("aria-hidden");
+    }
+    showSection("home", { updateHash: false });
     resizeWipeCanvas();
     const start = performance.now();
-    const duration = 1550;
-    let didReveal = false;
+    const duration = 1380;
+    const seed = performance.now() * 0.0007;
 
     function step(now) {
       const progress = Math.min(1, (now - start) / duration);
-      drawDitherWipe(progress);
-      if (!didReveal && progress >= 0.56) {
-        didReveal = true;
-        revealSite();
-      }
+      applyDitherMask(progress, seed);
+      drawDitherDust(progress, seed);
+      wipeCanvas.style.opacity = String(0.5 * (1 - smoothstep(0.74, 1, progress)));
       if (progress < 1) {
         wipeRaf = window.requestAnimationFrame(step);
       } else {
+        clearDitherMask();
         wipeCtx.clearRect(0, 0, wipeWidth, wipeHeight);
-        root.classList.remove("is-fire-wipe");
+        wipeCanvas.style.opacity = "";
+        root.classList.remove("is-fire-wipe", "is-dissolving");
+        revealSite();
         isWiping = false;
       }
     }
@@ -268,7 +310,11 @@
     setFireScale(messageIndex);
     renderMessage(messages[messageIndex]);
     root.classList.add("is-ritual");
-    root.classList.remove("is-revealed");
+    root.classList.remove("is-revealed", "is-fire-wipe", "is-dissolving");
+    clearDitherMask();
+    if (wipeCtx) {
+      wipeCtx.clearRect(0, 0, wipeWidth, wipeHeight);
+    }
     if (site) {
       site.setAttribute("aria-hidden", "true");
     }
@@ -281,7 +327,7 @@
     }
 
     if (messageIndex >= messages.length - 1) {
-      revealWithFireWipe();
+      revealWithDitherDissolve();
       return;
     }
 
@@ -311,9 +357,14 @@
     if (!soundToggle) {
       return;
     }
+    soundWaiting = Boolean(isWaiting) && !soundMuted;
     soundToggle.classList.toggle("is-muted", soundMuted);
-    soundToggle.classList.toggle("is-waiting", Boolean(isWaiting) && !soundMuted);
-    soundToggle.setAttribute("aria-label", soundMuted ? "Unmute firepit sound" : "Mute firepit sound");
+    soundToggle.classList.toggle("is-waiting", soundWaiting);
+    soundToggle.setAttribute("aria-pressed", String(soundMuted));
+    soundToggle.setAttribute(
+      "aria-label",
+      soundMuted ? "Unmute firepit sound" : soundWaiting ? "Enable firepit sound" : "Mute firepit sound"
+    );
   }
 
   function playSound() {
@@ -365,6 +416,10 @@
     soundToggle.addEventListener("click", function (event) {
       event.preventDefault();
       event.stopPropagation();
+      if (soundWaiting && !soundMuted) {
+        playSound();
+        return;
+      }
       setMuted(!soundMuted);
     });
   }

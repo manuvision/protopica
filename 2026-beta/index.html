@@ -29,13 +29,18 @@
     />
     <meta name="twitter:image" content="https://protopica.com/2026-beta/protopica/og.png" />
     <link rel="icon" href="favicon.png" />
-    <link rel="stylesheet" href="styles.css?v=20260719-rooms" />
-    <script defer src="dither.js?v=20260719-rooms"></script>
+    <link rel="stylesheet" href="styles.css?v=20260719-dissolve" />
+    <script defer src="dither.js?v=20260719-dissolve"></script>
   </head>
   <body>
     <audio data-fire-audio src="protopica/firepit-loop.m4a" autoplay loop preload="auto"></audio>
-    <button class="sound-toggle" type="button" data-sound-toggle aria-label="Mute firepit sound">
-      <span aria-hidden="true"></span>
+    <button class="sound-toggle" type="button" data-sound-toggle aria-label="Mute firepit sound" aria-pressed="false">
+      <svg class="sound-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path class="sound-speaker" d="M4 9v6h4l5 4V5L8 9H4Z"></path>
+        <path class="sound-wave sound-wave--one" d="M16 9.5c0.85 0.9 0.85 2.1 0 3"></path>
+        <path class="sound-wave sound-wave--two" d="M18.6 7c1.9 2.2 1.9 7.8 0 10"></path>
+        <path class="sound-slash" d="M5 5l14 14"></path>
+      </svg>
     </button>
     <canvas class="fire-wipe" data-dither-wipe aria-hidden="true"></canvas>
 
@@ -221,7 +226,7 @@
         </section>
 
         <section class="screen screen--soon" id="blog" data-section="blog" aria-labelledby="blog-title" hidden>
-          <div class="screen__inner soon-grid">
+          <div class="screen__inner soon-teaser">
             <div>
               <p class="eyebrow">Blog / Coming soon</p>
               <h2 id="blog-title">Field notes from the work.</h2>
@@ -230,30 +235,21 @@
                 Future version: our own analytics and CMS.
               </p>
             </div>
-            <div class="ascii-panel" aria-hidden="true">FIELD NOTES
-ARCHIVE LOADING
-CMS / ANALYTICS
-COMING SOON</div>
           </div>
         </section>
 
         <section class="screen screen--soon" id="playground" data-section="playground" aria-labelledby="playground-title" hidden>
-          <div class="screen__inner playground-grid">
+          <div class="screen__inner playground-teaser">
             <div>
               <p class="eyebrow">Playground / Coming soon</p>
               <h2 id="playground-title">Open-sourced experiments for the next language of storytelling.</h2>
               <p>Gaussian splats, Blender studies, TouchDesigner systems, BCI cinema, haptics, analog/digital rituals and original IP worldbuilding. Selected sketches will be open sourced so the community can learn from, remix and build on the work.</p>
             </div>
-            <div class="ascii-panel ascii-panel--playground" aria-hidden="true">PLAYGROUND
-OPEN SOURCE
-GAUSSIAN SPLATS
-TOUCHDESIGNER
-COMING SOON</div>
           </div>
         </section>
 
         <section class="screen" id="contact" data-section="contact" aria-labelledby="contact-title" hidden>
-          <div class="screen__inner contact-grid">
+          <div class="screen__inner contact-teaser">
             <div>
               <p class="eyebrow">Contact</p>
               <h2 id="contact-title">Build a new world, or archive one that should not disappear.</h2>
@@ -262,14 +258,6 @@ COMING SOON</div>
                 Tell us what story you are carrying, and what form it needs next.
               </p>
               <a class="button button--primary" href="mailto:hello@protopica.com?subject=Protopica%20community%20or%20collaboration">Start the conversation</a>
-            </div>
-            <div class="contact-ledger">
-              <span>Exhibitions</span>
-              <span>Talks</span>
-              <span>Courses</span>
-              <span>Consulting</span>
-              <span>Preservation</span>
-              <span>Worldbuilding</span>
             </div>
           </div>
         </section>

@@ -8,6 +8,8 @@
   const audio = document.querySelector("[data-fire-audio]");
   const soundToggle = document.querySelector("[data-sound-toggle]");
   const contactForm = document.querySelector("[data-contact-form]");
+  const universityModal = document.querySelector("[data-university-modal]");
+  const universityModalOpeners = Array.from(document.querySelectorAll("[data-university-modal-open]"));
   const navButtons = Array.from(document.querySelectorAll("[data-section-target]"));
   const screens = Array.from(document.querySelectorAll("[data-section]"));
 
@@ -396,6 +398,28 @@
       const subject = encodeURIComponent("Protopica project signal");
       const body = encodeURIComponent(lines.join("\n\n"));
       window.location.href = "mailto:hello@protopica.com?subject=" + subject + "&body=" + body;
+    });
+  }
+
+  if (universityModal && universityModalOpeners.length) {
+    universityModalOpeners.forEach(function (button) {
+      button.addEventListener("click", function () {
+        if (typeof universityModal.showModal === "function") {
+          universityModal.showModal();
+        } else {
+          universityModal.setAttribute("open", "");
+        }
+      });
+    });
+
+    universityModal.addEventListener("click", function (event) {
+      if (event.target === universityModal) {
+        if (typeof universityModal.close === "function") {
+          universityModal.close();
+        } else {
+          universityModal.removeAttribute("open");
+        }
+      }
     });
   }
 

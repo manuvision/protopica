@@ -19,7 +19,7 @@
 
   const messages = [
     "Since the dawn of humanity, we have gathered around a fire to tell stories.",
-    "Whether you want to build a new world, or preserve what already exists...",
+    "Whether you want to build something new, or preserve what already exists...",
     "...you are in the right place.",
     "Today, the fire is a network.",
   ];

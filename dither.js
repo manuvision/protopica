@@ -731,14 +731,6 @@
       }
     }
 
-    for (let i = 0; i < 34; i += 1) {
-      const drift = Math.sin(time * 0.015 + i) * 42 * scale;
-      const y = base - flameHeight * 0.18 - i * 4 * scale + ((time * 0.3 + i * 11) % 26);
-      const x = center + drift + Math.sin(i * 2.1) * 78 * scale;
-      if (y > base - flameHeight * 0.92 && y < base + 8) {
-        pixel(surfaceCtx, x, y, isNarrow ? 4 : 3, colors[(i + 1) % colors.length], 0.05 + (i % 5) * 0.012);
-      }
-    }
     surfaceCtx.globalAlpha = 1;
   }
 

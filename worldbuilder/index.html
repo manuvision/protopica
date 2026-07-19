@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Protopica Worldbuilder</title>
+    <meta name="description" content="A local-first workspace for building worlds, characters, relationships, timelines, and maps." />
+    <link rel="canonical" href="https://protopica.com/worldbuilder/" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23202328'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Arial,sans-serif' font-size='34' font-weight='800' fill='%23fffdf8'%3EW%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="styles.css?v=open-audio-lore-bible-3" />
+  </head>
+  <body data-theme="dark">
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">W</span>
+          <div class="brand-copy">
+            <strong>Worldbuilder</strong>
+            <span id="worldMeta">Local worldbuilding workspace</span>
+          </div>
+        </div>
+
+        <div class="top-actions">
+          <label class="visually-hidden" for="ambienceSelect">Ambience sound</label>
+          <select class="compact-select ambience-select" id="ambienceSelect" title="Ambience sound" aria-label="Ambience sound">
+            <option value="fireplace">Fireplace</option>
+            <option value="rain">Rain</option>
+            <option value="forest">Forest</option>
+            <option value="night">Night</option>
+          </select>
+          <button class="icon-button ambience-toggle" id="ambienceToggleButton" type="button" aria-label="Play fireplace ambience" title="Play fireplace ambience">
+            <svg class="ambience-icon ambience-icon-play" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 5v14l11-7Z" />
+            </svg>
+            <svg class="ambience-icon ambience-icon-pause" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 5v14M16 5v14" />
+            </svg>
+          </button>
+          <audio id="ambienceAudio" class="visually-hidden" preload="none" loop aria-hidden="true"></audio>
+          <button class="icon-button" id="themeToggleButton" type="button" aria-label="Switch to dark UI" title="Switch to dark UI">
+            <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 8.5 8.5 0 1 0 20.5 14.5Z" />
+            </svg>
+            <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+            </svg>
+          </button>
+          <button class="icon-button" id="importButton" type="button" aria-label="Import JSON" title="Import JSON">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3v12m0 0 4-4m-4 4-4-4" />
+              <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+            </svg>
+          </button>
+          <label class="visually-hidden" for="exportFormatSelect">Export format</label>
+          <select class="compact-select export-select" id="exportFormatSelect" title="Export format" aria-label="Export format">
+            <option value="json">JSON</option>
+            <option value="lore">Lore bible (.md)</option>
+          </select>
+          <button class="icon-button" id="exportButton" type="button" aria-label="Export JSON" title="Export JSON">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 21V9m0 0 4 4m-4-4-4 4" />
+              <path d="M4 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2" />
+            </svg>
+          </button>
+          <input id="importFile" class="visually-hidden" type="file" accept="application/json,.json" />
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="panel left-panel" aria-label="World navigation">
+          <section class="panel-section">
+            <div class="section-head">
+              <h2>Worlds</h2>
+              <div class="section-actions">
+                <button class="icon-button small" id="focusWorldName" type="button" aria-label="New world" title="New world">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                </button>
+                <button class="danger-button icon-button small" id="deleteWorldButton" type="button" aria-label="Delete selected world" title="Delete selected world">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" />
+                    <path d="M10 11v5M14 11v5" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <form class="inline-form" id="worldForm" autocomplete="off">
+              <label class="visually-hidden" for="worldName">World name</label>
+              <input id="worldName" name="worldName" type="text" placeholder="World name" required />
+              <button class="primary-button" type="submit">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+                Create
+              </button>
+            </form>
+
+            <div class="world-list" id="worldList" role="list"></div>
+          </section>
+
+          <section class="panel-section grow context-panel">
+            <div class="section-head">
+              <h2 id="contextPanelTitle">Graph</h2>
+              <div class="section-actions">
+                <button class="icon-button small" id="newCharacterButton" type="button" aria-label="New character" title="New character" data-context-action="character">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M19 8v6M16 11h6" />
+                  </svg>
+                </button>
+                <button class="icon-button small" id="newConnectionButton" type="button" aria-label="New connection" title="New connection" data-context-action="connection">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.2 1.2" />
+                    <path d="M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.2-1.2" />
+                    <path d="M12 5v6M9 8h6" />
+                  </svg>
+                </button>
+                <button class="icon-button small" id="newRailEventButton" type="button" aria-label="New event" title="New event" data-context-action="event">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                </button>
+                <button class="icon-button small" id="newRailLocationButton" type="button" aria-label="New place" title="New place" data-context-action="location">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="context-view" data-context-view="graph">
+              <div class="rail-subhead">Cast</div>
+              <div class="character-list" id="characterList" role="list"></div>
+              <div class="rail-subhead">Connections</div>
+              <div class="connection-list" id="connectionList" role="list"></div>
+            </div>
+
+            <div class="context-view hidden" data-context-view="timeline">
+              <div class="event-list" id="eventList" role="list"></div>
+            </div>
+
+            <div class="context-view hidden" data-context-view="map">
+              <div class="location-strip" id="locationStrip" role="list"></div>
+            </div>
+          </section>
+        </aside>
+
+        <section class="graph-stage" aria-label="World workspace">
+          <div class="graph-toolbar">
+            <div class="world-title-group">
+              <label class="visually-hidden" for="worldTitleInput">Selected world name</label>
+              <input id="worldTitleInput" class="world-title-input" type="text" />
+              <span id="worldStats" class="world-stats"></span>
+            </div>
+
+            <div class="view-switcher" role="tablist" aria-label="Workspace views">
+              <button class="view-tab active" id="graphViewButton" type="button" role="tab" aria-selected="true" data-view="graph">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="5" r="2" />
+                  <circle cx="5" cy="19" r="2" />
+                  <circle cx="19" cy="19" r="2" />
+                  <path d="m10.8 6.8-4.6 9.4M13.2 6.8l4.6 9.4M7 19h10" />
+                </svg>
+                Graph
+              </button>
+              <button class="view-tab" id="timelineViewButton" type="button" role="tab" aria-selected="false" data-view="timeline">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 5h16M4 12h16M4 19h16" />
+                  <path d="M8 3v4M16 10v4M11 17v4" />
+                </svg>
+                Timeline
+              </button>
+              <button class="view-tab" id="mapViewButton" type="button" role="tab" aria-selected="false" data-view="map">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m9 18-6 3V6l6-3 6 3 6-3v15l-6 3-6-3Z" />
+                  <path d="M9 3v15M15 6v15" />
+                </svg>
+                Map
+              </button>
+            </div>
+
+            <div class="toolbar-actions">
+              <div class="view-actions" id="graphControls">
+                <button class="icon-button" id="autoLayoutButton" type="button" aria-label="Auto layout" title="Auto layout">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="5" r="2" />
+                    <circle cx="5" cy="19" r="2" />
+                    <circle cx="19" cy="19" r="2" />
+                    <path d="m10.8 6.8-4.6 9.4M13.2 6.8l4.6 9.4M7 19h10" />
+                  </svg>
+                </button>
+                <button class="icon-button" id="fitButton" type="button" aria-label="Fit graph" title="Fit graph">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3" />
+                    <path d="M16 3h3a2 2 0 0 1 2 2v3" />
+                    <path d="M8 21H5a2 2 0 0 1-2-2v-3" />
+                    <path d="M16 21h3a2 2 0 0 0 2-2v-3" />
+                  </svg>
+                </button>
+                <button class="icon-button" id="zoomOutButton" type="button" aria-label="Zoom out" title="Zoom out">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.3-4.3M8 11h6" />
+                  </svg>
+                </button>
+                <button class="icon-button" id="zoomInButton" type="button" aria-label="Zoom in" title="Zoom in">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.3-4.3M11 8v6M8 11h6" />
+                  </svg>
+                </button>
+              </div>
+              <div class="view-actions hidden" id="timelineControls">
+                <button class="primary-button compact" id="newEventButton" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                  Event
+                </button>
+              </div>
+              <div class="view-actions hidden" id="mapControls">
+                <button class="primary-button compact" id="newLocationButton" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                  Place
+                </button>
+                <button class="icon-button" id="uploadMapImageButton" type="button" aria-label="Upload map background" title="Upload map background">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 8h.01" />
+                    <rect x="3" y="5" width="18" height="14" rx="2" />
+                    <path d="m3 15 4-4a2 2 0 0 1 3 0l5 5" />
+                    <path d="m14 14 1-1a2 2 0 0 1 3 0l3 3" />
+                  </svg>
+                </button>
+                <button class="icon-button" id="clearMapImageButton" type="button" aria-label="Clear map background" title="Clear map background">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 3h18v18H3z" />
+                    <path d="m8 8 8 8M16 8l-8 8" />
+                  </svg>
+                </button>
+                <input id="mapImageFile" class="visually-hidden" type="file" accept="image/*" />
+              </div>
+            </div>
+          </div>
+
+          <div class="stage-views">
+            <div class="stage-view graph-view active" id="graphView">
+              <div class="graph-wrap" id="graphWrap">
+                <svg id="graphSvg" role="img" aria-label="Character relationship graph">
+                  <defs>
+                    <filter id="nodeShadow" x="-30%" y="-30%" width="160%" height="160%">
+                      <feDropShadow dx="0" dy="14" stdDeviation="10" flood-color="#1a2134" flood-opacity="0.18" />
+                    </filter>
+                  </defs>
+                  <g id="viewport">
+                    <g id="edgesLayer"></g>
+                    <g id="nodesLayer"></g>
+                  </g>
+                </svg>
+                <div class="graph-empty" id="graphEmpty" hidden>
+                  <button class="primary-button" id="emptyAddCharacter" type="button">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path d="M19 8v6M16 11h6" />
+                    </svg>
+                    Add character
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="stage-view timeline-view hidden" id="timelineView">
+              <div class="timeline-list" id="timelineList" role="list"></div>
+              <div class="timeline-empty" id="timelineEmpty" hidden>
+                <button class="primary-button" id="emptyAddEvent" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                  Add event
+                </button>
+              </div>
+            </div>
+
+            <div class="stage-view map-view hidden" id="mapView">
+              <div class="map-canvas" id="mapCanvas" role="img" aria-label="World map">
+                <div class="map-image-layer" id="mapImageLayer"></div>
+                <div class="map-image-prompt" id="mapImagePrompt">
+                  <button class="primary-button" id="emptyUploadMapImage" type="button">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M15 8h.01" />
+                      <rect x="3" y="5" width="18" height="14" rx="2" />
+                      <path d="m3 15 4-4a2 2 0 0 1 3 0l5 5" />
+                      <path d="m14 14 1-1a2 2 0 0 1 3 0l3 3" />
+                    </svg>
+                    Upload map image
+                  </button>
+                </div>
+                <div class="map-pins" id="mapPins"></div>
+                <div class="map-empty" id="mapEmpty" hidden>
+                  <button class="primary-button" id="emptyAddLocation" type="button">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M12 5v14M5 12h14" />
+                    </svg>
+                    Add place
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="panel right-panel" aria-label="Editor">
+          <div class="tabs" role="tablist" aria-label="Editor tabs">
+            <button class="tab active" id="characterTab" type="button" role="tab" aria-selected="true" data-tab="character">Character</button>
+            <button class="tab" id="connectionTab" type="button" role="tab" aria-selected="false" data-tab="connection">Connection</button>
+            <button class="tab" id="eventTab" type="button" role="tab" aria-selected="false" data-tab="event">Event</button>
+            <button class="tab" id="locationTab" type="button" role="tab" aria-selected="false" data-tab="location">Place</button>
+          </div>
+
+          <form class="editor-panel" id="characterForm" data-editor="character" autocomplete="off">
+            <input id="characterId" name="characterId" type="hidden" />
+
+            <label for="characterName">Name</label>
+            <input id="characterName" name="characterName" type="text" placeholder="Character name" required />
+
+            <div class="field-grid">
+              <div class="field">
+                <label for="characterRole">Role</label>
+                <input id="characterRole" name="characterRole" type="text" placeholder="Heir, spy, oracle" />
+              </div>
+              <div class="field">
+                <label for="characterFaction">Faction</label>
+                <input id="characterFaction" name="characterFaction" type="text" placeholder="House, guild, court" />
+              </div>
+            </div>
+
+            <label for="characterStatus">Status</label>
+            <select id="characterStatus" name="characterStatus">
+              <option value="Active">Active</option>
+              <option value="Missing">Missing</option>
+              <option value="Hidden">Hidden</option>
+              <option value="Dead">Dead</option>
+              <option value="Mythic">Mythic</option>
+            </select>
+
+            <fieldset class="swatch-field">
+              <legend>Color</legend>
+              <div class="swatch-row" id="colorSwatches"></div>
+            </fieldset>
+
+            <fieldset class="image-field">
+              <legend>Icon</legend>
+              <div class="image-picker">
+                <div class="image-preview" id="characterImagePreview" aria-hidden="true"></div>
+                <button class="secondary-button" id="uploadCharacterImageButton" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 8h.01" />
+                    <rect x="3" y="5" width="18" height="14" rx="2" />
+                    <path d="m3 15 4-4a2 2 0 0 1 3 0l5 5" />
+                    <path d="m14 14 1-1a2 2 0 0 1 3 0l3 3" />
+                  </svg>
+                  Image
+                </button>
+                <button class="icon-button" id="clearCharacterImageButton" type="button" aria-label="Clear character image" title="Clear character image">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 3h18v18H3z" />
+                    <path d="m8 8 8 8M16 8l-8 8" />
+                  </svg>
+                </button>
+                <input id="characterImageFile" class="visually-hidden" type="file" accept="image/*" />
+              </div>
+            </fieldset>
+
+            <label for="characterNotes">Notes</label>
+            <textarea id="characterNotes" name="characterNotes" rows="6" placeholder="Private motives, secrets, scars"></textarea>
+
+            <div class="editor-actions">
+              <button class="primary-button" type="submit">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z" />
+                  <path d="M17 21v-8H7v8M7 3v5h8" />
+                </svg>
+                Save
+              </button>
+              <button class="secondary-button" id="clearCharacterButton" type="button">New</button>
+              <button class="danger-button icon-button" id="deleteCharacterButton" type="button" aria-label="Delete character" title="Delete character">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" />
+                  <path d="M10 11v5M14 11v5" />
+                </svg>
+              </button>
+            </div>
+          </form>
+
+          <form class="editor-panel hidden" id="connectionForm" data-editor="connection" autocomplete="off">
+            <label for="connectionSource">From</label>
+            <select id="connectionSource" name="connectionSource" required></select>
+
+            <label for="connectionTarget">To</label>
+            <select id="connectionTarget" name="connectionTarget" required></select>
+
+            <div class="field-grid">
+              <div class="field">
+                <label for="connectionType">Type</label>
+                <select id="connectionType" name="connectionType">
+                  <option value="Ally">Ally</option>
+                  <option value="Rival">Rival</option>
+                  <option value="Family">Family</option>
+                  <option value="Mentor">Mentor</option>
+                  <option value="Owes">Owes</option>
+                  <option value="Secret">Secret</option>
+                  <option value="Unknown">Unknown</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="connectionStrength">Strength</label>
+                <input id="connectionStrength" name="connectionStrength" type="range" min="1" max="5" value="3" />
+              </div>
+            </div>
+
+            <label for="connectionLabel">Label</label>
+            <input id="connectionLabel" name="connectionLabel" type="text" placeholder="Protects, betrayed, hunts" />
+
+            <label for="connectionNotes">Notes</label>
+            <textarea id="connectionNotes" name="connectionNotes" rows="4" placeholder="Why this bond matters"></textarea>
+
+            <div class="editor-actions">
+              <button class="primary-button" type="submit">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.2 1.2" />
+                  <path d="M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.2-1.2" />
+                </svg>
+                Connect
+              </button>
+              <button class="secondary-button" id="clearConnectionButton" type="button">New</button>
+              <button class="danger-button icon-button" id="deleteConnectionButton" type="button" aria-label="Delete connection" title="Delete connection">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" />
+                  <path d="M10 11v5M14 11v5" />
+                </svg>
+              </button>
+            </div>
+
+          </form>
+
+          <form class="editor-panel hidden" id="eventForm" data-editor="event" autocomplete="off">
+            <input id="eventId" name="eventId" type="hidden" />
+
+            <label for="eventTitle">Title</label>
+            <input id="eventTitle" name="eventTitle" type="text" placeholder="Founding, betrayal, eclipse" required />
+
+            <div class="field-grid">
+              <div class="field">
+                <label for="eventEra">Era</label>
+                <input id="eventEra" name="eventEra" type="text" placeholder="Age of Salt" />
+              </div>
+              <div class="field">
+                <label for="eventDate">Date</label>
+                <input id="eventDate" name="eventDate" type="text" placeholder="Year 312" />
+              </div>
+            </div>
+
+            <div class="field-grid">
+              <div class="field">
+                <label for="eventCategory">Type</label>
+                <select id="eventCategory" name="eventCategory">
+                  <option value="Canon">Canon</option>
+                  <option value="Conflict">Conflict</option>
+                  <option value="Discovery">Discovery</option>
+                  <option value="Personal">Personal</option>
+                  <option value="Rumor">Rumor</option>
+                  <option value="Myth">Myth</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="eventCharacter">Character</label>
+                <select id="eventCharacter" name="eventCharacter"></select>
+              </div>
+            </div>
+
+            <label for="eventImpact">Impact</label>
+            <textarea id="eventImpact" name="eventImpact" rows="3" placeholder="What changed because of this?"></textarea>
+
+            <label for="eventNotes">Notes</label>
+            <textarea id="eventNotes" name="eventNotes" rows="4" placeholder="Contradictions, open questions, source text"></textarea>
+
+            <div class="editor-actions">
+              <button class="primary-button" type="submit">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z" />
+                  <path d="M17 21v-8H7v8M7 3v5h8" />
+                </svg>
+                Save
+              </button>
+              <button class="secondary-button" id="clearEventButton" type="button">New</button>
+              <button class="danger-button icon-button" id="deleteEventButton" type="button" aria-label="Delete event" title="Delete event">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" />
+                  <path d="M10 11v5M14 11v5" />
+                </svg>
+              </button>
+            </div>
+          </form>
+
+          <form class="editor-panel hidden" id="locationForm" data-editor="location" autocomplete="off">
+            <input id="locationId" name="locationId" type="hidden" />
+
+            <label for="locationName">Name</label>
+            <input id="locationName" name="locationName" type="text" placeholder="Harbor, citadel, shrine" required />
+
+            <div class="field-grid">
+              <div class="field">
+                <label for="locationType">Type</label>
+                <select id="locationType" name="locationType">
+                  <option value="City">City</option>
+                  <option value="Ruin">Ruin</option>
+                  <option value="Wilderness">Wilderness</option>
+                  <option value="Stronghold">Stronghold</option>
+                  <option value="Shrine">Shrine</option>
+                  <option value="Route">Route</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="locationRegion">Region</label>
+                <input id="locationRegion" name="locationRegion" type="text" placeholder="North coast" />
+              </div>
+            </div>
+
+            <label for="locationCharacter">Keeper</label>
+            <select id="locationCharacter" name="locationCharacter"></select>
+
+            <label for="locationNotes">Notes</label>
+            <textarea id="locationNotes" name="locationNotes" rows="6" placeholder="What happens here, who wants it, what it costs"></textarea>
+
+            <div class="editor-actions">
+              <button class="primary-button" type="submit">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z" />
+                  <path d="M17 21v-8H7v8M7 3v5h8" />
+                </svg>
+                Save
+              </button>
+              <button class="secondary-button" id="clearLocationButton" type="button">New</button>
+              <button class="danger-button icon-button" id="deleteLocationButton" type="button" aria-label="Delete place" title="Delete place">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" />
+                  <path d="M10 11v5M14 11v5" />
+                </svg>
+              </button>
+            </div>
+          </form>
+        </aside>
+      </main>
+    </div>
+
+    <script src="app.js?v=ambience-sources-1"></script>
+  </body>
+</html>

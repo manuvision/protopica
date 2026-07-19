@@ -4,9 +4,9 @@
     repo: "protopica",
     branch: "main",
     apiVersion: "2026-03-10",
-    articlesPath: "2026-beta/blog/articles.json",
-    assetsRoot: "2026-beta/blog/assets",
-    publicAssetRoot: "/2026-beta/blog/assets",
+    articlesPath: "blog/articles.json",
+    assetsRoot: "blog/assets",
+    publicAssetRoot: "/blog/assets",
   };
   const tokenStorageKey = "protopicaCmsToken";
   const defaultAuthorKey = "protopicaCmsAuthor";

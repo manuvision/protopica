@@ -10,6 +10,7 @@
   const audio = document.querySelector("[data-fire-audio]");
   const soundToggle = document.querySelector("[data-sound-toggle]");
   const contactForm = document.querySelector("[data-contact-form]");
+  const contactStatus = document.querySelector("[data-contact-status]");
   const impactValues = Array.from(document.querySelectorAll("[data-count-to]"));
   const menuToggle = document.querySelector("#menu-toggle");
   const navLinks = document.querySelector("#nav-links");
@@ -513,24 +514,58 @@
   }
 
   if (contactForm) {
-    contactForm.addEventListener("submit", function (event) {
+    contactForm.addEventListener("submit", async function (event) {
       event.preventDefault();
+      const submitButton = contactForm.querySelector('[type="submit"]');
       const data = new FormData(contactForm);
-      const lines = [
-        ["Name", data.get("name")],
-        ["Email", data.get("email")],
-        ["Relevant support", data.get("support")],
-        ["Message", data.get("message")],
-      ]
-        .filter(function (entry) {
-          return String(entry[1] || "").trim();
-        })
-        .map(function (entry) {
-          return entry[0] + ":\n" + String(entry[1]).trim();
+      const payload = {};
+
+      data.forEach(function (value, key) {
+        payload[key] = String(value).trim();
+      });
+
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Sending...";
+      }
+      contactForm.setAttribute("aria-busy", "true");
+      if (contactStatus) {
+        contactStatus.className = "contact-form__status";
+        contactStatus.textContent = "Sending your signal...";
+      }
+
+      try {
+        const response = await fetch(contactForm.action, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
         });
-      const subject = encodeURIComponent("Protopica project signal");
-      const body = encodeURIComponent(lines.join("\n\n"));
-      window.location.href = "mailto:hello@protopica.com?subject=" + subject + "&body=" + body;
+        const result = await response.json();
+
+        if (!response.ok || (result.success !== true && result.success !== "true")) {
+          throw new Error(result.message || "Unable to send");
+        }
+
+        contactForm.reset();
+        if (contactStatus) {
+          contactStatus.classList.add("is-success");
+          contactStatus.textContent = "Signal sent. We will be in touch.";
+        }
+      } catch (error) {
+        if (contactStatus) {
+          contactStatus.classList.add("is-error");
+          contactStatus.innerHTML = 'The signal could not be sent. Email <a href="mailto:hello@protopica.com">hello@protopica.com</a> instead.';
+        }
+      } finally {
+        contactForm.removeAttribute("aria-busy");
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = "Send the Signal";
+        }
+      }
     });
   }
 

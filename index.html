@@ -41,8 +41,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Manrope:wght@400;500;600;700;800&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=20260719-launch1" />
-    <script defer src="dither.js?v=20260719-fire-tip1"></script>
+    <link rel="stylesheet" href="styles.css?v=20260719-logo-form1" />
+    <script defer src="dither.js?v=20260719-fire-form1"></script>
     <script defer src="blog.js?v=20260719-copy1"></script>
   </head>
   <body>
@@ -351,10 +351,14 @@
               <h2 id="contact-title">Tell us what you want to move forward.</h2>
               <p>You don't need a finished brief. Start with what you know.</p>
             </header>
-            <form class="contact-form" data-contact-form action="mailto:hello@protopica.com" method="post" enctype="text/plain">
+            <form class="contact-form" data-contact-form action="https://formsubmit.co/ajax/hello@protopica.com" method="post">
+              <input type="hidden" name="_subject" value="New Protopica project signal" />
+              <input type="hidden" name="_template" value="table" />
+              <input type="hidden" name="_url" value="https://protopica.com/#contact" />
+              <label class="form-honey" aria-hidden="true">Leave this empty<input name="_honey" tabindex="-1" autocomplete="off" /></label>
               <label><span>Name <b class="required-mark" aria-hidden="true">*</b></span><input name="name" autocomplete="name" required /></label>
               <label><span>Email <b class="required-mark" aria-hidden="true">*</b></span><input name="email" type="email" autocomplete="email" required /></label>
-              <label><span>Relevant support</span>
+              <label class="contact-form__theme"><span>Relevant support</span>
                 <select name="support">
                   <option selected>Not sure yet</option>
                   <option>Research and advisory</option>
@@ -368,6 +372,7 @@
               </label>
               <label class="contact-form__wide"><span>Message <b class="required-mark" aria-hidden="true">*</b></span><textarea name="message" rows="5" required></textarea></label>
               <button class="button button--primary" type="submit">Send the Signal</button>
+              <p class="contact-form__status" data-contact-status role="status" aria-live="polite"></p>
             </form>
           </div>
         </section>

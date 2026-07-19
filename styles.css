@@ -357,15 +357,15 @@ video {
 }
 
 .ritual-brand__logo {
-  margin: 0;
-}
-
-.ritual-brand__logo {
+  display: block;
   width: 100%;
   height: 100%;
+  margin: 0;
   object-fit: contain;
   opacity: 1;
-  filter: blur(0) drop-shadow(0 0 18px rgba(181, 156, 255, 0.2));
+  background: transparent;
+  -webkit-filter: none;
+  filter: none;
 }
 
 .ritual-line {
@@ -3016,6 +3016,42 @@ a.story-card:focus-visible {
   min-height: 132px;
 }
 
+.contact-form .form-honey {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.contact-form__status {
+  min-height: 1.5em;
+  grid-column: 1 / -1;
+  margin: 0;
+  color: rgba(247, 240, 220, 0.68);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.contact-form__status:empty {
+  display: none;
+}
+
+.contact-form__status.is-success {
+  color: var(--cyan);
+}
+
+.contact-form__status.is-error {
+  color: #df9cff;
+}
+
+.contact-form__status a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
 .required-mark {
   color: var(--cyan);
   font: inherit;
@@ -3040,7 +3076,7 @@ a.story-card:focus-visible {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .contact-form label:nth-child(3) {
+  .contact-form__theme {
     grid-column: 1 / -1;
   }
 }
@@ -3140,7 +3176,7 @@ a.story-card:focus-visible {
     min-height: 124px;
   }
 
-  .contact-form label:nth-child(3) {
+  .contact-form__theme {
     grid-column: auto;
   }
 }

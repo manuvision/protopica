@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-19T09:21:43.856Z",
+  "updatedAt": "2026-07-19T09:22:05.122Z",
   "articles": [
     {
       "id": "follow-protopica-by-rss",
@@ -16,9 +16,9 @@
       "title": "Introducing Protopica 2.0",
       "date": "2026-07-19",
       "author": "Manuel Sainsily & Will Selviz",
-      "content": "<h3>Today, we are launching Protopica 2.0:</h3>\n  <img src=\"/blog/assets/field-note/1784450332029-1-screenshot-2026-07-19-at-4-35-57-am.png\" alt=\"Screenshot 2026-07-19 at 4.35.57 AM.png\" loading=\"lazy\">\n  <figcaption></figcaption><br>A clearer home for the work we do and the people we hope to build with.<br><br>Protopica is a design research lab that turns emerging technologies into meaningful public experiences. We consult, build, and teach across immersive exhibitions, worldbuilding, cultural preservation, creative technology, and education.<br><br>Our new website brings that work together in one place: projects tested with real audiences, collaborations with creators and organizations, lectures and workshops, and the team behind the practice.<br><br>We also wanted the website itself to reflect how we think. It begins around a digital fire, then opens into a slower, more intentional space where analog storytelling and computational aesthetics meet.<br><br>This release is a foundation for what comes next. We will use it to share new work, field notes, open experiments, and practical ways to build something new without losing what makes it human.<br><br><em><strong>Welcome to Protopica 2.0.</strong></em>",
+      "content": "<img src=\"/blog/assets/field-note/1784450332029-1-screenshot-2026-07-19-at-4-35-57-am.png\" alt=\"Screenshot 2026-07-19 at 4.35.57 AM.png\" loading=\"lazy\">\n  <figcaption></figcaption>\n<h3>Today, we are launching Protopica 2.0:</h3>\n<br>A clearer home for the work we do and the people we hope to build with.<br><br>Protopica is a design research lab that turns emerging technologies into meaningful public experiences. We consult, build, and teach across immersive exhibitions, worldbuilding, cultural preservation, creative technology, and education.<br><br>Our new website brings that work together in one place: projects tested with real audiences, collaborations with creators and organizations, lectures and workshops, and the team behind the practice.<br><br>We also wanted the website itself to reflect how we think. It begins around a digital fire, then opens into a slower, more intentional space where analog storytelling and computational aesthetics meet.<br><br>This release is a foundation for what comes next. We will use it to share new work, field notes, open experiments, and practical ways to build something new without losing what makes it human.<br><br><em><strong>Welcome to Protopica 2.0.</strong></em>",
       "createdAt": "2026-07-19T08:39:23.831Z",
-      "updatedAt": "2026-07-19T08:39:37.748Z"
+      "updatedAt": "2026-07-19T09:22:05.122Z"
     }
   ]
 }

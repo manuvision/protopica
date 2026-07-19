@@ -444,7 +444,7 @@ video {
   opacity: 0;
 }
 
-.js.is-revealed .site {
+.js.is-revealed:not(.is-quiet-reveal) .site {
   animation: siteReveal 700ms ease both;
 }
 
@@ -535,8 +535,10 @@ video {
 
 .screen.is-dissolve-under,
 .screen.is-dissolving-out {
+  opacity: 1;
   pointer-events: none;
   transform: translateY(0);
+  transition: none;
 }
 
 .screen.is-dissolve-under {
@@ -545,6 +547,7 @@ video {
 
 .screen.is-dissolving-out {
   z-index: 3;
+  background: var(--black);
 }
 
 .screen__inner {

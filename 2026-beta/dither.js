@@ -146,12 +146,25 @@
   }
 
   function revealSite() {
+    root.classList.remove("is-quiet-reveal");
     root.classList.remove("is-ritual");
     root.classList.add("is-revealed");
     if (site) {
       site.removeAttribute("aria-hidden");
     }
     showSection(activeSection || "home");
+  }
+
+  function finishDitherReveal() {
+    root.classList.add("is-quiet-reveal");
+    root.classList.remove("is-ritual", "is-fire-wipe", "is-dissolving");
+    root.classList.add("is-revealed");
+    if (site) {
+      site.removeAttribute("aria-hidden");
+    }
+    showSection("home", { updateHash: false });
+    clearDitherMask();
+    isWiping = false;
   }
 
   function revealWithDitherDissolve() {
@@ -178,12 +191,12 @@
   }
 
   function resizeWipeCanvas() {
-    if (!wipeCanvas || !wipeCtx) {
-      return;
-    }
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     wipeWidth = Math.max(1, window.innerWidth);
     wipeHeight = Math.max(1, window.innerHeight);
+    if (!wipeCanvas || !wipeCtx) {
+      return;
+    }
     wipeCanvas.width = Math.floor(wipeWidth * dpr);
     wipeCanvas.height = Math.floor(wipeHeight * dpr);
     wipeCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -300,12 +313,9 @@
       if (progress < 1) {
         wipeRaf = window.requestAnimationFrame(step);
       } else {
-        clearDitherMask();
+        finishDitherReveal();
         wipeCtx.clearRect(0, 0, wipeWidth, wipeHeight);
         wipeCanvas.style.opacity = "";
-        root.classList.remove("is-fire-wipe", "is-dissolving");
-        revealSite();
-        isWiping = false;
       }
     }
 
@@ -325,7 +335,7 @@
       return;
     }
 
-    if (!wipeCanvas || !wipeCtx || !currentSection) {
+    if (!currentSection) {
       showSection(sectionId);
       return;
     }
@@ -363,14 +373,13 @@
       const progress = Math.min(1, (now - start) / duration);
       applyDitherMask(progress, seed, currentSection);
       drawDitherDust(progress, seed);
-      wipeCanvas.style.opacity = String(0.38 * (1 - smoothstep(0.74, 1, progress)));
+      if (wipeCanvas) {
+        wipeCanvas.style.opacity = String(0.38 * (1 - smoothstep(0.74, 1, progress)));
+      }
 
       if (progress < 1) {
         wipeRaf = window.requestAnimationFrame(step);
       } else {
-        clearDitherMask(currentSection);
-        wipeCtx.clearRect(0, 0, wipeWidth, wipeHeight);
-        wipeCanvas.style.opacity = "";
         root.classList.remove("is-fire-wipe", "is-room-dissolving");
         screens.forEach(function (screen) {
           const isActive = screen === nextSection;
@@ -379,6 +388,13 @@
           screen.hidden = !isActive;
           screen.setAttribute("aria-hidden", String(!isActive));
         });
+        clearDitherMask(currentSection);
+        if (wipeCtx) {
+          wipeCtx.clearRect(0, 0, wipeWidth, wipeHeight);
+        }
+        if (wipeCanvas) {
+          wipeCanvas.style.opacity = "";
+        }
         isRoomTransitioning = false;
       }
     }
@@ -394,7 +410,7 @@
     setFireScale(messageIndex);
     renderMessage(messages[messageIndex]);
     root.classList.add("is-ritual");
-    root.classList.remove("is-revealed", "is-fire-wipe", "is-dissolving", "is-room-dissolving");
+    root.classList.remove("is-revealed", "is-fire-wipe", "is-dissolving", "is-room-dissolving", "is-quiet-reveal");
     clearDitherMask();
     screens.forEach(function (screen) {
       clearDitherMask(screen);

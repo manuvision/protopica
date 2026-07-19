@@ -147,15 +147,44 @@ video {
   opacity: 0;
   pointer-events: none;
   image-rendering: pixelated;
-  transition: opacity 100ms linear;
+  background:
+    radial-gradient(circle at 50% 68%, rgba(255, 122, 53, 0.18) 0 9%, transparent 33%),
+    radial-gradient(circle at 50% 42%, rgba(216, 255, 61, 0.07) 0 5%, transparent 24%),
+    repeating-radial-gradient(circle at 48% 58%, rgba(247, 240, 220, 0.1) 0 1px, transparent 1px 7px),
+    repeating-linear-gradient(90deg, rgba(216, 255, 61, 0.035) 0 1px, transparent 1px 13px),
+    repeating-linear-gradient(0deg, rgba(247, 240, 220, 0.028) 0 1px, transparent 1px 11px),
+    rgba(3, 4, 4, 0.12);
+  background-size: auto, auto, 12px 12px, auto, auto, auto;
+  transform: scale(1.015);
+  transition: none;
 }
 
 .js.is-fire-wipe .fire-wipe {
-  opacity: 1;
+  opacity: 0;
 }
 
-.js.is-dissolving .fire-wipe {
-  opacity: 0.68;
+.js.is-dissolving .fire-wipe,
+.js.is-room-dissolving .fire-wipe {
+  animation: ditherVeil 760ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes ditherVeil {
+  0% {
+    opacity: 0;
+    transform: scale(1.015);
+  }
+  38% {
+    opacity: 0.48;
+    transform: scale(1);
+  }
+  62% {
+    opacity: 0.36;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.995);
+  }
 }
 
 .ritual {
@@ -428,8 +457,13 @@ video {
 }
 
 .js.is-dissolving .site {
-  opacity: 1;
+  opacity: 0;
   pointer-events: none;
+  transition: opacity 760ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.js.is-dissolving.is-intro-swap .site {
+  opacity: 1;
 }
 
 .js.is-room-dissolving .site {
@@ -438,6 +472,12 @@ video {
 
 .js.is-dissolving .ritual {
   pointer-events: none;
+  opacity: 1;
+  transition: opacity 760ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.js.is-dissolving.is-intro-swap .ritual {
+  opacity: 0;
 }
 
 .js.is-dissolving .ritual-skip {
@@ -535,19 +575,32 @@ video {
 
 .screen.is-dissolve-under,
 .screen.is-dissolving-out {
-  opacity: 1;
   pointer-events: none;
-  transform: translateY(0);
   transition: none;
 }
 
 .screen.is-dissolve-under {
   z-index: 2;
+  opacity: 0;
+  transform: translateY(10px) scale(0.996);
 }
 
 .screen.is-dissolving-out {
   z-index: 3;
-  background: var(--black);
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.js.is-room-swap .screen.is-dissolve-under {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: opacity 700ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.js.is-room-swap .screen.is-dissolving-out {
+  opacity: 0;
+  transform: translateY(-8px) scale(1.003);
+  transition: opacity 700ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .screen__inner {

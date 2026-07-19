@@ -843,23 +843,6 @@ video {
   position: relative;
 }
 
-.mini-logo-strip {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 18px;
-}
-
-.mini-logo-strip img {
-  width: 34px;
-  height: 34px;
-  object-fit: contain;
-  padding: 5px;
-  border: 1px solid rgba(247, 240, 220, 0.14);
-  border-radius: 5px;
-  background: rgba(247, 240, 220, 0.9);
-}
-
 .card-action:hover,
 .card-action:focus-visible {
   background: rgba(216, 255, 61, 0.1);

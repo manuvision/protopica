@@ -1,16 +1,7 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-19T13:45:39.787Z",
+  "updatedAt": "2026-07-19T15:05:51.780Z",
   "articles": [
-    {
-      "id": "behind-the-scenes",
-      "title": "Behind The Scenes",
-      "date": "2026-07-19",
-      "author": "Manuel Sainsily",
-      "content": "<figure>\n  <img src=\"/blog/assets/behind-the-scenes/1784468529703-1-img-6864.jpeg\" alt=\"IMG_6864.jpeg\" loading=\"lazy\">\n  <figcaption></figcaption>\n</figure><br><br>Fun fact: We went to sleep at 5:30AM after having worked all afternoon and evening on the website design and copy, making sure that even the smallest detail followed the vision and standard that we had for our website.",
-      "createdAt": "2026-07-19T13:45:39.786Z",
-      "updatedAt": "2026-07-19T13:45:39.786Z"
-    },
     {
       "id": "rss-feed-now-available",
       "title": "Follow Protopica's RSS feed",

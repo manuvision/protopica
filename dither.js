@@ -711,11 +711,8 @@
     const isNarrow = surfaceWidth < 700;
     const isHome = settings.variant === "home";
     const cell = isNarrow ? 6 : surfaceWidth > 800 ? 7 : 6;
-    const center = surfaceWidth * (isHome ? (isNarrow ? 0.5 : 0.76) : 0.5);
-    const base = surfaceHeight *
-      (isHome
-        ? isNarrow ? 0.96 : 0.93
-        : isNarrow ? 0.78 + scale * 0.04 : 0.81 + scale * 0.05);
+    const center = surfaceWidth * 0.5;
+    const base = surfaceHeight * 1.02;
     const flameHeight = Math.min(
       surfaceHeight * (isHome ? (isNarrow ? 0.38 : 0.52) : (isNarrow ? 0.38 : 0.5)),
       isHome ? (isNarrow ? 300 : 480) : (isNarrow ? 340 : 430)

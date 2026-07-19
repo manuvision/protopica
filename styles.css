@@ -331,7 +331,7 @@ video {
   grid-template-rows: 178px 3.8em;
   align-content: center;
   justify-items: center;
-  row-gap: 18px;
+  row-gap: 30px;
   text-align: center;
   padding: 32px;
   transform: translateY(-4vh);
@@ -717,13 +717,27 @@ video {
 .home-teaser {
   position: relative;
   z-index: 1;
+  justify-items: center;
 }
 
 .home-copy {
   position: relative;
   z-index: 1;
   width: min(66%, 780px);
+  margin-inline: auto;
+  text-align: center;
   text-shadow: 0 2px 18px rgba(5, 4, 10, 0.88);
+}
+
+.home-logo {
+  display: block;
+  width: clamp(126px, 10vw, 150px);
+  height: auto;
+  margin: 0 auto 16px;
+  background: transparent;
+  object-fit: contain;
+  -webkit-filter: none;
+  filter: none;
 }
 
 .home-copy h2,
@@ -757,6 +771,10 @@ video {
   color: rgba(247, 240, 220, 0.72);
   font-size: 1.05rem;
   line-height: 1.62;
+}
+
+.home-copy p:not(.eyebrow) {
+  margin-inline: auto;
 }
 
 .screen-head {
@@ -1103,6 +1121,7 @@ video {
 .home-actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 10px;
   margin-top: 34px;
 }
@@ -2101,7 +2120,7 @@ video {
     width: min(100% - 26px, 760px);
     min-height: 540px;
     grid-template-rows: 136px 6.6em;
-    row-gap: 18px;
+    row-gap: 26px;
     padding: 24px 0;
     transform: translateY(-2.5vh);
   }
@@ -2840,6 +2859,11 @@ a.story-card:focus-visible {
   }
 
   .screen--home .home-copy p:not(.eyebrow) {
+    margin-inline: auto;
+  }
+
+  .screen--home .home-logo {
+    width: 126px;
     margin-inline: auto;
   }
 

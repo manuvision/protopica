@@ -29,10 +29,15 @@
     />
     <meta name="twitter:image" content="https://protopica.com/2026-beta/protopica/og.png" />
     <link rel="icon" href="favicon.png" />
-    <link rel="stylesheet" href="styles.css?v=20260718-quietfire" />
-    <script defer src="dither.js?v=20260718-quietfire"></script>
+    <link rel="stylesheet" href="styles.css?v=20260719-rooms" />
+    <script defer src="dither.js?v=20260719-rooms"></script>
   </head>
   <body>
+    <audio data-fire-audio src="protopica/firepit-loop.m4a" autoplay loop preload="auto"></audio>
+    <button class="sound-toggle" type="button" data-sound-toggle aria-label="Mute firepit sound">
+      <span aria-hidden="true"></span>
+    </button>
+
     <section class="ritual" id="ritual" aria-label="Story introduction">
       <canvas class="ritual-canvas" aria-hidden="true"></canvas>
       <div class="pixel-fire" aria-hidden="true">
@@ -52,209 +57,250 @@
 
     <main class="site" id="site-content" aria-hidden="true">
       <nav class="site-nav" aria-label="Primary navigation">
-        <a class="wordmark" href="#top" aria-label="Protopica home">PROTOPICA</a>
-        <div class="nav-links">
-          <a href="#who">Who</a>
-          <a href="#done">Done</a>
-          <a href="#can-do">Can do</a>
-          <a href="#framework">How</a>
-          <a href="#join">Join</a>
+        <button class="wordmark" type="button" data-section-target="home" aria-label="Replay the Protopica intro">PROTOPICA</button>
+        <div class="nav-links" role="list">
+          <button class="nav-link is-active" type="button" data-section-target="home">Home</button>
+          <button class="nav-link" type="button" data-section-target="about">About</button>
+          <button class="nav-link" type="button" data-section-target="exhibitions">Exhibitions</button>
+          <button class="nav-link" type="button" data-section-target="services">Services</button>
+          <button class="nav-link" type="button" data-section-target="framework">Framework</button>
+          <button class="nav-link" type="button" data-section-target="blog">Blog</button>
+          <button class="nav-link" type="button" data-section-target="experiments">Experiments</button>
+          <button class="nav-link" type="button" data-section-target="contact">Contact</button>
         </div>
       </nav>
 
-      <section class="chapter opening" id="top" aria-labelledby="opening-title">
-        <p class="eyebrow">The fire is now a network</p>
-        <h2 id="opening-title">Protopica helps storytellers gather, learn and build worlds with emerging technology.</h2>
-        <p>
-          We are a storytelling lab for connected worlds: part studio, part school,
-          part community, part field research. We help artists, institutions,
-          universities and brands turn culture into experiences people can enter.
-        </p>
-      </section>
-
-      <section class="chapter split" id="who" aria-labelledby="who-title">
-        <div>
-          <p class="eyebrow">01 / Who are we</p>
-          <h2 id="who-title">A lab for people who know stories matter.</h2>
-        </div>
-        <div class="text-stack">
-          <p>
-            Everyone tells stories. Fewer people know how to translate a story
-            into an exhibition, a course, a public ritual, a brand system, a
-            cultural archive or a living world.
-          </p>
-          <p>
-            Protopica creates the room where that translation can happen. We bring
-            together creative technologists, artists, producers, educators,
-            institutions and companies supporting new ways of remembering and
-            imagining.
-          </p>
-        </div>
-      </section>
-
-      <section class="chapter" id="done" aria-labelledby="done-title">
-        <div class="chapter-head">
-          <p class="eyebrow">02 / What we have done</p>
-          <h2 id="done-title">Proof that the stories can leave the screen.</h2>
-        </div>
-        <div class="proof-ledger">
-          <article>
-            <img src="protopica/artechouse-grid.jpg" alt="Protopica immersive visuals inside ARTECHOUSE NYC" />
-            <div>
-              <span>NYC / ARTECHOUSE</span>
-              <h3>Sin Agua, No Hay Tiempo</h3>
-              <p>Active in SUBMERGE: Beyond the Render. 18K immersive format, 270-degree spatial cinema.</p>
+      <div class="screen-stage">
+        <section class="screen screen--home is-active" id="home" data-section="home" aria-labelledby="home-title">
+          <div class="screen__inner home-grid">
+            <div class="home-copy">
+              <p class="eyebrow">The fire is now a network</p>
+              <h2 id="home-title">Protopica helps storytellers gather, learn and build worlds with emerging technology.</h2>
+              <p>
+                We are a storytelling lab for connected worlds: part studio, part school,
+                part community, part field research. We help artists, institutions,
+                universities and brands turn culture into experiences people can enter.
+              </p>
             </div>
-          </article>
-          <article>
-            <img src="protopica/sonar-neurogenesis.jpg" alt="Audience members wearing EEG headsets in a Protopica installation" />
-            <div>
-              <span>Barcelona / Sonar+D</span>
-              <h3>Neurogenesis</h3>
-              <p>EEG-driven film engine where mental state influenced image, sound and pacing.</p>
+            <div class="home-ledger" aria-label="Protopica operating modes">
+              <span>Learn</span>
+              <span>Connect</span>
+              <span>Build</span>
+              <span>Exhibit</span>
+              <span>Archive</span>
+              <span>Donate</span>
             </div>
-          </article>
-          <article>
-            <img src="protopica/research-hand.jpg" alt="Hands interacting with a Protopica cultural technology installation" />
-            <div>
-              <span>Vancouver / VIFF Signals</span>
-              <h3>Interactive cultural AI</h3>
-              <p>Brainwaves, face movement and hand movement shaped the story in real time.</p>
+          </div>
+        </section>
+
+        <section class="screen" id="about" data-section="about" aria-labelledby="about-title" hidden>
+          <div class="screen__inner screen__inner--stack">
+            <header class="screen-head">
+              <p class="eyebrow">About</p>
+              <h2 id="about-title">Built by artists and producers who can ship the work.</h2>
+              <p>
+                Protopica brings together creative direction, immersive media, cultural AI,
+                opera, education and public programming.
+              </p>
+            </header>
+            <div class="team-grid">
+              <article class="person-card">
+                <img src="protopica/portrait-manu.png" alt="Portrait of Manuel Sainsily" />
+                <div>
+                  <p class="eyebrow">Creative direction / cultural AI</p>
+                  <h3>Manuel Sainsily</h3>
+                  <p>XR, BCI, haptics, education, design systems and cultural worldbuilding.</p>
+                </div>
+              </article>
+              <article class="person-card">
+                <img src="protopica/portrait-will.png" alt="Portrait of Will Selviz" />
+                <div>
+                  <p class="eyebrow">Immersive media / spatial worlds</p>
+                  <h3>Will Selviz</h3>
+                  <p>Participatory experiences, spatial storytelling and Caribbean futures.</p>
+                </div>
+              </article>
+              <article class="person-card">
+                <img class="debi-portrait" src="protopica/portrait-debi.jpg" alt="Portrait of Debi Wong" />
+                <div>
+                  <p class="eyebrow">Founding artistic director</p>
+                  <h3>Debi Wong</h3>
+                  <p>XR production, opera, creative technology and cultural programming.</p>
+                </div>
+              </article>
             </div>
-          </article>
-          <article>
-            <img src="protopica/film-poster.png" alt="Poster for the Protopica Sora short film" />
-            <div>
-              <span>OpenAI / Sora</span>
-              <h3>First Sora film</h3>
-              <p>A Guadeloupean cultural AI film reframing generative video as preservation, not extraction.</p>
+          </div>
+        </section>
+
+        <section class="screen" id="exhibitions" data-section="exhibitions" aria-labelledby="exhibitions-title" hidden>
+          <div class="screen__inner screen__inner--wide">
+            <header class="screen-head screen-head--row">
+              <div>
+                <p class="eyebrow">Exhibitions / Installations</p>
+                <h2 id="exhibitions-title">Immersive worlds people step into.</h2>
+              </div>
+              <div class="kpi-grid" aria-label="Selected Protopica metrics">
+                <span><strong>100K+</strong> exhibition audience</span>
+                <span><strong>150+</strong> talks + workshops</span>
+                <span><strong>100</strong> VR headsets donated</span>
+                <span><strong>1M+</strong> film audience</span>
+              </div>
+            </header>
+
+            <div class="exhibition-grid" aria-label="Selected exhibitions and screenings">
+              <a class="exhibition-card exhibition-card--wide" href="https://www.instagram.com/p/DO8g7k8EZUS/?img_index=1" target="_blank" rel="noopener noreferrer">
+                <img src="protopica/protopica-artechouse.webp" alt="Visitors moving through Protopica's immersive ocean world at ARTECHOUSE in New York" />
+                <div>
+                  <p class="eyebrow">NYC / 2025-10-09 - Present</p>
+                  <h3>ARTECHOUSE</h3>
+                  <p>A 270-degree immersive 3D ocean world with spatial audio surrounding visitors with a Caribbean future.</p>
+                  <dl><div><dt>Audience</dt><dd>40K+</dd></div><div><dt>Technology</dt><dd>3D/18K</dd></div><div><dt>Sponsor</dt><dd>OTOY</dd></div></dl>
+                </div>
+              </a>
+
+              <a class="exhibition-card" href="https://www.instagram.com/p/DJcrHXgucSe/?img_index=1" target="_blank" rel="noopener noreferrer">
+                <img src="protopica/sonar-thumbnail.jpeg" alt="A visitor watching Protopica inside the Sonar+D installation in Barcelona" />
+                <div>
+                  <p class="eyebrow">Barcelona / 2025-06-12</p>
+                  <h3>Sónar+D</h3>
+                  <p>An EEG-driven installation where mental state shaped the visuals in real time.</p>
+                  <dl><div><dt>Audience</dt><dd>52K+</dd></div><div><dt>Technology</dt><dd>BCI/EEG</dd></div><div><dt>Sponsor</dt><dd>Neurosity</dd></div></dl>
+                </div>
+              </a>
+
+              <a class="exhibition-card" href="https://www.instagram.com/p/DAd9e01vZp5/" target="_blank" rel="noopener noreferrer">
+                <img src="protopica/protopica-sonar.jpg" alt="Visitors experiencing the Protopica installation at VIFF Signals in Vancouver" />
+                <div>
+                  <p class="eyebrow">Vancouver / 2024-09-27</p>
+                  <h3>VIFF Signals</h3>
+                  <p>Protopica expanded from GenAI cinema into an immersive platform rooted in cultural world-building.</p>
+                  <dl><div><dt>Audience</dt><dd>1.5K+</dd></div><div><dt>Technology</dt><dd>BCI/EEG</dd></div><div><dt>Sponsor</dt><dd>Signals</dd></div></dl>
+                </div>
+              </a>
+
+              <a class="exhibition-card" href="https://www.instagram.com/p/DFgDk9rR67K/?img_index=1" target="_blank" rel="noopener noreferrer">
+                <img src="protopica/sora-selects-heic.jpg" alt="Manuel Sainsily and will.i.am at Sora Selects in New York" />
+                <div>
+                  <p class="eyebrow">NYC / 2024-07 - 2025-02</p>
+                  <h3>OpenAI Sora Selects</h3>
+                  <p>First OpenAI artists to release an AI film screened at the Metrograph Theatre.</p>
+                  <dl><div><dt>Audience</dt><dd>1M+</dd></div><div><dt>Technology</dt><dd>AI Film</dd></div><div><dt>Sponsor</dt><dd>OpenAI</dd></div></dl>
+                </div>
+              </a>
+
+              <a class="exhibition-card" href="https://www.instagram.com/p/Cm7LZU5ARc1/" target="_blank" rel="noopener noreferrer">
+                <img src="protopica/caribeano-futurisme-stage.jpeg" alt="Caribeano-futurisme opening moment at Afromusee with Manuel on stage" />
+                <div>
+                  <p class="eyebrow">Montréal / 2022-12-01</p>
+                  <h3>OpenAI x CaFu</h3>
+                  <p>A Caribbean Futurist exhibition blending XR, AI and traditional live art performances.</p>
+                  <dl><div><dt>Audience</dt><dd>1K+</dd></div><div><dt>Technology</dt><dd>AI/Art</dd></div><div><dt>Sponsor</dt><dd>DALL-E</dd></div></dl>
+                </div>
+              </a>
+
+              <a class="exhibition-card" href="https://www.instagram.com/reel/Ck8mHGngk1_/" target="_blank" rel="noopener noreferrer">
+                <img src="protopica/sparkar-exhibition.jpg" alt="Manuel at the Oculus Gallery in the World Trade Center in New York" />
+                <div>
+                  <p class="eyebrow">NYC / 2022-10</p>
+                  <h3>Meta SparkAR</h3>
+                  <p>First haptics SparkAR filter exhibited at the Oculus Gallery in the NYC World Trade Center.</p>
+                  <dl><div><dt>Audience</dt><dd>Private</dd></div><div><dt>Technology</dt><dd>SparkAR</dd></div><div><dt>Sponsor</dt><dd>SparkAR</dd></div></dl>
+                </div>
+              </a>
             </div>
-          </article>
-        </div>
-        <div class="metric-strip" aria-label="Selected Protopica metrics">
-          <span><strong>100K+</strong> exhibition audience</span>
-          <span><strong>150+</strong> talks + workshops</span>
-          <span><strong>100</strong> VR headsets donated</span>
-          <span><strong>1M+</strong> film audience</span>
-        </div>
-      </section>
+          </div>
+        </section>
 
-      <section class="chapter" id="can-do" aria-labelledby="can-do-title">
-        <div class="chapter-head">
-          <p class="eyebrow">03 / What we can do</p>
-          <h2 id="can-do-title">Choose the form your story needs.</h2>
-        </div>
-        <div class="offering-grid">
-          <article>
-            <span>Exhibitions</span>
-            <p>Immersive installations, spatial films, public programs and festival-ready worlds.</p>
-          </article>
-          <article>
-            <span>Talks</span>
-            <p>Keynotes, panels and demos for audiences trying to understand AI, XR and culture.</p>
-          </article>
-          <article>
-            <span>Courses</span>
-            <p>University lectures and workshops that turn emerging technology into creative confidence.</p>
-          </article>
-          <article>
-            <span>Brand consulting</span>
-            <p>Creative technology strategy for teams building with AI, 3D and spatial computing.</p>
-          </article>
-          <article>
-            <span>Cultural preservation</span>
-            <p>Community-validated workflows for language, memory, diaspora and oral history.</p>
-          </article>
-          <article>
-            <span>Access programs</span>
-            <p>Donation and education programs that put tools in the hands of communities.</p>
-          </article>
-        </div>
-      </section>
+        <section class="screen" id="services" data-section="services" aria-labelledby="services-title" hidden>
+          <div class="screen__inner screen__inner--stack">
+            <header class="screen-head">
+              <p class="eyebrow">Services</p>
+              <h2 id="services-title">Choose the form your story needs.</h2>
+            </header>
+            <div class="service-grid">
+              <article><span>Consulting</span><h3>From OpenAI to Adobe</h3><p>Creative technology strategy for AI, 3D, spatial computing, design systems and cultural platforms.</p></article>
+              <article><span>Teaching</span><h3>From MIT to Oxford</h3><p>University lectures and workshops that turn emerging technology into creative confidence.</p></article>
+              <article><span>Speaking</span><h3>From FITC to VIFF</h3><p>Keynotes, panels and live demos on AI, XR, BCI, haptics, design and cultural preservation.</p></article>
+              <article><span>Archiving</span><h3>Cultural heritage preservation</h3><p>Community-validated workflows for language, memory, diaspora, oral history and living archives.</p></article>
+              <article><span>Donating</span><h3>100 headsets for care</h3><p>Access programs that put immersive tools in the hands of children, patients and communities.</p></article>
+              <article><span>Experimenting</span><h3>Playground in progress</h3><p>Gaussian splats, Blender, TouchDesigner, BCI cinema sketches and analog/digital tests.</p><button type="button" data-section-target="experiments">Enter experiments</button></article>
+            </div>
+          </div>
+        </section>
 
-      <section class="chapter framework" id="framework" aria-labelledby="framework-title">
-        <div class="chapter-head">
-          <p class="eyebrow">04 / How we are doing it</p>
-          <h2 id="framework-title">A framework for moving from memory to world.</h2>
-        </div>
-        <ol class="framework-list">
-          <li>
-            <span>Listen</span>
-            <p>Begin with culture, archives, place, language, ritual and lived experience.</p>
-          </li>
-          <li>
-            <span>Translate</span>
-            <p>Use AI, XR, BCI, haptics, Gaussian splats, Blender and TouchDesigner as story instruments.</p>
-          </li>
-          <li>
-            <span>Gather</span>
-            <p>Bring storytellers, institutions, brands and communities into the same room.</p>
-          </li>
-          <li>
-            <span>Exhibit</span>
-            <p>Turn the work into public experiences, courses, frameworks and repeatable tools.</p>
-          </li>
-        </ol>
-        <div class="coming-grid">
-          <article>
-            <p class="eyebrow">Playground</p>
-            <h3>Experiments coming soon</h3>
-            <p>Gaussian splats, analog/digital studies, BCI cinema sketches and process notes.</p>
-          </article>
-          <article>
-            <p class="eyebrow">Field notes</p>
-            <h3>Blog coming soon</h3>
-            <p>Future version: our own analytics and CMS for essays, updates and technical breakdowns.</p>
-          </article>
-          <article>
-            <p class="eyebrow">Worldbuilding</p>
-            <h3>Original IP in progress</h3>
-            <p>Characters, places, rituals and story systems. More information TBA.</p>
-          </article>
-        </div>
-      </section>
+        <section class="screen" id="framework" data-section="framework" aria-labelledby="framework-title" hidden>
+          <div class="screen__inner screen__inner--stack">
+            <header class="screen-head">
+              <p class="eyebrow">Framework</p>
+              <h2 id="framework-title">P.R.O.T.O.P.I.C.A.</h2>
+              <p>A worldbuilding framework for moving from memory to public experience.</p>
+            </header>
+            <ol class="framework-grid">
+              <li><strong>P</strong><span>Preserve</span><p>Start with memory, place, language and lived culture.</p></li>
+              <li><strong>R</strong><span>Research</span><p>Map the communities, archives, audiences and constraints.</p></li>
+              <li><strong>O</strong><span>Organize</span><p>Build the lore, rules, characters, rituals and systems.</p></li>
+              <li><strong>T</strong><span>Translate</span><p>Choose the right media: AI, XR, film, BCI, 3D, sound or space.</p></li>
+              <li><strong>O</strong><span>Orchestrate</span><p>Align artists, technologists, institutions, sponsors and educators.</p></li>
+              <li><strong>P</strong><span>Prototype</span><p>Make the world testable before it becomes precious.</p></li>
+              <li><strong>I</strong><span>Invite</span><p>Let audiences participate, not just observe.</p></li>
+              <li><strong>C</strong><span>Circulate</span><p>Turn the experience into exhibitions, talks, courses and tools.</p></li>
+              <li><strong>A</strong><span>Archive</span><p>Document what was learned so the culture keeps moving.</p></li>
+            </ol>
+          </div>
+        </section>
 
-      <section class="chapter team-mini" aria-labelledby="team-title">
-        <div class="chapter-head">
-          <p class="eyebrow">05 / The people</p>
-          <h2 id="team-title">Built by artists and producers who can ship the work.</h2>
-        </div>
-        <div class="team-row">
-          <article>
-            <img src="protopica/portrait-manu.png" alt="Portrait of Manuel Sainsily" />
-            <h3>Manuel Sainsily</h3>
-            <p>Cultural AI, XR, BCI, education and worldbuilding.</p>
-          </article>
-          <article>
-            <img src="protopica/portrait-will.png" alt="Portrait of Will Selviz" />
-            <h3>Will Selviz</h3>
-            <p>Immersive media, spatial storytelling and participatory worlds.</p>
-          </article>
-          <article>
-            <img class="debi-portrait" src="protopica/portrait-debi.jpg" alt="Portrait of Debi Wong" />
-            <h3>Debi Wong</h3>
-            <p>XR production, opera, creative technology and cultural programming.</p>
-          </article>
-        </div>
-      </section>
+        <section class="screen screen--soon" id="blog" data-section="blog" aria-labelledby="blog-title" hidden>
+          <div class="screen__inner soon-grid">
+            <div>
+              <p class="eyebrow">Blog / Coming soon</p>
+              <h2 id="blog-title">Field notes from the work.</h2>
+              <p>
+                Essays, exhibition breakdowns, research notes and practical guides.
+                Future version: our own analytics and CMS.
+              </p>
+            </div>
+            <div class="ascii-panel" aria-hidden="true">FIELD NOTES
+ARCHIVE LOADING
+CMS / ANALYTICS
+COMING SOON</div>
+          </div>
+        </section>
 
-      <section class="chapter join" id="join" aria-labelledby="join-title">
-        <p class="eyebrow">06 / Join the community</p>
-        <h2 id="join-title">Build a new world, or archive one that should not disappear.</h2>
-        <p>
-          Bring Protopica to your venue, classroom, residency, festival or
-          innovation team. Tell us what story you are carrying, and what form it
-          needs next.
-        </p>
-        <a class="button button--primary" href="mailto:hello@protopica.com?subject=Protopica%20community%20or%20collaboration">
-          Start the conversation
-        </a>
-      </section>
+        <section class="screen screen--soon" id="experiments" data-section="experiments" aria-labelledby="experiments-title" hidden>
+          <div class="screen__inner experiments-grid">
+            <div>
+              <p class="eyebrow">Experiments / Coming soon</p>
+              <h2 id="experiments-title">The playground is where we test the next language.</h2>
+              <p>Gaussian splats, Blender studies, TouchDesigner systems, BCI cinema, haptics, analog/digital rituals and original IP worldbuilding.</p>
+            </div>
+            <video class="experiment-video" autoplay muted loop playsinline preload="metadata" poster="protopica/dream-art.png" aria-label="Biometric data driven dream art in motion">
+              <source src="protopica/dreamart-trailer.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </section>
 
-      <footer class="site-footer">
-        <span>PROTOPICA</span>
-        <span>Learn / connect / build / exhibit</span>
-      </footer>
+        <section class="screen" id="contact" data-section="contact" aria-labelledby="contact-title" hidden>
+          <div class="screen__inner contact-grid">
+            <div>
+              <p class="eyebrow">Contact</p>
+              <h2 id="contact-title">Build a new world, or archive one that should not disappear.</h2>
+              <p>
+                Bring Protopica to your venue, classroom, residency, festival or innovation team.
+                Tell us what story you are carrying, and what form it needs next.
+              </p>
+              <a class="button button--primary" href="mailto:hello@protopica.com?subject=Protopica%20community%20or%20collaboration">Start the conversation</a>
+            </div>
+            <div class="contact-ledger">
+              <span>Exhibitions</span>
+              <span>Talks</span>
+              <span>Courses</span>
+              <span>Consulting</span>
+              <span>Preservation</span>
+              <span>Worldbuilding</span>
+            </div>
+          </div>
+        </section>
+      </div>
     </main>
   </body>
 </html>

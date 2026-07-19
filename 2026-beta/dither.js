@@ -1,10 +1,13 @@
 (function () {
   const root = document.documentElement;
-  const ritual = document.querySelector(".ritual");
   const canvas = document.querySelector(".ritual-canvas");
   const line = document.querySelector("[data-ritual-line]");
   const skip = document.querySelector("[data-ritual-skip]");
   const site = document.querySelector("#site-content");
+  const audio = document.querySelector("[data-fire-audio]");
+  const soundToggle = document.querySelector("[data-sound-toggle]");
+  const navButtons = Array.from(document.querySelectorAll("[data-section-target]"));
+  const screens = Array.from(document.querySelectorAll("[data-section]"));
 
   const messages = [
     "Hello storyteller...",
@@ -20,6 +23,20 @@
   let isChanging = false;
   let lastInputAt = 0;
   let glyphCounter = 0;
+  let targetFireScale = 0.34;
+  let currentFireScale = 0.34;
+  let activeSection = "home";
+  let soundMuted = window.localStorage.getItem("protopicaFireMuted") === "true";
+
+  function fireScaleForIndex(index) {
+    const progress = index / Math.max(1, messages.length - 1);
+    return 0.34 + progress * 0.66;
+  }
+
+  function setFireScale(index) {
+    targetFireScale = fireScaleForIndex(index);
+    root.style.setProperty("--fire-scale", targetFireScale.toFixed(3));
+  }
 
   function renderMessage(text) {
     if (!line) {
@@ -67,15 +84,68 @@
     }, 250);
   }
 
+  function showSection(sectionId, options) {
+    const nextSection = screens.find(function (screen) {
+      return screen.dataset.section === sectionId;
+    });
+
+    if (!nextSection) {
+      return;
+    }
+
+    activeSection = sectionId;
+    screens.forEach(function (screen) {
+      const isActive = screen === nextSection;
+      screen.hidden = false;
+      screen.classList.toggle("is-active", isActive);
+      screen.setAttribute("aria-hidden", String(!isActive));
+      if (!isActive) {
+        window.setTimeout(function () {
+          if (!screen.classList.contains("is-active")) {
+            screen.hidden = true;
+          }
+        }, 430);
+      }
+    });
+
+    navButtons.forEach(function (button) {
+      const isActive = button.dataset.sectionTarget === sectionId;
+      button.classList.toggle("is-active", isActive);
+      if (button.classList.contains("nav-link")) {
+        button.setAttribute("aria-current", isActive ? "page" : "false");
+      }
+    });
+
+    if (!options || options.updateHash !== false) {
+      if (sectionId === "home") {
+        window.history.replaceState(null, "", window.location.pathname + window.location.search);
+      } else {
+        window.history.replaceState(null, "", "#" + sectionId);
+      }
+    }
+  }
+
   function revealSite() {
     root.classList.remove("is-ritual");
     root.classList.add("is-revealed");
     if (site) {
       site.removeAttribute("aria-hidden");
-      window.setTimeout(function () {
-        site.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 80);
     }
+    showSection(activeSection || "home");
+  }
+
+  function resetRitual() {
+    messageIndex = 0;
+    isChanging = false;
+    activeSection = "home";
+    setFireScale(messageIndex);
+    renderMessage(messages[messageIndex]);
+    root.classList.add("is-ritual");
+    root.classList.remove("is-revealed");
+    if (site) {
+      site.setAttribute("aria-hidden", "true");
+    }
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
   }
 
   function advance() {
@@ -90,6 +160,7 @@
 
     isChanging = true;
     messageIndex += 1;
+    setFireScale(messageIndex);
     updateMessage();
   }
 
@@ -97,7 +168,7 @@
     if (!root.classList.contains("is-ritual")) {
       return;
     }
-    if (skip && skip.contains(event.target)) {
+    if ((skip && skip.contains(event.target)) || (soundToggle && soundToggle.contains(event.target))) {
       return;
     }
     const now = Date.now();
@@ -105,7 +176,50 @@
       return;
     }
     lastInputAt = now;
+    playSound();
     advance();
+  }
+
+  function updateSoundUi(isWaiting) {
+    if (!soundToggle) {
+      return;
+    }
+    soundToggle.classList.toggle("is-muted", soundMuted);
+    soundToggle.classList.toggle("is-waiting", Boolean(isWaiting) && !soundMuted);
+    soundToggle.setAttribute("aria-label", soundMuted ? "Unmute firepit sound" : "Mute firepit sound");
+  }
+
+  function playSound() {
+    if (!audio || soundMuted) {
+      updateSoundUi(false);
+      return;
+    }
+    audio.volume = 0.38;
+    audio.muted = false;
+    const playAttempt = audio.play();
+    if (playAttempt && typeof playAttempt.then === "function") {
+      playAttempt.then(function () {
+        updateSoundUi(false);
+      }).catch(function () {
+        updateSoundUi(true);
+      });
+    }
+  }
+
+  function setMuted(nextMuted) {
+    soundMuted = nextMuted;
+    window.localStorage.setItem("protopicaFireMuted", String(soundMuted));
+    if (!audio) {
+      updateSoundUi(false);
+      return;
+    }
+    if (soundMuted) {
+      audio.pause();
+      audio.muted = true;
+      updateSoundUi(false);
+    } else {
+      playSound();
+    }
   }
 
   document.addEventListener("pointerdown", handleUserAdvance, true);
@@ -113,10 +227,33 @@
   document.addEventListener("click", handleUserAdvance, true);
 
   if (skip) {
-    skip.addEventListener("click", revealSite);
+    skip.addEventListener("click", function () {
+      setFireScale(messages.length - 1);
+      playSound();
+      revealSite();
+    });
   }
 
-  renderMessage(messages[messageIndex]);
+  if (soundToggle) {
+    soundToggle.addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      setMuted(!soundMuted);
+    });
+  }
+
+  navButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      const target = button.dataset.sectionTarget;
+      if (target === "home") {
+        resetRitual();
+        playSound();
+        return;
+      }
+      showSection(target);
+      playSound();
+    });
+  });
 
   window.addEventListener("keydown", function (event) {
     if (!root.classList.contains("is-ritual")) {
@@ -124,12 +261,21 @@
     }
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
+      playSound();
       advance();
     }
     if (event.key === "Escape") {
+      setFireScale(messages.length - 1);
       revealSite();
     }
   });
+
+  renderMessage(messages[messageIndex]);
+  setFireScale(messageIndex);
+  updateSoundUi(false);
+  window.setTimeout(playSound, 300);
+  document.addEventListener("pointerdown", playSound, { once: true, capture: true });
+  document.addEventListener("keydown", playSound, { once: true, capture: true });
 
   if (!canvas || typeof canvas.getContext !== "function") {
     return;
@@ -177,15 +323,16 @@
 
   function drawFire() {
     time += reducedMotion ? 0 : 1;
+    currentFireScale += (targetFireScale - currentFireScale) * (reducedMotion ? 1 : 0.07);
     ctx.globalAlpha = 1;
     ctx.fillStyle = "#030404";
     ctx.fillRect(0, 0, width, height);
 
     const cell = width > 800 ? 7 : 5;
     const center = width * 0.5;
-    const base = height * 0.86;
-    const flameHeight = Math.min(height * 0.5, 430);
-    const flameWidth = Math.min(width * 0.32, 360);
+    const base = height * (0.81 + currentFireScale * 0.05);
+    const flameHeight = Math.min(height * 0.5, 430) * currentFireScale;
+    const flameWidth = Math.min(width * 0.32, 360) * (0.78 + currentFireScale * 0.22);
     const colors = ["#5b1f15", "#ff4d2d", "#ff8a3d", "#d8ff3d", "#f7f0dc"];
 
     for (let y = 0; y < height; y += cell) {
@@ -218,9 +365,9 @@
     }
 
     for (let i = 0; i < 34; i += 1) {
-      const drift = Math.sin(time * 0.015 + i) * 42;
-      const y = base - flameHeight * 0.18 - i * 4 + ((time * 0.3 + i * 11) % 26);
-      const x = center + drift + Math.sin(i * 2.1) * 78;
+      const drift = Math.sin(time * 0.015 + i) * 42 * currentFireScale;
+      const y = base - flameHeight * 0.18 - i * 4 * currentFireScale + ((time * 0.3 + i * 11) % 26);
+      const x = center + drift + Math.sin(i * 2.1) * 78 * currentFireScale;
       if (y > base - flameHeight * 0.92 && y < base + 8) {
         pixel(x, y, 3, i % 3 === 0 ? "#d8ff3d" : "#ff8a3d", 0.05 + (i % 5) * 0.012);
       }

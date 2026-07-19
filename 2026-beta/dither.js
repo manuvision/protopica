@@ -25,6 +25,20 @@
   ];
 
   const bayer = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+  const emberPalette = [
+    [91, 31, 21],
+    [255, 77, 45],
+    [255, 138, 61],
+    [255, 209, 102],
+    [247, 240, 220],
+  ];
+  const networkPalette = [
+    [111, 231, 220],
+    [142, 203, 255],
+    [181, 156, 255],
+    [223, 156, 255],
+    [223, 156, 255],
+  ];
 
   let messageIndex = 0;
   let isChanging = false;
@@ -39,6 +53,8 @@
     : "home";
   let targetFireScale = 0.34;
   let currentFireScale = 0.34;
+  let targetPaletteMix = 0;
+  let currentPaletteMix = 0;
   let activeSection = initialSection;
   let soundMuted = window.localStorage.getItem("protopicaFireMuted") === "true";
   let soundWaiting = false;
@@ -54,7 +70,9 @@
 
   function setFireScale(index) {
     targetFireScale = fireScaleForIndex(index);
+    targetPaletteMix = index >= messages.length - 1 ? 1 : 0;
     root.style.setProperty("--fire-scale", targetFireScale.toFixed(3));
+    root.classList.toggle("is-network-step", targetPaletteMix === 1);
   }
 
   function renderMessage(text) {
@@ -321,6 +339,7 @@
 
   function resetRitual() {
     messageIndex = 0;
+    currentPaletteMix = 0;
     isChanging = false;
     isIntroTransitioning = false;
     isRoomTransitioning = false;
@@ -641,6 +660,13 @@
     surfaceCtx.fillRect(Math.round(x), Math.round(y), squareSize, squareSize);
   }
 
+  function blendPaletteColor(from, to, mix) {
+    const red = Math.round(from[0] + (to[0] - from[0]) * mix);
+    const green = Math.round(from[1] + (to[1] - from[1]) * mix);
+    const blue = Math.round(from[2] + (to[2] - from[2]) * mix);
+    return "rgb(" + red + ", " + green + ", " + blue + ")";
+  }
+
   function drawFireSurface(surfaceCtx, surfaceWidth, surfaceHeight, settings) {
     if (!surfaceCtx || surfaceWidth < 1 || surfaceHeight < 1) {
       return;
@@ -663,7 +689,10 @@
       surfaceWidth * (isHome ? (isNarrow ? 0.78 : 0.34) : (isNarrow ? 0.72 : 0.32)),
       isHome ? (isNarrow ? 360 : 430) : (isNarrow ? 350 : 360)
     ) * (0.8 + scale * 0.2);
-    const colors = ["#5b1f15", "#ff4d2d", "#ff8a3d", "#ffd166", "#f7f0dc"];
+    const paletteMix = Math.max(0, Math.min(1, settings.paletteMix));
+    const colors = emberPalette.map(function (color, index) {
+      return blendPaletteColor(color, networkPalette[index], paletteMix);
+    });
 
     surfaceCtx.globalAlpha = 1;
     if (isHome) {
@@ -707,7 +736,7 @@
       const y = base - flameHeight * 0.18 - i * 4 * scale + ((time * 0.3 + i * 11) % 26);
       const x = center + drift + Math.sin(i * 2.1) * 78 * scale;
       if (y > base - flameHeight * 0.92 && y < base + 8) {
-        pixel(surfaceCtx, x, y, isNarrow ? 4 : 3, i % 3 === 0 ? "#ffd166" : "#ff8a3d", 0.05 + (i % 5) * 0.012);
+        pixel(surfaceCtx, x, y, isNarrow ? 4 : 3, colors[(i + 1) % colors.length], 0.05 + (i % 5) * 0.012);
       }
     }
     surfaceCtx.globalAlpha = 1;
@@ -716,12 +745,21 @@
   function drawFire() {
     time += reducedMotion ? 0 : 1;
     currentFireScale += (targetFireScale - currentFireScale) * (reducedMotion ? 1 : 0.07);
+    currentPaletteMix += (targetPaletteMix - currentPaletteMix) * (reducedMotion ? 1 : 0.075);
 
     if (root.classList.contains("is-ritual")) {
-      drawFireSurface(ctx, width, height, { scale: currentFireScale, variant: "ritual" });
+      drawFireSurface(ctx, width, height, {
+        scale: currentFireScale,
+        variant: "ritual",
+        paletteMix: currentPaletteMix,
+      });
     } else if (root.classList.contains("is-revealed") && activeSection === "home") {
       const homeScale = homeWidth < 700 ? 0.92 : 1.06;
-      drawFireSurface(homeCtx, homeWidth, homeHeight, { scale: homeScale, variant: "home" });
+      drawFireSurface(homeCtx, homeWidth, homeHeight, {
+        scale: homeScale,
+        variant: "home",
+        paletteMix: 1,
+      });
     }
 
     raf = window.requestAnimationFrame(drawFire);

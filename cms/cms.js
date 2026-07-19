@@ -276,6 +276,20 @@
     return escapeHtml(value).replace(/"/g, "&quot;");
   }
 
+  function sanitizeInlineHtml(html) {
+    const inlineTags = new Set(["A", "B", "BR", "CODE", "DEL", "EM", "I", "IMG", "STRONG", "U"]);
+    const template = document.createElement("template");
+    template.innerHTML = sanitizeHtml(html);
+
+    Array.from(template.content.querySelectorAll("*")).forEach(function (node) {
+      if (!inlineTags.has(node.tagName)) {
+        node.replaceWith(...Array.from(node.childNodes));
+      }
+    });
+
+    return template.innerHTML.trim();
+  }
+
   async function apiFetch(path, options) {
     if (!state.token) {
       throw new Error("Paste a GitHub token first.");
@@ -617,27 +631,28 @@
 
   function insertFormatting(type) {
     const text = selectedText("Write here");
+    const inlineMarkup = sanitizeInlineHtml(text) || escapeHtml(text);
     const escaped = escapeHtml(text);
     let markup = "";
 
     if (type === "h2") {
-      markup = "<h2>" + escaped + "</h2>\n";
+      markup = "<h2>" + inlineMarkup + "</h2>\n";
     } else if (type === "h3") {
-      markup = "<h3>" + escaped + "</h3>\n";
+      markup = "<h3>" + inlineMarkup + "</h3>\n";
     } else if (type === "h4") {
-      markup = "<h4>" + escaped + "</h4>\n";
+      markup = "<h4>" + inlineMarkup + "</h4>\n";
     } else if (type === "p") {
-      markup = "<p>" + escaped + "</p>\n";
+      markup = "<p>" + inlineMarkup + "</p>\n";
     } else if (type === "strong") {
-      markup = "<strong>" + escaped + "</strong>";
+      markup = "<strong>" + inlineMarkup + "</strong>";
     } else if (type === "em") {
-      markup = "<em>" + escaped + "</em>";
+      markup = "<em>" + inlineMarkup + "</em>";
     } else if (type === "u") {
-      markup = "<u>" + escaped + "</u>";
+      markup = "<u>" + inlineMarkup + "</u>";
     } else if (type === "del") {
-      markup = "<del>" + escaped + "</del>";
+      markup = "<del>" + inlineMarkup + "</del>";
     } else if (type === "blockquote") {
-      markup = "<blockquote><p>" + escaped + "</p></blockquote>\n";
+      markup = "<blockquote><p>" + inlineMarkup + "</p></blockquote>\n";
     } else if (type === "ul") {
       markup = createListMarkup("ul", text);
     } else if (type === "ol") {
@@ -647,7 +662,7 @@
       if (!href) {
         return;
       }
-      markup = '<a href="' + escapeAttribute(href) + '">' + escaped + "</a>";
+      markup = '<a href="' + escapeAttribute(href) + '">' + inlineMarkup + "</a>";
     } else if (type === "code") {
       markup = "<code>" + escaped + "</code>";
     } else if (type === "pre") {
@@ -668,7 +683,7 @@
       .filter(Boolean);
     const listItems = (items.length ? items : ["List item"])
       .map(function (item) {
-        return "  <li>" + escapeHtml(item) + "</li>";
+        return "  <li>" + (sanitizeInlineHtml(item) || escapeHtml(item)) + "</li>";
       })
       .join("\n");
 

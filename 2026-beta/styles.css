@@ -638,6 +638,11 @@ video {
   overflow-y: auto;
 }
 
+.screen--work .screen__inner--wide {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 16px;
+}
+
 .framework-teaser {
   display: grid;
   align-content: center;
@@ -810,12 +815,26 @@ video {
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: minmax(540px, 43vw);
-  grid-template-rows: repeat(2, minmax(210px, 1fr));
+  grid-template-rows: repeat(2, minmax(182px, 1fr));
   gap: 14px;
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 8px;
   scroll-snap-type: x proximity;
+}
+
+.screen--work .exhibition-card > div {
+  padding: 13px;
+}
+
+.screen--work .exhibition-card p:not(.eyebrow) {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.screen--work .exhibition-card dl {
+  margin-top: 11px;
 }
 
 .exhibition-card {
@@ -1018,7 +1037,15 @@ video {
   margin-top: 34px;
 }
 
+.section-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: auto;
+}
+
 .home-actions .button,
+.section-actions .button,
 .contact-form .button {
   margin-top: 0;
 }
@@ -1730,6 +1757,13 @@ video {
     margin-top: 26px;
   }
 
+  .section-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
   .button,
   .service-grid article button,
   .card-action {
@@ -1804,11 +1838,11 @@ video {
   .exhibition-card img {
     width: 100%;
     height: auto;
-    aspect-ratio: 1.42;
+    aspect-ratio: 1.72;
   }
 
   .exhibition-card > div {
-    padding: 15px;
+    padding: 13px;
   }
 
   .exhibition-card dl {
@@ -1816,7 +1850,7 @@ video {
   }
 
   .exhibition-card dl div {
-    padding: 8px 6px;
+    padding: 7px 6px;
   }
 
   .exhibition-card dt,
@@ -1897,7 +1931,7 @@ video {
   }
 
   .exhibition-card dl {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .exhibition-card dl div {

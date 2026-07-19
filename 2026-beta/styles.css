@@ -672,6 +672,34 @@ video {
   align-content: center;
 }
 
+.screen--home {
+  isolation: isolate;
+}
+
+.home-fire-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  opacity: 0.82;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+
+.home-teaser {
+  position: relative;
+  z-index: 1;
+}
+
+.home-copy {
+  position: relative;
+  z-index: 1;
+  width: min(66%, 780px);
+  text-shadow: 0 2px 18px rgba(5, 4, 10, 0.88);
+}
+
 .home-copy h2,
 .soon-teaser h2,
 .playground-teaser h2,
@@ -1733,6 +1761,14 @@ video {
   .contact-teaser {
     align-content: start;
     padding-top: max(24px, 8svh);
+  }
+
+  .home-fire-canvas {
+    opacity: 0.64;
+  }
+
+  .home-copy {
+    width: 100%;
   }
 
   .home-copy h2,

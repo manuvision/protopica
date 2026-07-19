@@ -3,6 +3,7 @@
   const body = document.body;
   const ritual = document.querySelector("#ritual");
   const canvas = document.querySelector(".ritual-canvas");
+  const homeCanvas = document.querySelector(".home-fire-canvas");
   const line = document.querySelector("[data-ritual-line]");
   const skip = document.querySelector("[data-ritual-skip]");
   const site = document.querySelector("#site-content");
@@ -569,31 +570,63 @@
   document.addEventListener("pointerdown", playSound, { once: true, capture: true });
   document.addEventListener("keydown", playSound, { once: true, capture: true });
 
-  if (!canvas || typeof canvas.getContext !== "function") {
+  if (
+    (!canvas || typeof canvas.getContext !== "function") &&
+    (!homeCanvas || typeof homeCanvas.getContext !== "function")
+  ) {
     return;
   }
 
-  const ctx = canvas.getContext("2d");
+  const ctx = canvas && typeof canvas.getContext === "function" ? canvas.getContext("2d") : null;
+  const homeCtx = homeCanvas && typeof homeCanvas.getContext === "function" ? homeCanvas.getContext("2d") : null;
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   let width = 0;
   let height = 0;
+  let homeWidth = 0;
+  let homeHeight = 0;
   let raf = 0;
   let time = 0;
 
-  if (!ctx) {
+  if (!ctx && !homeCtx) {
     return;
   }
 
-  root.classList.add("has-canvas-fire");
+  if (ctx) {
+    root.classList.add("has-canvas-fire");
+  }
+
+  function resizeSurface(targetCanvas, targetCtx, previousWidth, previousHeight) {
+    if (!targetCanvas || !targetCtx) {
+      return { width: previousWidth, height: previousHeight };
+    }
+
+    const rect = targetCanvas.getBoundingClientRect();
+    if (rect.width < 1 || rect.height < 1) {
+      return { width: previousWidth, height: previousHeight };
+    }
+
+    const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1), 2);
+    const nextWidth = Math.max(1, rect.width);
+    const nextHeight = Math.max(1, rect.height);
+    const pixelWidth = Math.floor(nextWidth * dpr);
+    const pixelHeight = Math.floor(nextHeight * dpr);
+
+    if (targetCanvas.width !== pixelWidth || targetCanvas.height !== pixelHeight) {
+      targetCanvas.width = pixelWidth;
+      targetCanvas.height = pixelHeight;
+    }
+    targetCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    return { width: nextWidth, height: nextHeight };
+  }
 
   function resize() {
-    const rect = canvas.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    width = Math.max(1, rect.width);
-    height = Math.max(1, rect.height);
-    canvas.width = Math.floor(width * dpr);
-    canvas.height = Math.floor(height * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const ritualSize = resizeSurface(canvas, ctx, width, height);
+    const homeSize = resizeSurface(homeCanvas, homeCtx, homeWidth, homeHeight);
+    width = ritualSize.width;
+    height = ritualSize.height;
+    homeWidth = homeSize.width;
+    homeHeight = homeSize.height;
   }
 
   function noise(x, y, t) {
@@ -601,30 +634,47 @@
     return value - Math.floor(value);
   }
 
-  function pixel(x, y, size, color, alpha) {
-    ctx.globalAlpha = alpha;
-    ctx.fillStyle = color;
+  function pixel(surfaceCtx, x, y, size, color, alpha) {
+    surfaceCtx.globalAlpha = alpha;
+    surfaceCtx.fillStyle = color;
     const squareSize = Math.max(1, Math.round(size));
-    ctx.fillRect(Math.round(x), Math.round(y), squareSize, squareSize);
+    surfaceCtx.fillRect(Math.round(x), Math.round(y), squareSize, squareSize);
   }
 
-  function drawFire() {
-    time += reducedMotion ? 0 : 1;
-    currentFireScale += (targetFireScale - currentFireScale) * (reducedMotion ? 1 : 0.07);
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = "#030404";
-    ctx.fillRect(0, 0, width, height);
+  function drawFireSurface(surfaceCtx, surfaceWidth, surfaceHeight, settings) {
+    if (!surfaceCtx || surfaceWidth < 1 || surfaceHeight < 1) {
+      return;
+    }
 
-    const isNarrow = width < 700;
-    const cell = isNarrow ? 6 : width > 800 ? 7 : 6;
-    const center = width * 0.5;
-    const base = height * (isNarrow ? 0.78 + currentFireScale * 0.04 : 0.81 + currentFireScale * 0.05);
-    const flameHeight = Math.min(height * (isNarrow ? 0.38 : 0.5), isNarrow ? 340 : 430) * currentFireScale;
-    const flameWidth = Math.min(width * (isNarrow ? 0.72 : 0.32), isNarrow ? 350 : 360) * (0.8 + currentFireScale * 0.2);
+    const scale = settings.scale;
+    const isNarrow = surfaceWidth < 700;
+    const isHome = settings.variant === "home";
+    const cell = isNarrow ? 6 : surfaceWidth > 800 ? 7 : 6;
+    const center = surfaceWidth * (isHome ? (isNarrow ? 0.5 : 0.76) : 0.5);
+    const base = surfaceHeight *
+      (isHome
+        ? isNarrow ? 0.96 : 0.93
+        : isNarrow ? 0.78 + scale * 0.04 : 0.81 + scale * 0.05);
+    const flameHeight = Math.min(
+      surfaceHeight * (isHome ? (isNarrow ? 0.38 : 0.52) : (isNarrow ? 0.38 : 0.5)),
+      isHome ? (isNarrow ? 300 : 480) : (isNarrow ? 340 : 430)
+    ) * scale;
+    const flameWidth = Math.min(
+      surfaceWidth * (isHome ? (isNarrow ? 0.78 : 0.34) : (isNarrow ? 0.72 : 0.32)),
+      isHome ? (isNarrow ? 360 : 430) : (isNarrow ? 350 : 360)
+    ) * (0.8 + scale * 0.2);
     const colors = ["#5b1f15", "#ff4d2d", "#ff8a3d", "#ffd166", "#f7f0dc"];
 
-    for (let y = 0; y < height; y += cell) {
-      for (let x = 0; x < width; x += cell) {
+    surfaceCtx.globalAlpha = 1;
+    if (isHome) {
+      surfaceCtx.clearRect(0, 0, surfaceWidth, surfaceHeight);
+    } else {
+      surfaceCtx.fillStyle = "#030404";
+      surfaceCtx.fillRect(0, 0, surfaceWidth, surfaceHeight);
+    }
+
+    for (let y = 0; y < surfaceHeight; y += cell) {
+      for (let x = 0; x < surfaceWidth; x += cell) {
         const nx = (x - center) / flameWidth;
         const ny = (base - y) / flameHeight;
         const n = noise(x * 0.014, y * 0.018, time);
@@ -647,20 +697,32 @@
           const colorIndex = Math.min(colors.length - 1, Math.max(0, Math.floor(intensity * 5)));
           const size = edgeFade < 0.46 ? Math.max(2, cell - 3) : Math.max(2, cell - 1);
           const alpha = Math.min(0.92, (0.28 + intensity) * Math.min(1, edgeFade + 0.2));
-          pixel(x, y, size, colors[colorIndex], alpha);
+          pixel(surfaceCtx, x, y, size, colors[colorIndex], alpha);
         }
       }
     }
 
     for (let i = 0; i < 34; i += 1) {
-      const drift = Math.sin(time * 0.015 + i) * 42 * currentFireScale;
-      const y = base - flameHeight * 0.18 - i * 4 * currentFireScale + ((time * 0.3 + i * 11) % 26);
-      const x = center + drift + Math.sin(i * 2.1) * 78 * currentFireScale;
+      const drift = Math.sin(time * 0.015 + i) * 42 * scale;
+      const y = base - flameHeight * 0.18 - i * 4 * scale + ((time * 0.3 + i * 11) % 26);
+      const x = center + drift + Math.sin(i * 2.1) * 78 * scale;
       if (y > base - flameHeight * 0.92 && y < base + 8) {
-        pixel(x, y, isNarrow ? 4 : 3, i % 3 === 0 ? "#ffd166" : "#ff8a3d", 0.05 + (i % 5) * 0.012);
+        pixel(surfaceCtx, x, y, isNarrow ? 4 : 3, i % 3 === 0 ? "#ffd166" : "#ff8a3d", 0.05 + (i % 5) * 0.012);
       }
     }
-    ctx.globalAlpha = 1;
+    surfaceCtx.globalAlpha = 1;
+  }
+
+  function drawFire() {
+    time += reducedMotion ? 0 : 1;
+    currentFireScale += (targetFireScale - currentFireScale) * (reducedMotion ? 1 : 0.07);
+
+    if (root.classList.contains("is-ritual")) {
+      drawFireSurface(ctx, width, height, { scale: currentFireScale, variant: "ritual" });
+    } else if (root.classList.contains("is-revealed") && activeSection === "home") {
+      const homeScale = homeWidth < 700 ? 0.92 : 1.06;
+      drawFireSurface(homeCtx, homeWidth, homeHeight, { scale: homeScale, variant: "home" });
+    }
 
     raf = window.requestAnimationFrame(drawFire);
   }
@@ -668,7 +730,19 @@
   resize();
   drawFire();
   window.addEventListener("resize", resize);
+  const resizeObserver = typeof window.ResizeObserver === "function" ? new window.ResizeObserver(resize) : null;
+  if (resizeObserver) {
+    if (canvas) {
+      resizeObserver.observe(canvas);
+    }
+    if (homeCanvas) {
+      resizeObserver.observe(homeCanvas);
+    }
+  }
   window.addEventListener("beforeunload", function () {
     window.cancelAnimationFrame(raf);
+    if (resizeObserver) {
+      resizeObserver.disconnect();
+    }
   });
 })();

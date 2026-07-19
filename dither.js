@@ -716,15 +716,18 @@
         const topFade = 1 - smoothstep(0.72, 1.18, ny);
         const bottomFade = smoothstep(-0.08, 0.08, ny);
         const edgeFade = topFade * bottomFade;
-        const sparseTip = topFade > 0.74 || n > 0.42 + (1 - topFade) * 0.36;
+        const tipWarp = (n - 0.5) * 0.14 + Math.sin(nx * 8 + time * 0.025) * 0.04;
+        const tipProgress = smoothstep(0.48, 1.18, ny + tipWarp);
+        const tipNoise = noise(x * 0.027 + 19, y * 0.031 - 11, time + 113);
+        const tipBreakup = tipProgress * (0.12 + tipNoise * 0.48 + ordered * 0.2);
         const intensity =
-          ny > -0.08 && ny < 1.22 && sparseTip
-            ? shape + flicker + emberFoot - ordered * (0.16 + (1 - edgeFade) * 0.8)
+          ny > -0.08 && ny < 1.22
+            ? shape + flicker + emberFoot - ordered * (0.16 + (1 - edgeFade) * 0.8) - tipBreakup
             : -1;
 
         if (intensity > 0.02 && edgeFade > 0.035) {
           const colorIndex = Math.min(colors.length - 1, Math.max(0, Math.floor(intensity * 5)));
-          const size = edgeFade < 0.46 ? Math.max(2, cell - 3) : Math.max(2, cell - 1);
+          const size = Math.max(2, cell - 1);
           const alpha = Math.min(0.92, (0.28 + intensity) * Math.min(1, edgeFade + 0.2));
           pixel(surfaceCtx, x, y, size, colors[colorIndex], alpha);
         }

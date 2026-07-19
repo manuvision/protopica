@@ -555,13 +555,7 @@ video {
   align-content: center;
 }
 
-.home-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(300px, 0.55fr);
-  gap: 46px;
-  align-items: center;
-}
-
+.home-teaser,
 .soon-teaser,
 .playground-teaser,
 .contact-teaser {
@@ -573,9 +567,9 @@ video {
 .soon-teaser h2,
 .playground-teaser h2,
 .contact-teaser h2 {
-  max-width: 980px;
+  max-width: 1180px;
   margin: 0;
-  font-size: clamp(2.4rem, 6vw, 5.4rem);
+  font-size: clamp(2.6rem, 6.4vw, 6.2rem);
   line-height: 0.98;
   letter-spacing: 0;
 }
@@ -598,27 +592,6 @@ video {
   color: rgba(247, 240, 220, 0.72);
   font-size: 1.05rem;
   line-height: 1.62;
-}
-
-.home-ledger {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1px;
-  border: 1px solid var(--line);
-  background: var(--line);
-}
-
-.home-ledger span {
-  min-height: 94px;
-  display: grid;
-  place-items: center;
-  background:
-    linear-gradient(180deg, rgba(247, 240, 220, 0.04), rgba(247, 240, 220, 0)),
-    var(--black);
-  color: rgba(247, 240, 220, 0.76);
-  font-family: var(--mono);
-  font-size: 0.82rem;
-  text-transform: uppercase;
 }
 
 .screen-head {
@@ -880,8 +853,7 @@ video {
 }
 
 @media (max-width: 1180px) {
-  .screen-head--row,
-  .home-grid {
+  .screen-head--row {
     grid-template-columns: 1fr;
   }
 
@@ -937,7 +909,6 @@ video {
     line-height: 1.02;
   }
 
-  .home-ledger,
   .kpi-grid,
   .team-grid,
   .service-grid,

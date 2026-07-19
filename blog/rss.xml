@@ -5,9 +5,21 @@
     <link>https://protopica.com/#research</link>
     <description>Research, experiments and field notes from Protopica.</description>
     <language>en-ca</language>
-    <lastBuildDate>Sun, 19 Jul 2026 09:47:04 GMT</lastBuildDate>
+    <lastBuildDate>Sun, 19 Jul 2026 13:45:40 GMT</lastBuildDate>
     <atom:link href="https://protopica.com/blog/rss.xml" rel="self" type="application/rss+xml" />
     <generator>Protopica CMS</generator>
+    <item>
+      <title>Behind The Scenes</title>
+      <link>https://protopica.com/?article=behind-the-scenes#research</link>
+      <guid isPermaLink="true">https://protopica.com/?article=behind-the-scenes#research</guid>
+      <pubDate>Sun, 19 Jul 2026 13:45:39 GMT</pubDate>
+      <dc:creator>Manuel Sainsily</dc:creator>
+      <description>Fun fact: We went to sleep at 5:30AM after having worked all afternoon and evening on the website design and copy, making sure that even the smallest detail followed the vision and standard that we had for our website.</description>
+      <content:encoded><![CDATA[<figure>
+  <img src="/blog/assets/behind-the-scenes/1784468529703-1-img-6864.jpeg" alt="IMG_6864.jpeg" loading="lazy">
+  <figcaption></figcaption>
+</figure><br><br>Fun fact: We went to sleep at 5:30AM after having worked all afternoon and evening on the website design and copy, making sure that even the smallest detail followed the vision and standard that we had for our website.]]></content:encoded>
+    </item>
     <item>
       <title>Follow Protopica&apos;s RSS feed</title>
       <link>https://protopica.com/?article=rss-feed-now-available#research</link>

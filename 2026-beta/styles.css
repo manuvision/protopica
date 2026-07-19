@@ -133,6 +133,104 @@ video {
   opacity: 1;
 }
 
+.fire-wipe {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: -18svh;
+  bottom: -18svh;
+  z-index: 70;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(110%);
+  image-rendering: pixelated;
+  background:
+    radial-gradient(circle at 50% 86%, rgba(247, 240, 220, 0.98) 0 8%, transparent 20%),
+    radial-gradient(circle at 30% 78%, rgba(216, 255, 61, 0.92) 0 12%, transparent 32%),
+    radial-gradient(circle at 68% 76%, rgba(255, 138, 61, 0.9) 0 13%, transparent 34%),
+    linear-gradient(0deg, #f7f0dc 0 8%, #d8ff3d 12%, #ff8a3d 28%, #ff4d2d 52%, rgba(91, 31, 21, 0.98) 76%, rgba(3, 4, 4, 0) 100%);
+  clip-path: polygon(
+    0 100%,
+    100% 100%,
+    100% 29%,
+    97% 24%,
+    94% 31%,
+    90% 18%,
+    86% 28%,
+    82% 12%,
+    78% 30%,
+    73% 22%,
+    69% 35%,
+    64% 17%,
+    59% 34%,
+    54% 25%,
+    50% 9%,
+    46% 27%,
+    41% 36%,
+    36% 19%,
+    31% 33%,
+    27% 22%,
+    22% 36%,
+    17% 15%,
+    13% 30%,
+    8% 24%,
+    4% 34%,
+    0 27%
+  );
+}
+
+.fire-wipe::before,
+.fire-wipe::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.fire-wipe::before {
+  background:
+    radial-gradient(circle at 1px 1px, rgba(3, 4, 4, 0.72) 0 1.4px, transparent 1.6px),
+    radial-gradient(circle at 6px 5px, rgba(247, 240, 220, 0.18) 0 1.2px, transparent 1.4px),
+    linear-gradient(45deg, rgba(3, 4, 4, 0.34) 25%, transparent 25% 50%, rgba(3, 4, 4, 0.34) 50% 75%, transparent 75%);
+  background-size: 8px 8px, 13px 13px, 12px 12px;
+  mix-blend-mode: multiply;
+  opacity: 0.78;
+}
+
+.fire-wipe::after {
+  background:
+    repeating-linear-gradient(0deg, rgba(247, 240, 220, 0.16) 0 1px, transparent 1px 9px),
+    radial-gradient(circle at 48% 82%, rgba(247, 240, 220, 0.42), transparent 28%);
+  mix-blend-mode: screen;
+  opacity: 0.34;
+}
+
+.js.is-fire-wipe .fire-wipe {
+  animation: fireWipe 1.55s steps(18, end) both;
+}
+
+@keyframes fireWipe {
+  0% {
+    opacity: 0;
+    transform: translateY(110%) scaleX(1);
+  }
+  14% {
+    opacity: 1;
+  }
+  58% {
+    opacity: 1;
+    transform: translateY(0) scaleX(1.04);
+  }
+  72% {
+    opacity: 1;
+    transform: translateY(0) scaleX(1.04);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-118%) scaleX(1);
+  }
+}
+
 .ritual {
   position: fixed;
   inset: 0;

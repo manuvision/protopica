@@ -27,6 +27,7 @@
   let currentFireScale = 0.34;
   let activeSection = "home";
   let soundMuted = window.localStorage.getItem("protopicaFireMuted") === "true";
+  let isWiping = false;
 
   function fireScaleForIndex(index) {
     const progress = index / Math.max(1, messages.length - 1);
@@ -134,6 +135,23 @@
     showSection(activeSection || "home");
   }
 
+  function revealWithFireWipe() {
+    if (isWiping) {
+      return;
+    }
+    isWiping = true;
+    activeSection = "home";
+    setFireScale(messages.length - 1);
+    root.classList.add("is-fire-wipe");
+    window.setTimeout(function () {
+      revealSite();
+    }, 880);
+    window.setTimeout(function () {
+      root.classList.remove("is-fire-wipe");
+      isWiping = false;
+    }, 1660);
+  }
+
   function resetRitual() {
     messageIndex = 0;
     isChanging = false;
@@ -154,7 +172,7 @@
     }
 
     if (messageIndex >= messages.length - 1) {
-      revealSite();
+      revealWithFireWipe();
       return;
     }
 

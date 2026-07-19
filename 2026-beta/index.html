@@ -39,9 +39,9 @@
     <link rel="icon" href="favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&amp;family=Fragment+Mono:ital@0;1&amp;family=Spline+Sans:wght@400..700&amp;display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=20260719-purple-type1" />
-    <script defer src="dither.js?v=20260719-intro2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Manrope:wght@400;500;600;700;800&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css?v=20260719-cinematic-rooms1" />
+    <script defer src="dither.js?v=20260719-kpis1"></script>
     <script defer src="blog.js?v=20260719-availability1"></script>
   </head>
   <body>
@@ -109,62 +109,58 @@
         </section>
 
         <section class="screen screen--work" id="work" data-section="work" aria-labelledby="work-title" hidden>
-          <div class="screen__inner screen__inner--wide">
-            <header class="screen-head screen-head--row">
-              <div>
-                <p class="eyebrow">Work</p>
-                <h2 id="work-title">Ideas tested in public.</h2>
-                <p>
-                  Original worlds, installations, films, learning programs and research
-                  experiments developed by Protopica and its collaborators.
-                </p>
-              </div>
-              <div class="kpi-grid" aria-label="Selected Protopica metrics">
-                <span><strong>100K+</strong> exhibition audience</span>
-                <span><strong>150+</strong> talks + workshops</span>
-                <span><strong>$200K</strong> hardware donated</span>
-                <span><strong>1M+</strong> film audience</span>
-              </div>
+          <div class="screen__inner screen__inner--wide work-shell">
+            <header class="screen-head screen-head--compact">
+              <p class="eyebrow">Work / In Public</p>
+              <h2 id="work-title">Ideas tested where people can feel them.</h2>
+              <p>Selected exhibitions, installations and films built by Protopica and its collaborators.</p>
             </header>
 
-            <div class="exhibition-grid" aria-label="Selected Protopica work">
-              <a class="exhibition-card" href="https://www.instagram.com/p/DO8g7k8EZUS/?img_index=1" target="_blank" rel="noopener noreferrer">
+            <dl class="impact-strip" aria-label="Selected Protopica metrics" data-kpi-strip>
+              <div class="impact-metric impact-metric--one"><dt data-count-to="100" data-count-suffix="K+">0</dt><dd>Exhibition audience</dd><dd>New York / Barcelona / Vancouver</dd></div>
+              <div class="impact-metric impact-metric--two"><dt data-count-to="150" data-count-suffix="+">0</dt><dd>Talks + workshops</dd><dd>Keynotes to classrooms</dd></div>
+              <div class="impact-metric impact-metric--three"><dt data-count-to="200" data-count-prefix="$" data-count-suffix="K">0</dt><dd>Hardware donated</dd><dd>Access made tangible</dd></div>
+              <div class="impact-metric impact-metric--four"><dt data-count-to="1" data-count-suffix="M+">0</dt><dd>Film audience</dd><dd>Online + in theatres</dd></div>
+            </dl>
+
+            <div class="story-carousel story-carousel--work" aria-label="Selected Protopica work">
+              <a class="story-card" href="https://www.instagram.com/p/DO8g7k8EZUS/?img_index=1" target="_blank" rel="noopener noreferrer">
                 <img src="protopica/protopica-artechouse.webp" alt="Visitors moving through Protopica's immersive ocean world at ARTECHOUSE in New York" />
-                <div>
-                  <p class="eyebrow">Exhibition / NYC / Current</p>
+                <div class="story-card__overlay">
+                  <p class="eyebrow">NYC / 2025-10-09 - Present</p>
                   <h3>ARTECHOUSE</h3>
                   <p>A 270-degree immersive 3D ocean world with spatial audio surrounding visitors with a Caribbean future.</p>
-                  <dl><div><dt>Audience</dt><dd>40K+</dd></div><div><dt>Form</dt><dd>3D/18K</dd></div><div><dt>Partner</dt><dd>OTOY</dd></div></dl>
+                  <dl><div><dt>Audience</dt><dd>40K+</dd></div><div><dt>Technology</dt><dd>3D / 18K</dd></div><div><dt>Partner</dt><dd>OTOY</dd></div></dl>
                 </div>
               </a>
 
-              <a class="exhibition-card" href="https://www.instagram.com/p/DJcrHXgucSe/?img_index=1" target="_blank" rel="noopener noreferrer">
+              <a class="story-card" href="https://www.instagram.com/p/DJcrHXgucSe/?img_index=1" target="_blank" rel="noopener noreferrer">
                 <img src="protopica/sonar-thumbnail.jpeg" alt="A visitor watching Protopica inside the Sonar+D installation in Barcelona" />
-                <div>
-                  <p class="eyebrow">Installation / Barcelona</p>
+                <div class="story-card__overlay">
+                  <p class="eyebrow">Barcelona / 2025-06-12</p>
                   <h3>Sónar+D</h3>
                   <p>An EEG-driven installation where mental state shaped the visuals in real time.</p>
-                  <dl><div><dt>Audience</dt><dd>52K+</dd></div><div><dt>Form</dt><dd>BCI/EEG</dd></div><div><dt>Partner</dt><dd>Neurosity</dd></div></dl>
+                  <dl><div><dt>Audience</dt><dd>52K+</dd></div><div><dt>Technology</dt><dd>BCI / EEG</dd></div><div><dt>Partner</dt><dd>Neurosity</dd></div></dl>
                 </div>
               </a>
 
-              <a class="exhibition-card" href="https://www.instagram.com/p/DAd9e01vZp5/" target="_blank" rel="noopener noreferrer">
+              <a class="story-card" href="https://www.instagram.com/p/DAd9e01vZp5/" target="_blank" rel="noopener noreferrer">
                 <img src="protopica/protopica-sonar.jpg" alt="Visitors experiencing the Protopica installation at VIFF Signals in Vancouver" />
-                <div>
-                  <p class="eyebrow">Festival / Vancouver</p>
+                <div class="story-card__overlay">
+                  <p class="eyebrow">Vancouver / 2024-09-27</p>
                   <h3>VIFF Signals</h3>
                   <p>Protopica expanded from GenAI cinema into an immersive platform rooted in cultural worldbuilding.</p>
-                  <dl><div><dt>Audience</dt><dd>1.5K+</dd></div><div><dt>Form</dt><dd>BCI/EEG</dd></div><div><dt>Partner</dt><dd>Signals</dd></div></dl>
+                  <dl><div><dt>Audience</dt><dd>1.5K+</dd></div><div><dt>Technology</dt><dd>BCI / EEG</dd></div><div><dt>Partner</dt><dd>Signals</dd></div></dl>
                 </div>
               </a>
 
-              <a class="exhibition-card" href="https://www.instagram.com/p/DFgDk9rR67K/?img_index=1" target="_blank" rel="noopener noreferrer">
+              <a class="story-card" href="https://www.instagram.com/p/DFgDk9rR67K/?img_index=1" target="_blank" rel="noopener noreferrer">
                 <img src="protopica/sora-selects-heic.jpg" alt="Manuel Sainsily and will.i.am at Sora Selects in New York" />
-                <div>
-                  <p class="eyebrow">Cinema / NYC</p>
+                <div class="story-card__overlay">
+                  <p class="eyebrow">NYC / 2024-07 - 2025-02</p>
                   <h3>OpenAI Sora Selects</h3>
                   <p>First OpenAI artists to release an AI film screened at the Metrograph Theatre.</p>
-                  <dl><div><dt>Audience</dt><dd>1M+</dd></div><div><dt>Form</dt><dd>AI Film</dd></div><div><dt>Stage</dt><dd>Metrograph</dd></div></dl>
+                  <dl><div><dt>Audience</dt><dd>1M+</dd></div><div><dt>Technology</dt><dd>AI Film</dd></div><div><dt>Stage</dt><dd>Metrograph</dd></div></dl>
                 </div>
               </a>
             </div>
@@ -210,22 +206,40 @@
         </section>
 
         <section class="screen" id="collaborate" data-section="collaborate" aria-labelledby="collaborate-title" hidden>
-          <div class="screen__inner screen__inner--stack">
-            <header class="screen-head">
-              <p class="eyebrow">Collaborate</p>
-              <h2 id="collaborate-title">Bring us the unknown. Leave with a way forward.</h2>
-              <p>
-                We work with creators and organizations to research opportunities,
-                test ideas and build projects that require both technical depth and creative judgment.
-              </p>
+          <div class="screen__inner screen__inner--stack collaboration-shell">
+            <header class="screen-head screen-head--compact">
+              <p class="eyebrow">Collaborate / Three Ways In</p>
+              <h2 id="collaborate-title">Think clearly. Make boldly. Share what works.</h2>
+              <p>Three ways we help ideas move from uncertainty into the world.</p>
             </header>
-            <div class="service-grid">
-              <article><span>Advisory</span><h3>Make better decisions before expensive bets.</h3><p>Emerging technology strategy, AI workflow planning, tool evaluation and cultural review.</p></article>
-              <article><span>Prototyping</span><h3>Prove the idea before scaling it.</h3><p>Interactive prototypes, AI experiments, real-time media systems and feasibility studies.</p></article>
-              <article><span>Worldbuilding and IP</span><h3>Build a world that can grow.</h3><p>Story systems, character logic, creative bibles, visual development and production planning.</p></article>
-              <article><span>Exhibitions</span><h3>Give audiences something they can enter.</h3><p>Immersive installations, spatial storytelling, BCI experiments and public programming.</p></article>
-              <article><span>Cultural Archiving</span><h3>Carry memory into new forms.</h3><p>Oral history, language preservation, diaspora archives and community-led documentation.</p></article>
-              <article><span>Access</span><h3>Expand who gets to gather.</h3><p>Learning programs, hardware donations and public-value experiments designed to widen participation.</p></article>
+            <div class="story-carousel story-carousel--pillars" aria-label="Ways to collaborate with Protopica">
+              <article class="story-card pillar-card">
+                <img src="protopica/research-hand.jpg" alt="An abstract blue image of hands reaching through a digital surface" />
+                <div class="story-card__overlay">
+                  <p class="eyebrow">01 / Consulting</p>
+                  <h3>See the whole system before making the bet.</h3>
+                  <p>Executive advisory, emerging-technology strategy and practical planning.</p>
+                  <ul class="story-card__tags"><li>Advisory</li><li>Strategy</li><li>Roadmaps</li></ul>
+                </div>
+              </article>
+              <article class="story-card pillar-card">
+                <img src="protopica/memory-landscape.png" alt="A luminous digital landscape in cyan, magenta and violet" />
+                <div class="story-card__overlay">
+                  <p class="eyebrow">02 / Building</p>
+                  <h3>Make the idea real enough to learn from.</h3>
+                  <p>R&amp;D, rapid prototypes and immersive installations built for real audiences.</p>
+                  <ul class="story-card__tags"><li>R&amp;D</li><li>Prototypes</li><li>Installations</li></ul>
+                </div>
+              </article>
+              <article class="story-card pillar-card">
+                <img src="protopica/education.jpg" alt="Two creators reviewing a camera together during a workshop" />
+                <div class="story-card__overlay">
+                  <p class="eyebrow">03 / Teaching</p>
+                  <h3>Turn hard-won experience into shared capacity.</h3>
+                  <p>Corporate training, Ivy League university lectures and public speaking that meet people where they are.</p>
+                  <ul class="story-card__tags"><li>Training</li><li>Lectures</li><li>Speaking</li></ul>
+                </div>
+              </article>
             </div>
             <div class="section-actions" aria-label="Continue from Collaborate">
               <button class="button button--primary" type="button" data-section-target="education">Explore Education</button>
@@ -235,26 +249,47 @@
         </section>
 
         <section class="screen" id="education" data-section="education" aria-labelledby="education-title" hidden>
-          <div class="screen__inner screen__inner--stack">
-            <header class="screen-head">
-              <p class="eyebrow">Education</p>
-              <h2 id="education-title">Learn how to question, shape and use emerging technology.</h2>
-              <p>
-                We create learning experiences for students, educators, professionals,
-                executives and creative communities.
-              </p>
+          <div class="screen__inner screen__inner--stack education-shell">
+            <header class="screen-head screen-head--compact">
+              <p class="eyebrow">Education / Classrooms + Stages</p>
+              <h2 id="education-title">Complex ideas, made useful.</h2>
+              <p>Lectures, workshops and public conversations grounded in creative practice.</p>
             </header>
-            <div class="service-grid learning-grid">
-              <article class="learning-card learning-card--universities">
-                <span>Universities</span>
-                <h3>From Harvard to Oxford.</h3>
-                <p>Curriculum, workshops, lectures and studio programs connecting technical literacy with creative practice.</p>
-                <button class="card-action" type="button" data-university-modal-open aria-haspopup="dialog" aria-controls="universities-modal">View lecture archive</button>
+            <div class="education-showcase">
+              <article class="education-feature">
+                <img src="protopica/education.jpg" alt="Manuel Sainsily teaching during a creative technology workshop" />
+                <div>
+                  <p class="eyebrow">University Lectures + Workshops</p>
+                  <h3>From studio critique to lecture hall.</h3>
+                  <p>AI, XR, worldbuilding and cultural preservation taught through work we have actually made.</p>
+                </div>
               </article>
-              <article><span>Organizations</span><h3>Teams learning before they scale.</h3><p>Executive sessions and training focused on practical, responsible adoption.</p></article>
-              <article><span>Creators</span><h3>Tools without losing the hand.</h3><p>Masterclasses and workshops for artists building new skills, systems and projects.</p></article>
-              <article><span>Communities</span><h3>Access around the circle.</h3><p>Programs designed to expand participation in emerging technology.</p></article>
-              <article><span>Speaking</span><h3>From FITC to VIFF.</h3><p>Talks on worldbuilding, creative technology, AI, cultural preservation and human-centred innovation.</p></article>
+
+              <div class="education-archive" aria-label="University talks and workshops">
+                <div class="university-archive__grid">
+                  <article class="university-talk"><div class="university-talk__logo"><img src="protopica/universities/columbia.png" alt="Columbia University logo" loading="lazy" /></div><div><p class="eyebrow">New York / Nov 2025</p><h3>Columbia University</h3><span class="ivy-badge">Ivy League</span><p>Disrupt the narrative: Conversations that shape community.</p><a href="https://www.instagram.com/p/DQ4Y_oAEQMx/?img_index=1" target="_blank" rel="noopener noreferrer">View lecture</a></div></article>
+                  <article class="university-talk"><div class="university-talk__logo"><img src="protopica/universities/stanford.png" alt="Stanford d.school logo" loading="lazy" /></div><div><p class="eyebrow">Stanford / May 2025</p><h3>Stanford d.school</h3><p>XR Prototyping with AI.</p><a href="https://www.linkedin.com/in/manuvision/details/recommendations/?detailScreenTabIndex=1" target="_blank" rel="noopener noreferrer">View lecture</a></div></article>
+                  <article class="university-talk"><div class="university-talk__logo"><img src="protopica/universities/oxford.png" alt="Oxford University logo" loading="lazy" /></div><div><p class="eyebrow">Oxford / Apr 2025</p><h3>Oxford University</h3><p>OpenAI Sora project and workflow breakdown.</p><a href="https://lifelong-learning.ox.ac.uk/courses/generative-ai-for-creative-professionals" target="_blank" rel="noopener noreferrer">View lecture</a></div></article>
+                  <article class="university-talk"><div class="university-talk__logo"><img src="protopica/universities/harvard.png" alt="Harvard University logo" loading="lazy" /></div><div><p class="eyebrow">Cambridge / Apr 2025</p><h3>Harvard University</h3><span class="ivy-badge">Ivy League</span><p>HarvardXR 2025: The Augmented Self.</p><a href="https://www.youtube.com/watch?v=9ozmGsu9g3o" target="_blank" rel="noopener noreferrer">Watch lecture</a></div></article>
+                  <article class="university-talk"><div class="university-talk__logo"><img src="protopica/universities/ucsd.png" alt="UC San Diego logo" loading="lazy" /></div><div><p class="eyebrow">San Diego / Mar 2025</p><h3>UC San Diego</h3><p>HackXR: XR hackathon.</p><a href="https://www.youtube.com/shorts/juuCQhf9_MY" target="_blank" rel="noopener noreferrer">View workshop</a></div></article>
+                  <article class="university-talk"><div class="university-talk__logo"><img src="protopica/universities/mit.png" alt="MIT logo" loading="lazy" /></div><div><p class="eyebrow">Cambridge / Jan 2025</p><h3>MIT</h3><p>AI and creative technology.</p><a href="https://www.instagram.com/p/DFXsojMRgtf/" target="_blank" rel="noopener noreferrer">View lecture</a></div></article>
+                  <article class="university-talk"><div class="university-talk__logo"><img src="protopica/universities/ocad.png" alt="OCAD University logo" loading="lazy" /></div><div><p class="eyebrow">Toronto / Feb 2024</p><h3>OCAD University</h3><p>Challenging mainstream narratives through worldbuilding.</p><a href="https://www.instagram.com/p/C3X5hKvAHQg/" target="_blank" rel="noopener noreferrer">View lecture</a></div></article>
+                  <article class="university-talk"><div class="university-talk__logo"><img src="protopica/universities/umass-boston.png" alt="UMass Boston logo" loading="lazy" /></div><div><p class="eyebrow">Boston / 2023 + 2024</p><h3>UMass Boston</h3><p>AI and XR for cultural heritage preservation.</p><a href="https://www.instagram.com/p/DBRZFSUAicg/?img_index=1" target="_blank" rel="noopener noreferrer">View lectures</a></div></article>
+                  <article class="university-talk"><div class="university-talk__logo"><img src="protopica/universities/mcgill.png" alt="McGill University logo" loading="lazy" /></div><div><p class="eyebrow">Montreal / Sep 2023</p><h3>McGill University</h3><p>Learn AR / VR curriculum.</p><a href="https://www.instagram.com/p/Cu5VPnRgPvw/" target="_blank" rel="noopener noreferrer">View curriculum</a></div></article>
+                </div>
+
+                <section class="public-stages" aria-labelledby="public-stages-title">
+                  <div><p class="eyebrow">Beyond Campus</p><h3 id="public-stages-title">Selected public stages.</h3></div>
+                  <div class="stage-links">
+                    <a href="https://lu.ma/gbuv7aip" target="_blank" rel="noopener noreferrer"><span>San Francisco</span>Runway Meetup</a>
+                    <a href="https://www.instagram.com/hyperconference/" target="_blank" rel="noopener noreferrer"><span>Winnipeg</span>Hyper Conference</a>
+                    <a href="https://www.meta.ai/" target="_blank" rel="noopener noreferrer"><span>Silicon Valley</span>Meta AI Bootcamp</a>
+                    <a href="https://sora.openai.com/" target="_blank" rel="noopener noreferrer"><span>New York</span>Sora Selects</a>
+                    <a href="https://www.sxsw.com/" target="_blank" rel="noopener noreferrer"><span>Austin</span>SXSW</a>
+                    <a href="https://signals.digibc.org/digibc_projects/protopica-2/" target="_blank" rel="noopener noreferrer"><span>Vancouver</span>VIFF Signals</a>
+                  </div>
+                </section>
+              </div>
             </div>
             <div class="section-actions" aria-label="Continue from Education">
               <button class="button button--primary" type="button" data-section-target="about" data-education-next>Meet the People Behind It</button>
@@ -272,26 +307,26 @@
               </div>
             </header>
 
-            <div class="team-grid">
-              <article class="person-card">
+            <div class="story-carousel team-carousel" aria-label="The Protopica team">
+              <article class="story-card person-card person-card--manu">
                 <img src="protopica/portrait-manu.png" alt="Portrait of Manuel Sainsily" />
-                <div>
+                <div class="story-card__overlay">
                   <p class="eyebrow">CO-FOUNDER / Creative Technologist</p>
                   <h3>Manuel Sainsily</h3>
                   <p>Creative Director from Guadeloupe, based in Montreal, working where art, technology and culture meet. With 15+ years across IBM, Immersion, Unity and Adobe, he builds AI, XR, haptics and design systems for human-centered worlds.</p>
                 </div>
               </article>
-              <article class="person-card">
+              <article class="story-card person-card person-card--will">
                 <img src="protopica/portrait-will.png" alt="Portrait of Will Selviz" />
-                <div>
+                <div class="story-card__overlay">
                   <p class="eyebrow">CO-FOUNDER / Creative Technologist</p>
                   <h3>Will Selviz</h3>
                   <p>Afro-Caribbean multidisciplinary designer born in Venezuela, raised in Kuwait and based in Canada. Founder of RENDRD Media, he creates 3D, VR, AR and 360 stories for clients including Nike, Prada, REVOLT, Ciroc, Bell Media and Universal Music while opening pathways for BIPOC youth.</p>
                 </div>
               </article>
-              <article class="person-card">
-                <img class="debi-portrait" src="protopica/portrait-debi.jpg" alt="Portrait of Debi Wong" />
-                <div>
+              <article class="story-card person-card person-card--debi">
+                <img src="protopica/portrait-debi.jpg" alt="Portrait of Debi Wong" />
+                <div class="story-card__overlay">
                   <p class="eyebrow">Producer</p>
                   <h3>Debi Wong</h3>
                   <p>XR producer, creative director and multidisciplinary artist working across opera, creative technology and cultural programming.</p>
@@ -337,105 +372,5 @@
       </div>
     </main>
 
-    <dialog class="university-archive" id="universities-modal" data-university-modal aria-label="University lectures and workshops">
-      <form method="dialog">
-        <button class="modal-close" type="submit" aria-label="Close university lecture archive">×</button>
-      </form>
-      <div class="university-archive__inner">
-        <div class="university-archive__grid" aria-label="University talks and workshops">
-          <article class="university-talk">
-            <div class="university-talk__logo"><img src="protopica/universities/columbia.png" alt="Columbia University logo" loading="lazy" /></div>
-            <div>
-              <p class="eyebrow">New York, NY / November 2025</p>
-              <h3>Columbia University</h3>
-              <span class="ivy-badge">Ivy League</span>
-              <p>Disrupt the narrative: Conversations that shape community (Lecture)</p>
-              <a href="https://www.instagram.com/p/DQ4Y_oAEQMx/?img_index=1" target="_blank" rel="noopener noreferrer">See source</a>
-            </div>
-          </article>
-
-          <article class="university-talk">
-            <div class="university-talk__logo"><img src="protopica/universities/stanford.png" alt="Stanford d.school logo" loading="lazy" /></div>
-            <div>
-              <p class="eyebrow">Stanford, CA / May 2025</p>
-              <h3>Stanford d.school</h3>
-              <p>XR Prototyping with AI (Lecture)</p>
-              <a href="https://www.linkedin.com/in/manuvision/details/recommendations/?detailScreenTabIndex=1" target="_blank" rel="noopener noreferrer">See source</a>
-            </div>
-          </article>
-
-          <article class="university-talk">
-            <div class="university-talk__logo"><img src="protopica/universities/oxford.png" alt="Oxford University logo" loading="lazy" /></div>
-            <div>
-              <p class="eyebrow">Oxford, UK / April 2025</p>
-              <h3>Oxford University</h3>
-              <p>OpenAI Sora Project &amp; Workflow Breakdown (Lecture)</p>
-              <a href="https://lifelong-learning.ox.ac.uk/courses/generative-ai-for-creative-professionals" target="_blank" rel="noopener noreferrer">See source</a>
-            </div>
-          </article>
-
-          <article class="university-talk">
-            <div class="university-talk__logo"><img src="protopica/universities/harvard.png" alt="Harvard University logo" loading="lazy" /></div>
-            <div>
-              <p class="eyebrow">Cambridge, MA / April 2025</p>
-              <h3>Harvard University</h3>
-              <span class="ivy-badge">Ivy League</span>
-              <p>HarvardXR 2025: The Augmented Self (Lecture)</p>
-              <a href="https://www.youtube.com/watch?v=9ozmGsu9g3o" target="_blank" rel="noopener noreferrer">See source</a>
-            </div>
-          </article>
-
-          <article class="university-talk">
-            <div class="university-talk__logo"><img src="protopica/universities/ucsd.png" alt="UC San Diego logo" loading="lazy" /></div>
-            <div>
-              <p class="eyebrow">San Diego, CA / March 2025</p>
-              <h3>UC San Diego</h3>
-              <p>HackXR (XR Hackathon)</p>
-              <a href="https://www.youtube.com/shorts/juuCQhf9_MY" target="_blank" rel="noopener noreferrer">See source</a>
-            </div>
-          </article>
-
-          <article class="university-talk">
-            <div class="university-talk__logo"><img src="protopica/universities/mit.png" alt="MIT logo" loading="lazy" /></div>
-            <div>
-              <p class="eyebrow">Cambridge, MA / January 2025</p>
-              <h3>MIT</h3>
-              <p>AI &amp; Creative Technology (Lecture)</p>
-              <a href="https://www.instagram.com/p/DFXsojMRgtf/" target="_blank" rel="noopener noreferrer">See source</a>
-            </div>
-          </article>
-
-          <article class="university-talk">
-            <div class="university-talk__logo"><img src="protopica/universities/ocad.png" alt="OCAD University logo" loading="lazy" /></div>
-            <div>
-              <p class="eyebrow">Toronto, Canada / February 2024</p>
-              <h3>OCAD University</h3>
-              <p>Protopica: Challenging mainstream narratives through world building (Lecture)</p>
-              <a href="https://www.instagram.com/p/C3X5hKvAHQg/" target="_blank" rel="noopener noreferrer">See source</a>
-            </div>
-          </article>
-
-          <article class="university-talk">
-            <div class="university-talk__logo"><img src="protopica/universities/umass-boston.png" alt="UMass Boston logo" loading="lazy" /></div>
-            <div>
-              <p class="eyebrow">Boston, MA / November 2023 &amp; October 2024</p>
-              <h3>UMass Boston</h3>
-              <p>AI &amp; XR for Cultural Heritage Preservation (Lectures)</p>
-              <a href="https://www.instagram.com/p/DBRZFSUAicg/?img_index=1" target="_blank" rel="noopener noreferrer">See source</a>
-            </div>
-          </article>
-
-          <article class="university-talk">
-            <div class="university-talk__logo"><img src="protopica/universities/mcgill.png" alt="McGill University logo" loading="lazy" /></div>
-            <div>
-              <p class="eyebrow">Montreal, Canada / September 2023</p>
-              <h3>McGill University</h3>
-              <p>Learn AR/VR (Curriculum)</p>
-              <a href="https://www.instagram.com/p/Cu5VPnRgPvw/" target="_blank" rel="noopener noreferrer">See source</a>
-            </div>
-          </article>
-        </div>
-      </div>
-    </dialog>
   </body>
 </html>

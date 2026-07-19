@@ -9,8 +9,7 @@
   const audio = document.querySelector("[data-fire-audio]");
   const soundToggle = document.querySelector("[data-sound-toggle]");
   const contactForm = document.querySelector("[data-contact-form]");
-  const universityModal = document.querySelector("[data-university-modal]");
-  const universityModalOpeners = Array.from(document.querySelectorAll("[data-university-modal-open]"));
+  const impactValues = Array.from(document.querySelectorAll("[data-count-to]"));
   const menuToggle = document.querySelector("#menu-toggle");
   const navLinks = document.querySelector("#nav-links");
   const navButtons = Array.from(document.querySelectorAll("[data-section-target]"));
@@ -45,6 +44,7 @@
   let isIntroTransitioning = false;
   let isRoomTransitioning = false;
   let researchAvailability = null;
+  let impactAnimationFrame = 0;
 
   function fireScaleForIndex(index) {
     const progress = index / Math.max(1, messages.length - 1);
@@ -140,6 +140,50 @@
     }
   }
 
+  function renderImpactValue(element, value) {
+    const prefix = element.dataset.countPrefix || "";
+    const suffix = element.dataset.countSuffix || "";
+    element.textContent = prefix + value.toLocaleString("en-US") + suffix;
+  }
+
+  function animateImpactValues() {
+    if (!impactValues.length) {
+      return;
+    }
+
+    window.cancelAnimationFrame(impactAnimationFrame);
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      impactValues.forEach(function (element) {
+        renderImpactValue(element, Number(element.dataset.countTo) || 0);
+      });
+      return;
+    }
+
+    impactValues.forEach(function (element) {
+      renderImpactValue(element, 0);
+    });
+
+    const startedAt = window.performance.now();
+    const duration = 980;
+
+    function tick(now) {
+      const progress = Math.min(1, (now - startedAt) / duration);
+      const eased = 1 - Math.pow(1 - progress, 3);
+
+      impactValues.forEach(function (element) {
+        const target = Number(element.dataset.countTo) || 0;
+        renderImpactValue(element, Math.round(target * eased));
+      });
+
+      if (progress < 1) {
+        impactAnimationFrame = window.requestAnimationFrame(tick);
+      }
+    }
+
+    impactAnimationFrame = window.requestAnimationFrame(tick);
+  }
+
   function showSection(sectionId, options) {
     const nextSection = screens.find(function (screen) {
       return screen.dataset.section === sectionId;
@@ -166,6 +210,9 @@
 
     updateNavState(sectionId);
     updateLocation(sectionId, options);
+    if (sectionId === "work") {
+      window.requestAnimationFrame(animateImpactValues);
+    }
   }
 
   function revealSite() {
@@ -467,28 +514,6 @@
       const subject = encodeURIComponent("Protopica project signal");
       const body = encodeURIComponent(lines.join("\n\n"));
       window.location.href = "mailto:hello@protopica.com?subject=" + subject + "&body=" + body;
-    });
-  }
-
-  if (universityModal && universityModalOpeners.length) {
-    universityModalOpeners.forEach(function (button) {
-      button.addEventListener("click", function () {
-        if (typeof universityModal.showModal === "function") {
-          universityModal.showModal();
-        } else {
-          universityModal.setAttribute("open", "");
-        }
-      });
-    });
-
-    universityModal.addEventListener("click", function (event) {
-      if (event.target === universityModal) {
-        if (typeof universityModal.close === "function") {
-          universityModal.close();
-        } else {
-          universityModal.removeAttribute("open");
-        }
-      }
     });
   }
 

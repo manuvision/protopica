@@ -326,15 +326,17 @@ video {
   position: relative;
   z-index: 2;
   width: min(88vw, 1040px);
-  min-height: 320px;
+  min-height: 460px;
   display: grid;
+  grid-template-rows: 178px 3.8em;
   align-content: center;
   justify-items: center;
+  row-gap: 18px;
   text-align: center;
   padding: 32px;
+  transform: translateY(-4vh);
 }
 
-.ritual-brand__text,
 .eyebrow {
   margin: 0 0 18px;
   color: var(--cyan);
@@ -346,52 +348,31 @@ video {
 
 .ritual-brand {
   position: relative;
-  width: clamp(96px, 10vw, 132px);
-  height: clamp(88px, 10vw, 124px);
+  width: clamp(144px, 13vw, 178px);
+  height: clamp(152px, 13.7vw, 188px);
   display: grid;
   place-items: center;
-  margin: 0 0 14px;
-}
-
-.ritual-brand__text,
-.ritual-brand__logo {
-  grid-area: 1 / 1;
+  align-self: end;
   margin: 0;
-  transition:
-    opacity 620ms ease,
-    transform 720ms cubic-bezier(0.16, 1, 0.3, 1),
-    filter 620ms ease;
 }
 
-.ritual-brand__text {
-  opacity: 1;
-  transform: translateY(0) scale(1);
+.ritual-brand__logo {
+  margin: 0;
 }
 
 .ritual-brand__logo {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  opacity: 0;
-  transform: translateY(10px) scale(0.9);
-  filter: blur(4px) drop-shadow(0 0 18px rgba(181, 156, 255, 0));
-}
-
-.is-network-step .ritual-brand__text {
-  opacity: 0;
-  transform: translateY(-8px) scale(0.94);
-  filter: blur(3px);
-}
-
-.is-network-step .ritual-brand__logo {
   opacity: 1;
-  transform: translateY(0) scale(1);
   filter: blur(0) drop-shadow(0 0 18px rgba(181, 156, 255, 0.2));
 }
 
 .ritual-line {
   max-width: 980px;
-  min-height: 2.2em;
+  width: 100%;
+  height: 3.8em;
+  align-self: start;
   margin: 0;
   color: var(--bone);
   font-family: var(--mono);
@@ -2008,17 +1989,22 @@ video {
 
   .ritual-content {
     width: min(100% - 26px, 760px);
+    min-height: 540px;
+    grid-template-rows: 136px 6.6em;
+    row-gap: 18px;
+    padding: 24px 0;
+    transform: translateY(-2.5vh);
   }
 
   .ritual-line {
     font-size: 2.05rem;
     line-height: 1.08;
+    height: 6.6em;
   }
 
   .ritual-brand {
-    width: 100px;
-    height: 105px;
-    margin-bottom: 14px;
+    width: 128px;
+    height: 136px;
   }
 
   .home-copy h2,
@@ -2724,15 +2710,10 @@ a.story-card:focus-visible {
 }
 
 /* Readable type scale and full-width education archive. */
-.ritual-brand__text,
 .eyebrow {
   margin-bottom: 12px;
   font-size: 0.86rem;
   line-height: 1.45;
-}
-
-.ritual-brand__text {
-  margin: 0;
 }
 
 .home-copy h2,
@@ -2848,7 +2829,8 @@ a.story-card:focus-visible {
 .education-shell .university-archive__grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: start;
+  grid-auto-rows: 1fr;
+  align-items: stretch;
   gap: 12px;
   border: 0;
   background: transparent;
@@ -2856,8 +2838,9 @@ a.story-card:focus-visible {
 
 .education-shell .university-talk {
   min-height: 0;
+  height: 100%;
   grid-template-columns: 56px minmax(0, 1fr);
-  align-self: start;
+  align-self: stretch;
   gap: 12px;
   padding: 14px;
   border: 1px solid rgba(159, 134, 255, 0.2);
@@ -2865,6 +2848,12 @@ a.story-card:focus-visible {
   background:
     linear-gradient(145deg, rgba(159, 134, 255, 0.09), transparent 62%),
     rgba(16, 13, 25, 0.92);
+}
+
+.education-shell .university-talk > div:not(.university-talk__logo) {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .education-shell .university-talk__logo {
@@ -2897,7 +2886,8 @@ a.story-card:focus-visible {
 }
 
 .education-shell .university-talk a {
-  margin-top: 9px;
+  margin-top: auto;
+  padding-top: 9px;
   color: #81e8df;
   font-size: 0.72rem;
 }
@@ -3056,7 +3046,6 @@ a.story-card:focus-visible {
 }
 
 @media (max-width: 620px) {
-  .ritual-brand__text,
   .eyebrow {
     font-size: 0.8rem;
   }

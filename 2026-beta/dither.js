@@ -17,7 +17,7 @@
   const sectionAliases = { frameworks: "collaboration", collaborate: "collaboration", learn: "education" };
 
   const messages = [
-    "Since the dawn of humanity, we have gathered around a fire to tell stories.",
+    "Since the beginning, people have gathered to tell stories.",
     "Whether you want to build something new, or preserve what already exists...",
     "...you are in the right place.",
     "Today, the fire is a network.",
@@ -499,7 +499,7 @@
       const lines = [
         ["Name", data.get("name")],
         ["Email", data.get("email")],
-        ["Theme", data.get("theme")],
+        ["Relevant support", data.get("support")],
         ["Message", data.get("message")],
       ]
         .filter(function (entry) {

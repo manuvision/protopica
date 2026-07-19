@@ -47,7 +47,7 @@
     }
     if (educationNext) {
       educationNext.dataset.sectionTarget = isAvailable ? "research" : "about";
-      educationNext.textContent = isAvailable ? "Follow the Research" : "Meet the People Behind It";
+      educationNext.textContent = isAvailable ? "Follow the Research" : "Learn More About the Team";
     }
     document.dispatchEvent(
       new CustomEvent("protopica:research-availability", {

@@ -307,7 +307,7 @@
     runDitherCssTransition({
       className: "is-dissolving",
       swapClass: "is-intro-swap",
-      duration: 1460,
+      duration: 1280,
       onComplete: function () {
         finishDitherReveal({ keepOverlay: true });
         isWiping = false;
@@ -357,7 +357,7 @@
     runDitherCssTransition({
       className: "is-room-dissolving",
       swapClass: "is-room-swap",
-      duration: 1320,
+      duration: 1180,
       onComplete: function () {
         screens.forEach(function (screen) {
           const isActive = screen === nextSection;

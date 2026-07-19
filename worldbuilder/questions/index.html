@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Protopica Worldbuilding Questions</title>
+    <meta name="description" content="A guided P.R.O.T.O.P.I.C.A worldbuilding workshop that exports to the Protopica Worldbuilder." />
+    <link rel="canonical" href="https://protopica.com/worldbuilder/questions/" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030308'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Arial,sans-serif' font-size='34' font-weight='800' fill='%23977cff'%3EQ%3C/text%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Fragment+Mono:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="questions.css?v=20260719-workshop1" />
+  </head>
+  <body>
+    <main class="question-shell">
+      <header class="question-header">
+        <nav class="question-nav" aria-label="Worldbuilder navigation">
+          <a class="brand-link" href="/worldbuilder/" aria-label="Back to Worldbuilder">
+            <span class="brand-mark">P</span>
+            <span>Worldbuilder</span>
+          </a>
+          <div class="nav-actions">
+            <a class="ghost-button" href="protopica-worldbuilding-framework.pdf" download>Download Framework PDF</a>
+            <a class="ghost-button" href="/worldbuilder/">Open Worldbuilder</a>
+          </div>
+        </nav>
+
+        <section class="intro">
+          <p class="eyebrow">P.R.O.T.O.P.I.C.A Workshop</p>
+          <h1>Build the universe slowly.</h1>
+          <p>
+            Answer one prompt at a time. The page saves locally as you go and exports a JSON you can import into the Protopica Worldbuilder.
+          </p>
+        </section>
+      </header>
+
+      <section class="workshop-card" aria-live="polite">
+        <div class="progress-row">
+          <span id="progressLabel">Question 1 / 18</span>
+          <span id="completeLabel">0 answered</span>
+          <button class="text-button" id="resetButton" type="button">Reset</button>
+        </div>
+        <div class="progress-track" aria-hidden="true">
+          <span id="progressFill"></span>
+        </div>
+
+        <ol class="step-map" id="stepMap" aria-label="Workshop steps"></ol>
+
+        <article class="question-panel">
+          <p class="question-kicker" id="questionKicker">Premise</p>
+          <h2 id="questionTitle">What is the emotional promise?</h2>
+          <p id="questionHelp"></p>
+          <textarea id="answerInput" rows="9" placeholder="Write freely. Fragments are welcome."></textarea>
+        </article>
+
+        <div class="button-row">
+          <button class="ghost-button" id="prevButton" type="button">Previous</button>
+          <button class="primary-button" id="nextButton" type="button">Next</button>
+        </div>
+      </section>
+
+      <section class="output-panel" id="outputPanel" hidden>
+        <div>
+          <p class="eyebrow">Export</p>
+          <h2>Your foundation is ready.</h2>
+          <p>
+            Download the Worldbuilder JSON and import it from the main app. The workshop notes JSON keeps the full answers organized by framework pillar.
+          </p>
+        </div>
+        <div class="output-actions">
+          <button class="primary-button" id="downloadWorldbuilderButton" type="button">Download Worldbuilder JSON</button>
+          <button class="ghost-button" id="downloadNotesButton" type="button">Download Workshop Notes</button>
+        </div>
+        <pre id="jsonPreview" aria-label="JSON preview"></pre>
+      </section>
+    </main>
+
+    <script src="questions.js?v=20260719-workshop1"></script>
+  </body>
+</html>

@@ -322,6 +322,7 @@ legend {
   background: var(--accent);
   color: #ffffff;
   padding: 0 13px;
+  text-decoration: none;
 }
 
 .primary-button.compact {
@@ -396,7 +397,11 @@ svg {
   display: block;
 }
 
-button svg {
+button svg,
+.primary-button svg,
+.secondary-button svg,
+.danger-button svg,
+.icon-button svg {
   fill: none;
   height: 18px;
   stroke: currentColor;

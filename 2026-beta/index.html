@@ -4,7 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
-      document.documentElement.className = "js is-ritual";
+      (function () {
+        var directSections = ["work", "collaborate", "frameworks", "learn", "research", "about", "contact"];
+        var initialHash = window.location.hash.replace("#", "");
+        document.documentElement.className = directSections.indexOf(initialHash) > -1
+          ? "js is-revealed is-quiet-reveal is-route-pending"
+          : "js is-ritual";
+      })();
     </script>
     <title>Protopica - Creative and Technical Research Lab</title>
     <meta
@@ -29,8 +35,8 @@
     />
     <meta name="twitter:image" content="https://protopica.com/2026-beta/protopica/og.png" />
     <link rel="icon" href="favicon.png" />
-    <link rel="stylesheet" href="styles.css?v=20260719-researchnotes1" />
-    <script defer src="dither.js?v=20260719-trim1"></script>
+    <link rel="stylesheet" href="styles.css?v=20260719-mobile1" />
+    <script defer src="dither.js?v=20260719-mobile1"></script>
     <script defer src="blog.js?v=20260719-researchnotes1"></script>
   </head>
   <body>
@@ -63,13 +69,17 @@
     <main class="site" id="site-content" aria-hidden="true">
       <nav class="site-nav" aria-label="Primary navigation">
         <button class="wordmark" type="button" data-section-target="home" aria-label="Replay the Protopica intro">PROTOPICA</button>
-        <div class="nav-links" role="list">
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open navigation">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="menu-toggle__mark" aria-hidden="true"></span>
+        </button>
+        <div class="nav-links" id="nav-links" role="list">
           <button class="nav-link is-active" type="button" data-section-target="home">Home</button>
           <button class="nav-link" type="button" data-section-target="work">Work</button>
-          <button class="nav-link" type="button" data-section-target="research">Research</button>
           <button class="nav-link" type="button" data-section-target="collaborate">Collaborate</button>
           <button class="nav-link" type="button" data-section-target="frameworks">Frameworks</button>
           <button class="nav-link" type="button" data-section-target="learn">Learn</button>
+          <button class="nav-link" type="button" data-section-target="research">Research</button>
           <button class="nav-link" type="button" data-section-target="about">About</button>
           <button class="nav-link nav-link--cta" type="button" data-section-target="contact">Let's Build</button>
         </div>
@@ -196,6 +206,7 @@
                 We work with creators and organizations to research opportunities,
                 test ideas and build projects that require both technical depth and creative judgment.
               </p>
+              <button class="button button--primary" type="button" data-section-target="contact">Let's Build</button>
             </header>
             <div class="service-grid">
               <article><span>Advisory</span><h3>Make better decisions before expensive bets.</h3><p>Emerging technology strategy, AI workflow planning, tool evaluation and cultural review.</p></article>

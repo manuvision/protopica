@@ -1,5 +1,6 @@
 (function () {
   const root = document.documentElement;
+  const body = document.body;
   const ritual = document.querySelector("#ritual");
   const canvas = document.querySelector(".ritual-canvas");
   const line = document.querySelector("[data-ritual-line]");
@@ -10,6 +11,8 @@
   const contactForm = document.querySelector("[data-contact-form]");
   const universityModal = document.querySelector("[data-university-modal]");
   const universityModalOpeners = Array.from(document.querySelectorAll("[data-university-modal-open]"));
+  const menuToggle = document.querySelector("#menu-toggle");
+  const navLinks = document.querySelector("#nav-links");
   const navButtons = Array.from(document.querySelectorAll("[data-section-target]"));
   const screens = Array.from(document.querySelectorAll("[data-section]"));
 
@@ -96,6 +99,24 @@
         isChanging = false;
       }, 780);
     }, 250);
+  }
+
+  function setMenuOpen(nextOpen, options) {
+    if (!menuToggle || !navLinks) {
+      return;
+    }
+
+    navLinks.classList.toggle("is-open", nextOpen);
+    body.classList.toggle("nav-open", nextOpen);
+    menuToggle.setAttribute("aria-expanded", String(nextOpen));
+    menuToggle.setAttribute("aria-label", nextOpen ? "Close navigation" : "Open navigation");
+    if (options && options.restoreFocus) {
+      menuToggle.focus();
+    }
+  }
+
+  function closeMenu(options) {
+    setMenuOpen(false, options);
   }
 
   function updateNavState(sectionId) {
@@ -265,11 +286,13 @@
       "is-classic-in",
       "is-intro-fade",
       "is-section-fade",
-      "is-quiet-reveal"
+      "is-quiet-reveal",
+      "is-route-pending"
     );
     if (site) {
       site.setAttribute("aria-hidden", "true");
     }
+    closeMenu();
     window.history.replaceState(null, "", window.location.pathname + window.location.search);
   }
 
@@ -352,9 +375,47 @@
     }
   }
 
+  function revealInitialSectionFromHash() {
+    if (initialSection === "home") {
+      return;
+    }
+
+    root.classList.remove("is-ritual", "is-route-pending");
+    root.classList.add("is-revealed", "is-quiet-reveal");
+    if (site) {
+      site.removeAttribute("aria-hidden");
+    }
+    if (ritual) {
+      ritual.setAttribute("aria-hidden", "true");
+    }
+    showSection(initialSection, { updateHash: false });
+  }
+
   document.addEventListener("pointerdown", handleUserAdvance, true);
   document.addEventListener("touchstart", handleUserAdvance, true);
   document.addEventListener("click", handleUserAdvance, true);
+
+  if (menuToggle && navLinks) {
+    menuToggle.addEventListener("click", function (event) {
+      event.stopPropagation();
+      setMenuOpen(menuToggle.getAttribute("aria-expanded") !== "true");
+    });
+
+    navLinks.addEventListener("click", function (event) {
+      if (event.target === navLinks) {
+        closeMenu();
+      }
+    });
+
+    document.addEventListener("click", function (event) {
+      if (!body.classList.contains("nav-open")) {
+        return;
+      }
+      if (!event.target.closest(".site-nav")) {
+        closeMenu();
+      }
+    });
+  }
 
   if (skip) {
     skip.addEventListener("click", function () {
@@ -426,6 +487,7 @@
   navButtons.forEach(function (button) {
     button.addEventListener("click", function () {
       const target = button.dataset.sectionTarget;
+      closeMenu();
       if (target === "home") {
         resetRitual();
         playSound();
@@ -437,6 +499,12 @@
   });
 
   window.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && body.classList.contains("nav-open")) {
+      event.preventDefault();
+      closeMenu({ restoreFocus: true });
+      return;
+    }
+
     if (!root.classList.contains("is-ritual")) {
       return;
     }
@@ -454,6 +522,7 @@
   renderMessage(messages[messageIndex]);
   setFireScale(messageIndex);
   updateSoundUi(false);
+  revealInitialSectionFromHash();
   window.setTimeout(playSound, 300);
   document.addEventListener("pointerdown", playSound, { once: true, capture: true });
   document.addEventListener("keydown", playSound, { once: true, capture: true });
@@ -493,7 +562,8 @@
   function pixel(x, y, size, color, alpha) {
     ctx.globalAlpha = alpha;
     ctx.fillStyle = color;
-    ctx.fillRect(x, y, size, size);
+    const squareSize = Math.max(1, Math.round(size));
+    ctx.fillRect(Math.round(x), Math.round(y), squareSize, squareSize);
   }
 
   function drawFire() {
@@ -503,11 +573,12 @@
     ctx.fillStyle = "#030404";
     ctx.fillRect(0, 0, width, height);
 
-    const cell = width > 800 ? 7 : 5;
+    const isNarrow = width < 700;
+    const cell = isNarrow ? 6 : width > 800 ? 7 : 6;
     const center = width * 0.5;
-    const base = height * (0.81 + currentFireScale * 0.05);
-    const flameHeight = Math.min(height * 0.5, 430) * currentFireScale;
-    const flameWidth = Math.min(width * 0.32, 360) * (0.78 + currentFireScale * 0.22);
+    const base = height * (isNarrow ? 0.78 + currentFireScale * 0.04 : 0.81 + currentFireScale * 0.05);
+    const flameHeight = Math.min(height * (isNarrow ? 0.38 : 0.5), isNarrow ? 340 : 430) * currentFireScale;
+    const flameWidth = Math.min(width * (isNarrow ? 0.72 : 0.32), isNarrow ? 350 : 360) * (0.8 + currentFireScale * 0.2);
     const colors = ["#5b1f15", "#ff4d2d", "#ff8a3d", "#d8ff3d", "#f7f0dc"];
 
     for (let y = 0; y < height; y += cell) {
@@ -544,7 +615,7 @@
       const y = base - flameHeight * 0.18 - i * 4 * currentFireScale + ((time * 0.3 + i * 11) % 26);
       const x = center + drift + Math.sin(i * 2.1) * 78 * currentFireScale;
       if (y > base - flameHeight * 0.92 && y < base + 8) {
-        pixel(x, y, 3, i % 3 === 0 ? "#d8ff3d" : "#ff8a3d", 0.05 + (i % 5) * 0.012);
+        pixel(x, y, isNarrow ? 4 : 3, i % 3 === 0 ? "#d8ff3d" : "#ff8a3d", 0.05 + (i % 5) * 0.012);
       }
     }
     ctx.globalAlpha = 1;

@@ -395,7 +395,9 @@
       } catch (error) {
         message = response.statusText;
       }
-      throw new Error(message + " (" + response.status + ")");
+      const requestError = new Error(message + " (" + response.status + ")");
+      requestError.status = response.status;
+      throw requestError;
     }
 
     if (response.status === 204) {
@@ -430,6 +432,19 @@
       method: "PUT",
       body: JSON.stringify(body),
     });
+  }
+
+  async function putContentWithCurrentSha(path, content, message, sha) {
+    try {
+      return await putContent(path, content, message, sha);
+    } catch (error) {
+      if (error.status !== 409) {
+        throw error;
+      }
+
+      const latest = await getContent(path, true);
+      return putContent(path, content, message, latest ? latest.sha : null);
+    }
   }
 
   function deleteContent(path, sha, message) {
@@ -578,7 +593,7 @@
       articles: sortArticles(state.articles),
     };
 
-    const response = await putContent(
+    const response = await putContentWithCurrentSha(
       config.articlesPath,
       encodeBase64Text(JSON.stringify(payload, null, 2) + "\n"),
       message,
@@ -586,7 +601,7 @@
     );
     state.articlesSha = response.content.sha;
 
-    const rssResponse = await putContent(
+    const rssResponse = await putContentWithCurrentSha(
       config.rssPath,
       encodeBase64Text(buildRssFeed()),
       "Update Protopica research RSS feed",

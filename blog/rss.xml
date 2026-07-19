@@ -5,18 +5,58 @@
     <link>https://protopica.com/#research</link>
     <description>Research, experiments and field notes from Protopica.</description>
     <language>en-ca</language>
-    <lastBuildDate>Sun, 19 Jul 2026 08:39:37 GMT</lastBuildDate>
+    <lastBuildDate>Sun, 19 Jul 2026 09:21:44 GMT</lastBuildDate>
     <atom:link href="https://protopica.com/blog/rss.xml" rel="self" type="application/rss+xml" />
     <generator>Protopica CMS</generator>
+    <item>
+      <title>Follow Protopica by RSS</title>
+      <link>https://protopica.com/?article=follow-protopica-by-rss#research</link>
+      <guid isPermaLink="true">https://protopica.com/?article=follow-protopica-by-rss#research</guid>
+      <pubDate>Sun, 19 Jul 2026 12:00:00 GMT</pubDate>
+      <dc:creator>Manuel Sainsily &amp; Will Selviz</dc:creator>
+      <description>Our Research page now has an RSS feed. We added a small RSS subscribe button so people can follow Protopica updates without needing to check the website manually. Whenever we publish a new article, field note, experiment, or process update, the feed will update automatically. It </description>
+      <content:encoded><![CDATA[<figure>
+  <img src="/blog/assets/follow-protopica-by-rss/1784452869261-1-rss-radio-wave-icon-and-rss-logo-feeds-and-news-vector.jpg" alt="rss-radio-wave-icon-and-rss-logo-feeds-and-news-vector.jpg" loading="lazy">
+  <figcaption></figcaption>
+</figure>
+
+<h3>Our Research page now has an RSS feed.</h3>
+
+<p>We added a small RSS subscribe button so people can follow Protopica updates without needing to check the website manually.</p>
+
+<p>Whenever we publish a new article, field note, experiment, or process update, the feed will update automatically. It is a simple way to keep a slower, more intentional connection to our work without depending only on social platforms or algorithms.</p>
+
+<h4>How to subscribe on desktop</h4>
+
+<p>1. Install an RSS reader extension such as <a href="https://feeder.co" target="_blank" rel="noopener noreferrer">Feeder</a> for Chrome.</p>
+
+<p>2. Open the Protopica Research page and click <strong>Subscribe via RSS</strong>, or paste this feed URL into your reader:</p>
+
+<p><a href="https://protopica.com/blog/rss.xml" target="_blank" rel="noopener noreferrer">https://protopica.com/blog/rss.xml</a></p>
+
+<p>3. New Protopica articles will appear directly in your reader when they are published.</p>
+
+<h4>How to subscribe on iPhone or iPad</h4>
+
+<p>1. Download an RSS app such as the <a href="https://feeder.co/ios" target="_blank" rel="noopener noreferrer">Feeder.co iOS app</a>.</p>
+
+<p>2. Add a new feed and paste:</p>
+
+<p><a href="https://protopica.com/blog/rss.xml" target="_blank" rel="noopener noreferrer">https://protopica.com/blog/rss.xml</a></p>
+
+<p>3. You can now receive Protopica updates from your phone, without waiting for a social media post to surface.</p>
+
+<p><em>RSS is old internet infrastructure, but it still feels right for what we are building: a quieter way to gather around the work, follow the signal, and return when something new is ready.</em></p>]]></content:encoded>
+    </item>
     <item>
       <title>Introducing Protopica 2.0</title>
       <link>https://protopica.com/?article=field-note#research</link>
       <guid isPermaLink="true">https://protopica.com/?article=field-note#research</guid>
       <pubDate>Sun, 19 Jul 2026 12:00:00 GMT</pubDate>
       <dc:creator>Manuel Sainsily &amp; Will Selviz</dc:creator>
-      <description>Today, we are launching Protopica 2.0: A clearer home for the work we do and the people we hope to build with. Protopica is a design research lab that turns emerging technologies into meaningful public experiences.</description>
+      <description>Today, we are launching Protopica 2.0: A clearer home for the work we do and the people we hope to build with. Protopica is a design research lab that turns emerging technologies into meaningful public experiences. We consult, build, and teach across immersive exhibitions, worldb</description>
       <content:encoded><![CDATA[<h3>Today, we are launching Protopica 2.0:</h3>
-  <img src="/blog/assets/field-note/1784450332029-1-screenshot-2026-07-19-at-4-35-57-am.png" alt="Protopica 2.0 website screenshot" loading="lazy">
+  <img src="/blog/assets/field-note/1784450332029-1-screenshot-2026-07-19-at-4-35-57-am.png" alt="Screenshot 2026-07-19 at 4.35.57 AM.png" loading="lazy">
   <figcaption></figcaption><br>A clearer home for the work we do and the people we hope to build with.<br><br>Protopica is a design research lab that turns emerging technologies into meaningful public experiences. We consult, build, and teach across immersive exhibitions, worldbuilding, cultural preservation, creative technology, and education.<br><br>Our new website brings that work together in one place: projects tested with real audiences, collaborations with creators and organizations, lectures and workshops, and the team behind the practice.<br><br>We also wanted the website itself to reflect how we think. It begins around a digital fire, then opens into a slower, more intentional space where analog storytelling and computational aesthetics meet.<br><br>This release is a foundation for what comes next. We will use it to share new work, field notes, open experiments, and practical ways to build something new without losing what makes it human.<br><br><em><strong>Welcome to Protopica 2.0.</strong></em>]]></content:encoded>
     </item>
   </channel>

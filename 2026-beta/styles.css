@@ -147,7 +147,7 @@ video {
   opacity: 0;
   pointer-events: none;
   image-rendering: pixelated;
-  background: var(--black);
+  background: transparent;
   contain: strict;
 }
 

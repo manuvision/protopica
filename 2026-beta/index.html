@@ -37,7 +37,7 @@
     <button class="sound-toggle" type="button" data-sound-toggle aria-label="Mute firepit sound">
       <span aria-hidden="true"></span>
     </button>
-    <div class="fire-wipe" aria-hidden="true"></div>
+    <canvas class="fire-wipe" data-dither-wipe aria-hidden="true"></canvas>
 
     <section class="ritual" id="ritual" aria-label="Story introduction">
       <canvas class="ritual-canvas" aria-hidden="true"></canvas>
@@ -66,7 +66,7 @@
           <button class="nav-link" type="button" data-section-target="services">Services</button>
           <button class="nav-link" type="button" data-section-target="framework">Framework</button>
           <button class="nav-link" type="button" data-section-target="blog">Blog</button>
-          <button class="nav-link" type="button" data-section-target="experiments">Experiments</button>
+          <button class="nav-link" type="button" data-section-target="playground">Playground</button>
           <button class="nav-link" type="button" data-section-target="contact">Contact</button>
         </div>
       </nav>
@@ -149,7 +149,7 @@
             </header>
 
             <div class="exhibition-grid" aria-label="Selected exhibitions and screenings">
-              <a class="exhibition-card exhibition-card--wide" href="https://www.instagram.com/p/DO8g7k8EZUS/?img_index=1" target="_blank" rel="noopener noreferrer">
+              <a class="exhibition-card" href="https://www.instagram.com/p/DO8g7k8EZUS/?img_index=1" target="_blank" rel="noopener noreferrer">
                 <img src="protopica/protopica-artechouse.webp" alt="Visitors moving through Protopica's immersive ocean world at ARTECHOUSE in New York" />
                 <div>
                   <p class="eyebrow">NYC / 2025-10-09 - Present</p>
@@ -188,26 +188,6 @@
                   <dl><div><dt>Audience</dt><dd>1M+</dd></div><div><dt>Technology</dt><dd>AI Film</dd></div><div><dt>Sponsor</dt><dd>OpenAI</dd></div></dl>
                 </div>
               </a>
-
-              <a class="exhibition-card" href="https://www.instagram.com/p/Cm7LZU5ARc1/" target="_blank" rel="noopener noreferrer">
-                <img src="protopica/caribeano-futurisme-stage.jpeg" alt="Caribeano-futurisme opening moment at Afromusee with Manuel on stage" />
-                <div>
-                  <p class="eyebrow">Montréal / 2022-12-01</p>
-                  <h3>OpenAI x CaFu</h3>
-                  <p>A Caribbean Futurist exhibition blending XR, AI and traditional live art performances.</p>
-                  <dl><div><dt>Audience</dt><dd>1K+</dd></div><div><dt>Technology</dt><dd>AI/Art</dd></div><div><dt>Sponsor</dt><dd>DALL-E</dd></div></dl>
-                </div>
-              </a>
-
-              <a class="exhibition-card" href="https://www.instagram.com/reel/Ck8mHGngk1_/" target="_blank" rel="noopener noreferrer">
-                <img src="protopica/sparkar-exhibition.jpg" alt="Manuel at the Oculus Gallery in the World Trade Center in New York" />
-                <div>
-                  <p class="eyebrow">NYC / 2022-10</p>
-                  <h3>Meta SparkAR</h3>
-                  <p>First haptics SparkAR filter exhibited at the Oculus Gallery in the NYC World Trade Center.</p>
-                  <dl><div><dt>Audience</dt><dd>Private</dd></div><div><dt>Technology</dt><dd>SparkAR</dd></div><div><dt>Sponsor</dt><dd>SparkAR</dd></div></dl>
-                </div>
-              </a>
             </div>
           </div>
         </section>
@@ -219,34 +199,24 @@
               <h2 id="services-title">Choose the form your story needs.</h2>
             </header>
             <div class="service-grid">
-              <article><span>Consulting</span><h3>From OpenAI to Adobe</h3><p>Creative technology strategy for AI, 3D, spatial computing, design systems and cultural platforms.</p></article>
+              <article><span>Consulting</span><h3>From individuals to brands</h3><p>Creative technology strategy for AI, 3D, spatial computing, design systems and cultural platforms.</p></article>
               <article><span>Teaching</span><h3>From MIT to Oxford</h3><p>University lectures and workshops that turn emerging technology into creative confidence.</p></article>
               <article><span>Speaking</span><h3>From FITC to VIFF</h3><p>Keynotes, panels and live demos on AI, XR, BCI, haptics, design and cultural preservation.</p></article>
               <article><span>Archiving</span><h3>Cultural heritage preservation</h3><p>Community-validated workflows for language, memory, diaspora, oral history and living archives.</p></article>
               <article><span>Donating</span><h3>100 headsets for care</h3><p>Access programs that put immersive tools in the hands of children, patients and communities.</p></article>
-              <article><span>Experimenting</span><h3>Playground in progress</h3><p>Gaussian splats, Blender, TouchDesigner, BCI cinema sketches and analog/digital tests.</p><button type="button" data-section-target="experiments">Enter experiments</button></article>
+              <article><span>Playground</span><h3>Open-source experiments</h3><p>Gaussian splats, Blender, TouchDesigner, BCI cinema sketches and analog/digital tests.</p><button type="button" data-section-target="playground">Enter playground</button></article>
             </div>
           </div>
         </section>
 
         <section class="screen" id="framework" data-section="framework" aria-labelledby="framework-title" hidden>
-          <div class="screen__inner screen__inner--stack">
+          <div class="screen__inner framework-teaser">
             <header class="screen-head">
               <p class="eyebrow">Framework</p>
               <h2 id="framework-title">P.R.O.T.O.P.I.C.A.</h2>
               <p>A worldbuilding framework for moving from memory to public experience.</p>
+              <button class="button button--primary" type="button" data-section-target="contact">Talk to us</button>
             </header>
-            <ol class="framework-grid">
-              <li><strong>P</strong><span>Preserve</span><p>Start with memory, place, language and lived culture.</p></li>
-              <li><strong>R</strong><span>Research</span><p>Map the communities, archives, audiences and constraints.</p></li>
-              <li><strong>O</strong><span>Organize</span><p>Build the lore, rules, characters, rituals and systems.</p></li>
-              <li><strong>T</strong><span>Translate</span><p>Choose the right media: AI, XR, film, BCI, 3D, sound or space.</p></li>
-              <li><strong>O</strong><span>Orchestrate</span><p>Align artists, technologists, institutions, sponsors and educators.</p></li>
-              <li><strong>P</strong><span>Prototype</span><p>Make the world testable before it becomes precious.</p></li>
-              <li><strong>I</strong><span>Invite</span><p>Let audiences participate, not just observe.</p></li>
-              <li><strong>C</strong><span>Circulate</span><p>Turn the experience into exhibitions, talks, courses and tools.</p></li>
-              <li><strong>A</strong><span>Archive</span><p>Document what was learned so the culture keeps moving.</p></li>
-            </ol>
           </div>
         </section>
 
@@ -267,16 +237,18 @@ COMING SOON</div>
           </div>
         </section>
 
-        <section class="screen screen--soon" id="experiments" data-section="experiments" aria-labelledby="experiments-title" hidden>
-          <div class="screen__inner experiments-grid">
+        <section class="screen screen--soon" id="playground" data-section="playground" aria-labelledby="playground-title" hidden>
+          <div class="screen__inner playground-grid">
             <div>
-              <p class="eyebrow">Experiments / Coming soon</p>
-              <h2 id="experiments-title">The playground is where we test the next language.</h2>
-              <p>Gaussian splats, Blender studies, TouchDesigner systems, BCI cinema, haptics, analog/digital rituals and original IP worldbuilding.</p>
+              <p class="eyebrow">Playground / Coming soon</p>
+              <h2 id="playground-title">Open-sourced experiments for the next language of storytelling.</h2>
+              <p>Gaussian splats, Blender studies, TouchDesigner systems, BCI cinema, haptics, analog/digital rituals and original IP worldbuilding. Selected sketches will be open sourced so the community can learn from, remix and build on the work.</p>
             </div>
-            <video class="experiment-video" autoplay muted loop playsinline preload="metadata" poster="protopica/dream-art.png" aria-label="Biometric data driven dream art in motion">
-              <source src="protopica/dreamart-trailer.mp4" type="video/mp4" />
-            </video>
+            <div class="ascii-panel ascii-panel--playground" aria-hidden="true">PLAYGROUND
+OPEN SOURCE
+GAUSSIAN SPLATS
+TOUCHDESIGNER
+COMING SOON</div>
           </div>
         </section>
 

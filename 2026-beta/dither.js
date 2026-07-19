@@ -6,6 +6,7 @@
   const site = document.querySelector("#site-content");
   const audio = document.querySelector("[data-fire-audio]");
   const soundToggle = document.querySelector("[data-sound-toggle]");
+  const wipeCanvas = document.querySelector("[data-dither-wipe]");
   const navButtons = Array.from(document.querySelectorAll("[data-section-target]"));
   const screens = Array.from(document.querySelectorAll("[data-section]"));
 
@@ -28,6 +29,14 @@
   let activeSection = "home";
   let soundMuted = window.localStorage.getItem("protopicaFireMuted") === "true";
   let isWiping = false;
+  let wipeCtx = null;
+  let wipeWidth = 0;
+  let wipeHeight = 0;
+  let wipeRaf = 0;
+
+  if (wipeCanvas && typeof wipeCanvas.getContext === "function") {
+    wipeCtx = wipeCanvas.getContext("2d");
+  }
 
   function fireScaleForIndex(index) {
     const progress = index / Math.max(1, messages.length - 1);
@@ -142,14 +151,114 @@
     isWiping = true;
     activeSection = "home";
     setFireScale(messages.length - 1);
+    if (!wipeCanvas || !wipeCtx) {
+      root.classList.add("is-fire-wipe");
+      window.setTimeout(revealSite, 420);
+      window.setTimeout(function () {
+        root.classList.remove("is-fire-wipe");
+        isWiping = false;
+      }, 900);
+      return;
+    }
+    startDitherWipe();
+  }
+
+  function resizeWipeCanvas() {
+    if (!wipeCanvas || !wipeCtx) {
+      return;
+    }
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    wipeWidth = Math.max(1, window.innerWidth);
+    wipeHeight = Math.max(1, window.innerHeight);
+    wipeCanvas.width = Math.floor(wipeWidth * dpr);
+    wipeCanvas.height = Math.floor(wipeHeight * dpr);
+    wipeCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function orderedValue(x, y, cell) {
+    return bayer[((x / cell) % 4 | 0) + (((y / cell) % 4 | 0) * 4)] / 16;
+  }
+
+  function drawDitherWipe(progress) {
+    if (!wipeCtx) {
+      return;
+    }
+
+    wipeCtx.clearRect(0, 0, wipeWidth, wipeHeight);
+    const cell = wipeWidth > 900 ? 8 : 6;
+    const palette = ["#030404", "#5b1f15", "#ff4d2d", "#ff8a3d", "#d8ff3d", "#f7f0dc"];
+    const waveCenter = wipeHeight * 1.38 - progress * wipeHeight * 2.45;
+    const waveDepth = wipeHeight * 1.28;
+    const topBase = waveCenter - waveDepth * 0.52;
+    const bottomBase = waveCenter + waveDepth * 0.52;
+
+    for (let y = -cell; y < wipeHeight + cell; y += cell) {
+      for (let x = -cell; x < wipeWidth + cell; x += cell) {
+        const wave =
+          Math.sin(x * 0.014 + progress * 10.8) * 42 +
+          Math.sin(x * 0.037 - progress * 8.2) * 19 +
+          Math.sin((x + y) * 0.011 + progress * 13.5) * 11;
+        const top = topBase + wave;
+        const bottom = bottomBase + wave * 0.36 + Math.sin(x * 0.02 - progress * 7) * 24;
+        const topEdge = smoothstep(top - 88, top + 54, y);
+        const bottomEdge = 1 - smoothstep(bottom - 64, bottom + 90, y);
+        const coverage = topEdge * bottomEdge;
+
+        if (coverage <= 0.02) {
+          continue;
+        }
+
+        const ordered = orderedValue(x, y, cell);
+        const turbulence = noise(x * 0.018, y * 0.02, progress * 900);
+        const threshold = coverage + turbulence * 0.22 - ordered * 0.45;
+
+        if (threshold <= 0.18) {
+          continue;
+        }
+
+        const heat = Math.max(0, Math.min(1, (y - top) / Math.max(1, bottom - top)));
+        const colorIndex = Math.max(0, Math.min(palette.length - 1, Math.floor((1 - heat) * 2.1 + heat * 5.2 + turbulence * 1.2)));
+        const alpha = Math.min(0.98, 0.35 + coverage * 0.68);
+        const size = threshold > 0.78 ? cell : Math.max(2, cell - 2);
+        wipeCtx.globalAlpha = alpha;
+        wipeCtx.fillStyle = palette[colorIndex];
+        wipeCtx.fillRect(x, y, size, size);
+      }
+    }
+
+    wipeCtx.globalAlpha = 0.22;
+    wipeCtx.fillStyle = "#f7f0dc";
+    for (let y = 0; y < wipeHeight; y += cell * 3) {
+      wipeCtx.fillRect(0, y, wipeWidth, 1);
+    }
+    wipeCtx.globalAlpha = 1;
+  }
+
+  function startDitherWipe() {
     root.classList.add("is-fire-wipe");
-    window.setTimeout(function () {
-      revealSite();
-    }, 880);
-    window.setTimeout(function () {
-      root.classList.remove("is-fire-wipe");
-      isWiping = false;
-    }, 1660);
+    resizeWipeCanvas();
+    const start = performance.now();
+    const duration = 1550;
+    let didReveal = false;
+
+    function step(now) {
+      const progress = Math.min(1, (now - start) / duration);
+      drawDitherWipe(progress);
+      if (!didReveal && progress >= 0.56) {
+        didReveal = true;
+        revealSite();
+      }
+      if (progress < 1) {
+        wipeRaf = window.requestAnimationFrame(step);
+      } else {
+        wipeCtx.clearRect(0, 0, wipeWidth, wipeHeight);
+        root.classList.remove("is-fire-wipe");
+        isWiping = false;
+      }
+    }
+
+    window.cancelAnimationFrame(wipeRaf);
+    wipeRaf = window.requestAnimationFrame(step);
   }
 
   function resetRitual() {

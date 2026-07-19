@@ -676,6 +676,11 @@ video {
   line-height: 1.5;
 }
 
+.person-card p:not(.eyebrow) {
+  font-size: 0.92rem;
+  line-height: 1.43;
+}
+
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

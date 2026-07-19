@@ -1164,6 +1164,10 @@ video {
   gap: 14px;
 }
 
+.research-notes__heading {
+  margin-bottom: 0;
+}
+
 .blog-head {
   display: flex;
   align-items: end;

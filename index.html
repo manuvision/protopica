@@ -41,9 +41,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Manrope:wght@400;500;600;700;800&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=20260719-editor1" />
+    <link rel="stylesheet" href="styles.css?v=20260719-research1" />
     <script defer src="dither.js?v=20260719-fire-form1"></script>
-    <script defer src="blog.js?v=20260719-editor1"></script>
+    <script defer src="blog.js?v=20260719-research1"></script>
   </head>
   <body>
     <audio data-fire-audio src="protopica/firepit-loop.m4a" autoplay loop preload="auto"></audio>
@@ -173,11 +173,9 @@
 
         <section class="screen screen--research" id="research" data-section="research" data-research-section aria-labelledby="research-title" hidden>
           <div class="screen__inner research-shell">
-            <header class="screen-head screen-head--row">
-              <div>
-                <p class="eyebrow">Research</p>
-                <h2 id="research-title">Research should not stay behind closed doors.</h2>
-              </div>
+            <header class="screen-head screen-head--compact">
+              <p class="eyebrow">Research</p>
+              <h2 id="research-title">Research should not stay behind closed doors.</h2>
               <p>
                 We share what we learn so others can understand, question, and
                 shape emerging technologies.
@@ -185,6 +183,9 @@
             </header>
 
             <section class="blog-workspace research-notes" aria-label="Research notes">
+              <div class="education-group__heading research-notes__heading" data-blog-list-heading hidden>
+                <p class="eyebrow">Latest Articles</p>
+              </div>
               <div class="blog-list" data-blog-list aria-live="polite"></div>
               <div class="blog-empty" data-blog-empty hidden>
                 <p class="eyebrow">Research Notes</p>

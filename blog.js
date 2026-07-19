@@ -11,6 +11,7 @@
   const readerMeta = document.querySelector("[data-blog-meta]");
   const readerTitle = document.querySelector("[data-blog-title]");
   const readerContent = document.querySelector("[data-blog-content]");
+  const listHeading = document.querySelector("[data-blog-list-heading]");
   const researchNav = document.querySelector("[data-research-nav]");
   const educationNext = document.querySelector("[data-education-next]");
   const allowedTags = new Set([
@@ -187,6 +188,9 @@
 
   function showEmpty() {
     list.hidden = true;
+    if (listHeading) {
+      listHeading.hidden = true;
+    }
     if (reader) {
       reader.hidden = true;
     }
@@ -203,6 +207,9 @@
       empty.hidden = articles.length > 0;
     }
     list.hidden = articles.length === 0;
+    if (listHeading) {
+      listHeading.hidden = articles.length === 0;
+    }
   }
 
   function showReader(article) {
@@ -211,6 +218,9 @@
     }
 
     list.hidden = true;
+    if (listHeading) {
+      listHeading.hidden = true;
+    }
     if (empty) {
       empty.hidden = true;
     }

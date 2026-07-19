@@ -13,8 +13,7 @@
 
   const messages = [
     "Hello storyteller...",
-    "Whether you want to build a new world",
-    "or archive what already exists",
+    "Whether you want to build a new world or archive what already exists",
     "you are in the right place.",
     "Since the dawn of humanity, we have gathered around a fire to tell stories.",
     "Today, the fire is a network.",
@@ -31,6 +30,7 @@
   let soundMuted = window.localStorage.getItem("protopicaFireMuted") === "true";
   let soundWaiting = false;
   let isWiping = false;
+  let isRoomTransitioning = false;
   let wipeCtx = null;
   let wipeWidth = 0;
   let wipeHeight = 0;
@@ -96,6 +96,26 @@
     }, 250);
   }
 
+  function updateNavState(sectionId) {
+    navButtons.forEach(function (button) {
+      const isActive = button.dataset.sectionTarget === sectionId;
+      button.classList.toggle("is-active", isActive);
+      if (button.classList.contains("nav-link")) {
+        button.setAttribute("aria-current", isActive ? "page" : "false");
+      }
+    });
+  }
+
+  function updateLocation(sectionId, options) {
+    if (!options || options.updateHash !== false) {
+      if (sectionId === "home") {
+        window.history.replaceState(null, "", window.location.pathname + window.location.search);
+      } else {
+        window.history.replaceState(null, "", "#" + sectionId);
+      }
+    }
+  }
+
   function showSection(sectionId, options) {
     const nextSection = screens.find(function (screen) {
       return screen.dataset.section === sectionId;
@@ -110,6 +130,7 @@
       const isActive = screen === nextSection;
       screen.hidden = false;
       screen.classList.toggle("is-active", isActive);
+      screen.classList.remove("is-dissolve-under", "is-dissolving-out");
       screen.setAttribute("aria-hidden", String(!isActive));
       if (!isActive) {
         window.setTimeout(function () {
@@ -120,21 +141,8 @@
       }
     });
 
-    navButtons.forEach(function (button) {
-      const isActive = button.dataset.sectionTarget === sectionId;
-      button.classList.toggle("is-active", isActive);
-      if (button.classList.contains("nav-link")) {
-        button.setAttribute("aria-current", isActive ? "page" : "false");
-      }
-    });
-
-    if (!options || options.updateHash !== false) {
-      if (sectionId === "home") {
-        window.history.replaceState(null, "", window.location.pathname + window.location.search);
-      } else {
-        window.history.replaceState(null, "", "#" + sectionId);
-      }
-    }
+    updateNavState(sectionId);
+    updateLocation(sectionId, options);
   }
 
   function revealSite() {
@@ -192,8 +200,9 @@
     return grain * 0.46 + secondGrain * 0.19 + ordered * 0.2 + centerPull * 0.1 + weave * 0.05;
   }
 
-  function applyDitherMask(progress, seed) {
-    if (!ritual) {
+  function applyDitherMask(progress, seed, targetElement) {
+    const targetElementWithMask = targetElement || ritual;
+    if (!targetElementWithMask) {
       return;
     }
 
@@ -217,26 +226,27 @@
       "<svg xmlns='http://www.w3.org/2000/svg' width='" + wipeWidth + "' height='" + wipeHeight + "' viewBox='0 0 " +
       wipeWidth + " " + wipeHeight + "'><g fill='white'>" + rects + "</g></svg>";
     const url = "url(\"data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg) + "\")";
-    ritual.style.webkitMaskImage = url;
-    ritual.style.maskImage = url;
-    ritual.style.webkitMaskSize = "100% 100%";
-    ritual.style.maskSize = "100% 100%";
-    ritual.style.webkitMaskRepeat = "no-repeat";
-    ritual.style.maskRepeat = "no-repeat";
-    ritual.style.opacity = String(1 - smoothstep(0.08, 0.92, progress) * 0.16);
+    targetElementWithMask.style.webkitMaskImage = url;
+    targetElementWithMask.style.maskImage = url;
+    targetElementWithMask.style.webkitMaskSize = "100% 100%";
+    targetElementWithMask.style.maskSize = "100% 100%";
+    targetElementWithMask.style.webkitMaskRepeat = "no-repeat";
+    targetElementWithMask.style.maskRepeat = "no-repeat";
+    targetElementWithMask.style.opacity = String(1 - smoothstep(0.08, 0.92, progress) * 0.16);
   }
 
-  function clearDitherMask() {
-    if (!ritual) {
+  function clearDitherMask(targetElement) {
+    const targetElementWithMask = targetElement || ritual;
+    if (!targetElementWithMask) {
       return;
     }
-    ritual.style.webkitMaskImage = "";
-    ritual.style.maskImage = "";
-    ritual.style.webkitMaskSize = "";
-    ritual.style.maskSize = "";
-    ritual.style.webkitMaskRepeat = "";
-    ritual.style.maskRepeat = "";
-    ritual.style.opacity = "";
+    targetElementWithMask.style.webkitMaskImage = "";
+    targetElementWithMask.style.maskImage = "";
+    targetElementWithMask.style.webkitMaskSize = "";
+    targetElementWithMask.style.maskSize = "";
+    targetElementWithMask.style.webkitMaskRepeat = "";
+    targetElementWithMask.style.maskRepeat = "";
+    targetElementWithMask.style.opacity = "";
   }
 
   function drawDitherDust(progress, seed) {
@@ -303,6 +313,80 @@
     wipeRaf = window.requestAnimationFrame(step);
   }
 
+  function transitionToSection(sectionId) {
+    const nextSection = screens.find(function (screen) {
+      return screen.dataset.section === sectionId;
+    });
+    const currentSection = screens.find(function (screen) {
+      return screen.classList.contains("is-active");
+    });
+
+    if (!nextSection || nextSection === currentSection || isWiping || isRoomTransitioning) {
+      return;
+    }
+
+    if (!wipeCanvas || !wipeCtx || !currentSection) {
+      showSection(sectionId);
+      return;
+    }
+
+    isRoomTransitioning = true;
+    activeSection = sectionId;
+    resizeWipeCanvas();
+    updateNavState(sectionId);
+    updateLocation(sectionId);
+    root.classList.add("is-fire-wipe", "is-room-dissolving");
+
+    screens.forEach(function (screen) {
+      const isCurrent = screen === currentSection;
+      const isNext = screen === nextSection;
+      screen.classList.remove("is-dissolve-under", "is-dissolving-out");
+      clearDitherMask(screen);
+      if (isCurrent || isNext) {
+        screen.hidden = false;
+        screen.classList.add("is-active");
+        screen.classList.toggle("is-dissolving-out", isCurrent);
+        screen.classList.toggle("is-dissolve-under", isNext);
+        screen.setAttribute("aria-hidden", String(!isNext));
+      } else {
+        screen.classList.remove("is-active");
+        screen.hidden = true;
+        screen.setAttribute("aria-hidden", "true");
+      }
+    });
+
+    const start = performance.now();
+    const duration = 820;
+    const seed = performance.now() * 0.0007;
+
+    function step(now) {
+      const progress = Math.min(1, (now - start) / duration);
+      applyDitherMask(progress, seed, currentSection);
+      drawDitherDust(progress, seed);
+      wipeCanvas.style.opacity = String(0.38 * (1 - smoothstep(0.74, 1, progress)));
+
+      if (progress < 1) {
+        wipeRaf = window.requestAnimationFrame(step);
+      } else {
+        clearDitherMask(currentSection);
+        wipeCtx.clearRect(0, 0, wipeWidth, wipeHeight);
+        wipeCanvas.style.opacity = "";
+        root.classList.remove("is-fire-wipe", "is-room-dissolving");
+        screens.forEach(function (screen) {
+          const isActive = screen === nextSection;
+          screen.classList.toggle("is-active", isActive);
+          screen.classList.remove("is-dissolve-under", "is-dissolving-out");
+          screen.hidden = !isActive;
+          screen.setAttribute("aria-hidden", String(!isActive));
+        });
+        isRoomTransitioning = false;
+      }
+    }
+
+    window.cancelAnimationFrame(wipeRaf);
+    wipeRaf = window.requestAnimationFrame(step);
+  }
+
   function resetRitual() {
     messageIndex = 0;
     isChanging = false;
@@ -310,8 +394,12 @@
     setFireScale(messageIndex);
     renderMessage(messages[messageIndex]);
     root.classList.add("is-ritual");
-    root.classList.remove("is-revealed", "is-fire-wipe", "is-dissolving");
+    root.classList.remove("is-revealed", "is-fire-wipe", "is-dissolving", "is-room-dissolving");
     clearDitherMask();
+    screens.forEach(function (screen) {
+      clearDitherMask(screen);
+      screen.classList.remove("is-dissolve-under", "is-dissolving-out");
+    });
     if (wipeCtx) {
       wipeCtx.clearRect(0, 0, wipeWidth, wipeHeight);
     }
@@ -432,7 +520,7 @@
         playSound();
         return;
       }
-      showSection(target);
+      transitionToSection(target);
       playSound();
     });
   });

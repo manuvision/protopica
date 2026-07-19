@@ -432,6 +432,10 @@ video {
   pointer-events: none;
 }
 
+.js.is-room-dissolving .site {
+  pointer-events: none;
+}
+
 .js.is-dissolving .ritual {
   pointer-events: none;
 }
@@ -527,6 +531,20 @@ video {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
+}
+
+.screen.is-dissolve-under,
+.screen.is-dissolving-out {
+  pointer-events: none;
+  transform: translateY(0);
+}
+
+.screen.is-dissolve-under {
+  z-index: 2;
+}
+
+.screen.is-dissolving-out {
+  z-index: 3;
 }
 
 .screen__inner {

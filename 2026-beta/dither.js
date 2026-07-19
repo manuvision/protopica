@@ -34,8 +34,9 @@
   let wipeCtx = null;
   let wipeWidth = 0;
   let wipeHeight = 0;
+  let wipeDpr = 1;
   let wipeRaf = 0;
-  let wipeTimer = 0;
+  let transitionSeed = 0;
 
   if (wipeCanvas && typeof wipeCanvas.getContext === "function") {
     wipeCtx = wipeCanvas.getContext("2d");
@@ -156,23 +157,14 @@
     showSection(activeSection || "home");
   }
 
-  function finishDitherReveal(options) {
-    const keepOverlay = options && options.keepOverlay;
+  function finishDitherReveal() {
     root.classList.add("is-quiet-reveal");
     root.classList.remove("is-ritual");
-    if (!keepOverlay) {
-      root.classList.remove("is-fire-wipe", "is-dissolving");
-    }
     root.classList.add("is-revealed");
     if (site) {
       site.removeAttribute("aria-hidden");
     }
     showSection("home", { updateHash: false });
-    clearDitherMask();
-    if (!keepOverlay) {
-      clearDitherOverlay();
-      isWiping = false;
-    }
   }
 
   function revealWithDitherDissolve() {
@@ -186,117 +178,158 @@
   }
 
   function resizeWipeCanvas() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    wipeDpr = Math.min(window.devicePixelRatio || 1, 2);
     wipeWidth = Math.max(1, window.innerWidth);
     wipeHeight = Math.max(1, window.innerHeight);
     if (!wipeCanvas || !wipeCtx) {
       return;
     }
-    wipeCanvas.width = Math.floor(wipeWidth * dpr);
-    wipeCanvas.height = Math.floor(wipeHeight * dpr);
-    wipeCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-
-  function maskScore(col, row, cols, rows, seed) {
-    const x = cols <= 1 ? 0 : col / (cols - 1);
-    const y = rows <= 1 ? 0 : row / (rows - 1);
-    const ordered = bayer[(col % 4) + ((row % 4) * 4)] / 16;
-    const grain = noise(col * 0.173 + seed, row * 0.211 - seed, seed * 900);
-    const secondGrain = noise(col * 0.071 - seed, row * 0.097 + seed, seed * 420);
-    const centerPull = 1 - Math.min(1, Math.hypot(x - 0.5, y - 0.54) * 1.52);
-    const weave = (Math.sin(x * 11.2 + y * 8.6 + seed * 7.4) + 1) * 0.5;
-    return grain * 0.46 + secondGrain * 0.19 + ordered * 0.2 + centerPull * 0.1 + weave * 0.05;
+    wipeCanvas.width = Math.floor(wipeWidth * wipeDpr);
+    wipeCanvas.height = Math.floor(wipeHeight * wipeDpr);
+    wipeCtx.setTransform(wipeDpr, 0, 0, wipeDpr, 0, 0);
   }
 
   function clearDitherOverlay() {
+    window.cancelAnimationFrame(wipeRaf);
     if (wipeCtx) {
       wipeCtx.clearRect(0, 0, wipeWidth, wipeHeight);
     }
-    if (wipeCanvas) {
-      wipeCanvas.style.opacity = "";
-    }
   }
 
-  function applyDitherMask(progress, seed, targetElement) {
-    const targetElementWithMask = targetElement || ritual;
-    if (!targetElementWithMask) {
-      return;
-    }
+  function cellNoise(col, row, seed) {
+    const value = Math.sin((col + seed * 17) * 12.9898 + (row - seed * 11) * 78.233) * 43758.5453;
+    return value - Math.floor(value);
+  }
 
-    const cell = wipeWidth > 1400 ? 26 : wipeWidth > 900 ? 20 : 16;
-    const cols = Math.ceil(wipeWidth / cell);
-    const rows = Math.ceil(wipeHeight / cell);
-    const eased = smoothstep(0.02, 0.98, progress);
-    const threshold = eased * 1.08 - 0.06;
-    let rects = "";
+  function buildDitherCells(seed) {
+    const cellSize = wipeWidth > 1500 ? 8 : wipeWidth > 760 ? 7 : 6;
+    const cols = Math.ceil(wipeWidth / cellSize);
+    const rows = Math.ceil(wipeHeight / cellSize);
+    const fireColors = ["#5b1f15", "#ff4d2d", "#ff8a3d", "#ff8a3d", "#d8ff3d"];
+    const cells = [];
 
     for (let row = 0; row < rows; row += 1) {
+      const vertical = 1 - (row + 0.5) / rows;
       for (let col = 0; col < cols; col += 1) {
-        const score = maskScore(col, row, cols, rows, seed);
-        if (progress < 0.01 || score > threshold) {
-          rects += "<rect x='" + (col * cell) + "' y='" + (row * cell) + "' width='" + cell + "' height='" + cell + "'/>";
-        }
+        const ordered = bayer[(col % 4) + ((row % 4) * 4)] / 15;
+        const grain = cellNoise(col, row, seed);
+        const colorIndex = Math.min(fireColors.length - 1, Math.floor((ordered * 0.55 + grain * 0.45) * fireColors.length));
+        cells.push({
+          x: col * cellSize,
+          y: row * cellSize,
+          size: cellSize + 0.6,
+          score: vertical * 0.34 + ordered * 0.48 + grain * 0.18,
+          color: fireColors[colorIndex],
+          alpha: 0.72 + grain * 0.22,
+        });
       }
     }
 
-    const svg =
-      "<svg xmlns='http://www.w3.org/2000/svg' width='" + wipeWidth + "' height='" + wipeHeight + "' viewBox='0 0 " +
-      wipeWidth + " " + wipeHeight + "'><g fill='white'>" + rects + "</g></svg>";
-    const url = "url(\"data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg) + "\")";
-    targetElementWithMask.style.webkitMaskImage = url;
-    targetElementWithMask.style.maskImage = url;
-    targetElementWithMask.style.webkitMaskSize = "100% 100%";
-    targetElementWithMask.style.maskSize = "100% 100%";
-    targetElementWithMask.style.webkitMaskRepeat = "no-repeat";
-    targetElementWithMask.style.maskRepeat = "no-repeat";
-    targetElementWithMask.style.opacity = String(1 - smoothstep(0.08, 0.92, progress) * 0.16);
+    cells.sort(function (a, b) {
+      return a.score - b.score;
+    });
+    return cells;
   }
 
-  function clearDitherMask(targetElement) {
-    const targetElementWithMask = targetElement || ritual;
-    if (!targetElementWithMask) {
+  function captureCurrentViewport() {
+    if (typeof window.html2canvas !== "function") {
+      return Promise.reject(new Error("html2canvas unavailable"));
+    }
+
+    resizeWipeCanvas();
+    return window.html2canvas(document.documentElement, {
+      backgroundColor: "#030404",
+      scale: wipeDpr,
+      width: wipeWidth,
+      height: wipeHeight,
+      windowWidth: wipeWidth,
+      windowHeight: wipeHeight,
+      scrollX: 0,
+      scrollY: 0,
+      useCORS: true,
+      logging: false,
+      ignoreElements: function (element) {
+        return element === wipeCanvas;
+      },
+    });
+  }
+
+  function paintSnapshot(snapshot) {
+    if (!wipeCtx) {
       return;
     }
-    targetElementWithMask.style.webkitMaskImage = "";
-    targetElementWithMask.style.maskImage = "";
-    targetElementWithMask.style.webkitMaskSize = "";
-    targetElementWithMask.style.maskSize = "";
-    targetElementWithMask.style.webkitMaskRepeat = "";
-    targetElementWithMask.style.maskRepeat = "";
-    targetElementWithMask.style.opacity = "";
+    wipeCtx.globalCompositeOperation = "source-over";
+    wipeCtx.clearRect(0, 0, wipeWidth, wipeHeight);
+    wipeCtx.drawImage(snapshot, 0, 0, snapshot.width, snapshot.height, 0, 0, wipeWidth, wipeHeight);
   }
 
-  function runDitherCssTransition(settings) {
+  function animatePixelReplacement(duration, seed, onComplete) {
+    const cells = buildDitherCells(seed);
+    const startedAt = performance.now();
+    let ignited = 0;
+    let cleared = 0;
+
+    function frame(now) {
+      const progress = Math.min(1, (now - startedAt) / duration);
+      const igniteTarget = Math.min(cells.length, Math.floor(smoothstep(0, 0.94, progress) * cells.length));
+      const clearTarget = Math.min(igniteTarget, Math.floor(smoothstep(0.07, 1, progress) * cells.length));
+
+      wipeCtx.globalCompositeOperation = "source-over";
+      while (ignited < igniteTarget) {
+        const cell = cells[ignited];
+        wipeCtx.globalAlpha = cell.alpha;
+        wipeCtx.fillStyle = cell.color;
+        wipeCtx.fillRect(cell.x, cell.y, cell.size, cell.size);
+        ignited += 1;
+      }
+
+      wipeCtx.globalAlpha = 1;
+      wipeCtx.globalCompositeOperation = "destination-out";
+      while (cleared < clearTarget) {
+        const cell = cells[cleared];
+        wipeCtx.clearRect(cell.x, cell.y, cell.size, cell.size);
+        cleared += 1;
+      }
+
+      if (progress < 1) {
+        wipeRaf = window.requestAnimationFrame(frame);
+        return;
+      }
+
+      wipeCtx.clearRect(0, 0, wipeWidth, wipeHeight);
+      onComplete();
+    }
+
+    wipeRaf = window.requestAnimationFrame(frame);
+  }
+
+  function runDitherTransition(settings) {
     const duration = settings.duration;
     const className = settings.className;
-    const swapClass = settings.swapClass;
-    root.classList.remove("is-intro-swap", "is-room-swap");
-    root.classList.add("is-fire-wipe", className);
-    if (wipeCanvas) {
-      wipeCanvas.style.opacity = "";
-    }
     window.cancelAnimationFrame(wipeRaf);
-    window.clearTimeout(wipeTimer);
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      root.classList.add(swapClass);
+      settings.onSwap();
       settings.onComplete();
-      root.classList.remove("is-fire-wipe", className, swapClass);
-      clearDitherOverlay();
       return;
     }
 
-    wipeRaf = window.requestAnimationFrame(function () {
-      wipeRaf = window.requestAnimationFrame(function () {
-        root.classList.add(swapClass);
+    captureCurrentViewport().then(function (snapshot) {
+      paintSnapshot(snapshot);
+      transitionSeed = (transitionSeed + 1) % 997;
+      root.classList.add("is-pixel-transitioning", className);
+      settings.onSwap();
+      animatePixelReplacement(duration, transitionSeed, function () {
+        root.classList.remove("is-pixel-transitioning", className);
+        clearDitherOverlay();
+        settings.onComplete();
       });
-    });
-
-    wipeTimer = window.setTimeout(function () {
-      settings.onComplete();
-      root.classList.remove("is-fire-wipe", className, swapClass);
+    }).catch(function () {
+      settings.onSwap();
+      root.classList.remove("is-pixel-transitioning", className);
       clearDitherOverlay();
-    }, duration);
+      settings.onComplete();
+    });
   }
 
   function startDitherDissolve() {
@@ -304,12 +337,13 @@
       site.removeAttribute("aria-hidden");
     }
     showSection("home", { updateHash: false });
-    runDitherCssTransition({
+    runDitherTransition({
       className: "is-dissolving",
-      swapClass: "is-intro-swap",
-      duration: 1280,
+      duration: 1500,
+      onSwap: function () {
+        finishDitherReveal();
+      },
       onComplete: function () {
-        finishDitherReveal({ keepOverlay: true });
         isWiping = false;
       },
     });
@@ -333,39 +367,13 @@
     }
 
     isRoomTransitioning = true;
-    activeSection = sectionId;
-    updateNavState(sectionId);
-    updateLocation(sectionId);
-    screens.forEach(function (screen) {
-      const isCurrent = screen === currentSection;
-      const isNext = screen === nextSection;
-      screen.classList.remove("is-dissolve-under", "is-dissolving-out");
-      clearDitherMask(screen);
-      if (isCurrent || isNext) {
-        screen.hidden = false;
-        screen.classList.add("is-active");
-        screen.classList.toggle("is-dissolving-out", isCurrent);
-        screen.classList.toggle("is-dissolve-under", isNext);
-        screen.setAttribute("aria-hidden", String(!isNext));
-      } else {
-        screen.classList.remove("is-active");
-        screen.hidden = true;
-        screen.setAttribute("aria-hidden", "true");
-      }
-    });
-
-    runDitherCssTransition({
+    runDitherTransition({
       className: "is-room-dissolving",
-      swapClass: "is-room-swap",
-      duration: 1180,
+      duration: 1400,
+      onSwap: function () {
+        showSection(sectionId);
+      },
       onComplete: function () {
-        screens.forEach(function (screen) {
-          const isActive = screen === nextSection;
-          screen.classList.toggle("is-active", isActive);
-          screen.classList.remove("is-dissolve-under", "is-dissolving-out");
-          screen.hidden = !isActive;
-          screen.setAttribute("aria-hidden", String(!isActive));
-        });
         isRoomTransitioning = false;
       },
     });
@@ -380,17 +388,14 @@
     root.classList.add("is-ritual");
     root.classList.remove(
       "is-revealed",
-      "is-fire-wipe",
+      "is-pixel-transitioning",
       "is-dissolving",
       "is-room-dissolving",
       "is-intro-swap",
       "is-room-swap",
       "is-quiet-reveal"
     );
-    window.clearTimeout(wipeTimer);
-    clearDitherMask();
     screens.forEach(function (screen) {
-      clearDitherMask(screen);
       screen.classList.remove("is-dissolve-under", "is-dissolving-out");
     });
     clearDitherOverlay();

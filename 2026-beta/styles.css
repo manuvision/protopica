@@ -140,118 +140,19 @@ video {
 
 .fire-wipe {
   position: fixed;
-  inset: -26% 0;
+  inset: 0;
   z-index: 70;
   width: 100%;
-  height: 152%;
+  height: 100%;
   opacity: 0;
   pointer-events: none;
   image-rendering: pixelated;
-  mix-blend-mode: screen;
-  background:
-    radial-gradient(circle, rgba(247, 240, 220, 0.26) 0 1.2px, transparent 1.5px),
-    radial-gradient(circle, rgba(216, 255, 61, 0.2) 0 1px, transparent 1.35px),
-    repeating-linear-gradient(90deg, rgba(255, 122, 53, 0.18) 0 1px, transparent 1px 13px),
-    linear-gradient(0deg, transparent 0 23%, rgba(255, 122, 53, 0.2) 39%, rgba(216, 255, 61, 0.32) 49%, rgba(247, 240, 220, 0.16) 58%, rgba(255, 122, 53, 0.12) 69%, transparent 82%);
-  background-size: 9px 9px, 15px 15px, 21px 21px, auto;
-  background-position: 0 0, 0 0, 0 0, 0 0;
-  transform: translateY(54%) scale(1.01);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0 28%, #000 40%, #000 61%, transparent 76%);
-  mask-image: linear-gradient(to bottom, transparent 0 28%, #000 40%, #000 61%, transparent 76%);
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  will-change: opacity, transform, background-position;
-  transition: none;
+  background: var(--black);
+  contain: strict;
 }
 
-.js.is-fire-wipe .fire-wipe {
-  opacity: 0;
-}
-
-.js.is-dissolving .fire-wipe,
-.js.is-room-dissolving .fire-wipe {
-  animation: ditherLift 1180ms cubic-bezier(0.25, 0.85, 0.2, 1) both;
-}
-
-.js.is-dissolving .fire-wipe {
-  animation-duration: 1280ms;
-}
-
-@keyframes ditherLift {
-  0% {
-    opacity: 0;
-    transform: translateY(56%) scale(1.01);
-    background-position: 0 0, 0 0, 0 0, 0 0;
-  }
-  18% {
-    opacity: 0.62;
-  }
-  48% {
-    opacity: 0.78;
-    transform: translateY(0) scale(1);
-  }
-  72% {
-    opacity: 0.66;
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-56%) scale(1.01);
-    background-position: 0 38px, 30px 18px, -20px 26px, 0 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .js.is-dissolving .fire-wipe,
-  .js.is-room-dissolving .fire-wipe {
-    animation: softFallbackVeil 900ms ease both;
-  }
-}
-
-@keyframes softFallbackVeil {
-  0%,
-  100% {
-    opacity: 0;
-  }
-  50% { opacity: 0.4; }
-}
-
-@supports ((-webkit-mask-image: linear-gradient(#000, transparent)) or (mask-image: linear-gradient(#000, transparent))) {
-  .js.is-dissolving.is-intro-swap .ritual,
-  .js.is-room-swap .screen.is-dissolving-out {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    -webkit-mask-image: linear-gradient(to bottom, #000 0 47%, rgba(0, 0, 0, 0.82) 53%, rgba(0, 0, 0, 0.46) 59%, rgba(0, 0, 0, 0.16) 66%, transparent 74% 100%);
-    mask-image: linear-gradient(to bottom, #000 0 47%, rgba(0, 0, 0, 0.82) 53%, rgba(0, 0, 0, 0.46) 59%, rgba(0, 0, 0, 0.16) 66%, transparent 74% 100%);
-    -webkit-mask-size: 100% 300%;
-    mask-size: 100% 300%;
-    -webkit-mask-position: 0 0;
-    mask-position: 0 0;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    animation: ditherRevealOut 1120ms steps(18, end) both;
-  }
-
-  .js.is-dissolving.is-intro-swap .ritual {
-    animation-duration: 1240ms;
-  }
-}
-
-@keyframes ditherRevealOut {
-  0% {
-    opacity: 1;
-    -webkit-mask-position: 0 0;
-    mask-position: 0 0;
-  }
-  96% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    -webkit-mask-position: 0 140%;
-    mask-position: 0 140%;
-  }
+.js.is-pixel-transitioning .fire-wipe {
+  opacity: 1;
 }
 
 .ritual {
@@ -523,32 +424,9 @@ video {
   pointer-events: none;
 }
 
-.js.is-dissolving .site {
-  opacity: 0;
+.js.is-pixel-transitioning .site,
+.js.is-pixel-transitioning .ritual {
   pointer-events: none;
-  transition: opacity 1180ms cubic-bezier(0.25, 0.85, 0.2, 1);
-}
-
-.js.is-dissolving.is-intro-swap .site {
-  opacity: 1;
-}
-
-.js.is-room-dissolving .site {
-  pointer-events: none;
-}
-
-.js.is-dissolving .ritual {
-  pointer-events: none;
-  opacity: 1;
-  transition: opacity 1180ms cubic-bezier(0.25, 0.85, 0.2, 1);
-}
-
-.js.is-dissolving.is-intro-swap .ritual {
-  opacity: 0;
-}
-
-.js.is-dissolving .ritual-skip {
-  opacity: 0;
 }
 
 .js.is-revealed:not(.is-quiet-reveal) .site {
@@ -646,28 +524,8 @@ video {
   transition: none;
 }
 
-.screen.is-dissolve-under {
-  z-index: 2;
-  opacity: 0;
-  transform: translateY(12px) scale(0.996);
-}
-
-.screen.is-dissolving-out {
-  z-index: 3;
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-.js.is-room-swap .screen.is-dissolve-under {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  transition: opacity 1100ms cubic-bezier(0.25, 0.85, 0.2, 1), transform 1100ms cubic-bezier(0.25, 0.85, 0.2, 1);
-}
-
-.js.is-room-swap .screen.is-dissolving-out {
-  opacity: 0;
-  transform: translateY(-10px) scale(1.003);
-  transition: opacity 1100ms cubic-bezier(0.25, 0.85, 0.2, 1), transform 1100ms cubic-bezier(0.25, 0.85, 0.2, 1);
+.js.is-pixel-transitioning .screen {
+  transition: none;
 }
 
 .screen__inner {

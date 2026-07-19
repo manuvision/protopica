@@ -29,9 +29,9 @@
     />
     <meta name="twitter:image" content="https://protopica.com/2026-beta/protopica/og.png" />
     <link rel="icon" href="favicon.png" />
-    <link rel="stylesheet" href="styles.css?v=20260719-trim1" />
+    <link rel="stylesheet" href="styles.css?v=20260719-researchnotes1" />
     <script defer src="dither.js?v=20260719-trim1"></script>
-    <script defer src="blog.js?v=20260719-structure1"></script>
+    <script defer src="blog.js?v=20260719-researchnotes1"></script>
   </head>
   <body>
     <audio data-fire-audio src="protopica/firepit-loop.m4a" autoplay loop preload="auto"></audio>
@@ -170,32 +170,20 @@
               </p>
             </header>
 
-            <div class="research-layout">
-              <section class="research-panel" aria-labelledby="topics-title">
-                <p class="eyebrow">Topics</p>
-                <h3 id="topics-title">Questions we keep close to the fire.</h3>
-                <div class="signal-row signal-row--compact">
-                  <span>AI and Creative Practice</span>
-                  <span>Worldbuilding</span>
-                  <span>Computer Graphics</span>
-                  <span>Cultural Technology</span>
-                  <span>Creative Careers</span>
-                  <span>Education</span>
-                  <span>Human-Machine Collaboration</span>
-                  <span>Spatial and Interactive Media</span>
-                </div>
-              </section>
-
-              <section class="research-panel" aria-labelledby="formats-title">
-                <p class="eyebrow">Formats</p>
-                <h3 id="formats-title">How the knowledge travels.</h3>
-                <div class="format-list">
-                  <article><span>Videos</span><p>Experiments, demonstrations and project breakdowns.</p></article>
-                  <article><span>Podcast</span><p>Conversations across creative and technical disciplines.</p></article>
-                  <article><span>Playground</span><p>Open-source tools, sketches and technical studies.</p></article>
-                </div>
-              </section>
-            </div>
+            <section class="blog-workspace research-notes" aria-label="Research notes">
+              <div class="blog-list" data-blog-list aria-live="polite"></div>
+              <div class="blog-empty" data-blog-empty hidden>
+                <p class="eyebrow">Research Notes</p>
+                <h3>Notes will appear here soon.</h3>
+                <p>Published research, experiments and process notes will show up here once they are live.</p>
+              </div>
+              <article class="blog-reader" data-blog-reader hidden>
+                <button class="blog-back" type="button" data-blog-back>Back to notes</button>
+                <p class="eyebrow" data-blog-meta></p>
+                <h3 data-blog-title></h3>
+                <div class="blog-content" data-blog-content></div>
+              </article>
+            </section>
           </div>
         </section>
 
@@ -339,18 +327,11 @@
       </div>
     </main>
 
-    <dialog class="university-archive" id="universities-modal" data-university-modal aria-labelledby="universities-modal-title">
+    <dialog class="university-archive" id="universities-modal" data-university-modal aria-label="University lectures and workshops">
       <form method="dialog">
         <button class="modal-close" type="submit" aria-label="Close university lecture archive">×</button>
       </form>
       <div class="university-archive__inner">
-        <header class="screen-head screen-head--row university-archive__head">
-          <div>
-            <p class="eyebrow">University Lectures / Workshops</p>
-            <h2 id="universities-modal-title">Talks that carry the spark into classrooms.</h2>
-          </div>
-        </header>
-
         <div class="university-archive__grid" aria-label="University talks and workshops">
           <article class="university-talk">
             <div class="university-talk__logo"><img src="protopica/universities/columbia.png" alt="Columbia University logo" loading="lazy" /></div>

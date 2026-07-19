@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Protopica CMS</title>
+    <link rel="icon" href="../favicon.png" />
+    <link rel="stylesheet" href="cms.css?v=20260719-cms1" />
+    <script defer src="cms.js?v=20260719-cms1"></script>
+  </head>
+  <body>
+    <main class="cms-shell">
+      <header class="cms-header">
+        <div>
+          <p class="eyebrow">Protopica CMS</p>
+          <h1>Publish field notes to the beta blog.</h1>
+        </div>
+        <a href="../#research" target="_blank" rel="noopener noreferrer">Open Field Notes</a>
+      </header>
+
+      <section class="auth-panel" aria-labelledby="auth-title">
+        <div>
+          <p class="eyebrow">GitHub Access</p>
+          <h2 id="auth-title">Connect with a repository token.</h2>
+          <p>
+            Use a fine-grained GitHub token for <strong>manuvision/protopica</strong>
+            with repository Contents read/write access. The token is never committed.
+          </p>
+        </div>
+        <div class="auth-controls">
+          <label for="github-token">GitHub token</label>
+          <input id="github-token" type="password" autocomplete="off" placeholder="github_pat_..." />
+          <label class="checkline">
+            <input id="remember-token" type="checkbox" />
+            <span>Remember on this device</span>
+          </label>
+          <div class="button-row">
+            <button class="button button--primary" id="connect" type="button">Connect</button>
+            <button class="button" id="refresh" type="button">Refresh</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Article editor">
+        <aside class="article-sidebar">
+          <div class="sidebar-head">
+            <div>
+              <p class="eyebrow">Articles</p>
+              <h2>Blog Index</h2>
+            </div>
+            <button class="icon-button" id="new-article" type="button" aria-label="Create a new article">+</button>
+          </div>
+          <div class="article-list" id="article-list">
+            <p class="muted">Connect to GitHub to load articles.</p>
+          </div>
+        </aside>
+
+        <section class="editor-panel" aria-labelledby="editor-title">
+          <div class="editor-head">
+            <div>
+              <p class="eyebrow">Editor</p>
+              <h2 id="editor-title">Draft Article</h2>
+            </div>
+            <div class="button-row">
+              <button class="button" id="delete-article" type="button" disabled>Delete</button>
+              <button class="button button--primary" id="save-article" type="button">Save Article</button>
+            </div>
+          </div>
+
+          <form class="article-form">
+            <label>
+              <span>Title</span>
+              <input id="article-title" type="text" placeholder="A field note from Protopica" />
+            </label>
+            <div class="split-fields">
+              <label>
+                <span>Date</span>
+                <input id="article-date" type="date" />
+              </label>
+              <label>
+                <span>Author</span>
+                <input id="article-author" type="text" placeholder="Protopica" />
+              </label>
+            </div>
+
+            <div class="content-toolbar" aria-label="Formatting helpers">
+              <button type="button" data-insert="h2">H2</button>
+              <button type="button" data-insert="h3">H3</button>
+              <button type="button" data-insert="p">P</button>
+              <button type="button" data-insert="blockquote">Quote</button>
+              <button type="button" data-insert="ul">List</button>
+              <button type="button" data-insert="link">Link</button>
+            </div>
+
+            <label>
+              <span>Content</span>
+              <textarea id="article-content" rows="16" spellcheck="true" placeholder="<p>Write the article here. Upload images below, then place them where they belong.</p>"></textarea>
+            </label>
+
+            <section class="upload-panel" aria-labelledby="upload-title">
+              <div>
+                <p class="eyebrow">Images</p>
+                <h3 id="upload-title">Upload and insert images.</h3>
+                <p>Images are saved under <code>2026-beta/blog/assets/&lt;article-id&gt;/</code>.</p>
+              </div>
+              <div class="upload-controls">
+                <label>
+                  <span>Image files</span>
+                  <input id="image-files" type="file" accept="image/*" multiple />
+                </label>
+                <label>
+                  <span>Alt text</span>
+                  <input id="image-alt" type="text" placeholder="Describe the image for accessibility" />
+                </label>
+                <button class="button" id="upload-image" type="button">Upload Images</button>
+              </div>
+            </section>
+          </form>
+        </section>
+
+        <aside class="preview-panel">
+          <p class="eyebrow">Preview</p>
+          <article class="preview" id="article-preview">
+            <h2>Untitled article</h2>
+            <p class="meta">Draft</p>
+            <div class="preview-content"></div>
+          </article>
+        </aside>
+      </section>
+
+      <p class="status" id="status" role="status" aria-live="polite">Idle.</p>
+    </main>
+  </body>
+</html>

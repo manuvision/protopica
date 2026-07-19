@@ -7,16 +7,17 @@
   const site = document.querySelector("#site-content");
   const audio = document.querySelector("[data-fire-audio]");
   const soundToggle = document.querySelector("[data-sound-toggle]");
+  const contactForm = document.querySelector("[data-contact-form]");
   const navButtons = Array.from(document.querySelectorAll("[data-section-target]"));
   const screens = Array.from(document.querySelectorAll("[data-section]"));
 
   const messages = [
     "Hello storyteller...",
-    "Whether you want to build a new world or archive what already exists",
-    "you are in the right place.",
-    "Since the dawn of humanity, we have gathered around a fire to tell stories.",
+    "Build what comes next without losing what makes it human.",
+    "Tools come after the question.",
+    "Some ideas do not fit inside one discipline.",
     "Today, the fire is a network.",
-    "Join a community of storytellers and build your own world.",
+    "Bring us what you are trying to move forward.",
   ];
 
   const bayer = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
@@ -25,9 +26,15 @@
   let isChanging = false;
   let lastInputAt = 0;
   let glyphCounter = 0;
+  const initialHash = window.location.hash.replace("#", "");
+  const initialSection = screens.some(function (screen) {
+    return screen.dataset.section === initialHash;
+  })
+    ? initialHash
+    : "home";
   let targetFireScale = 0.34;
   let currentFireScale = 0.34;
-  let activeSection = "home";
+  let activeSection = initialSection;
   let soundMuted = window.localStorage.getItem("protopicaFireMuted") === "true";
   let soundWaiting = false;
   let isIntroTransitioning = false;
@@ -148,13 +155,14 @@
   }
 
   function finishIntroReveal() {
+    const targetSection = activeSection || "home";
     root.classList.add("is-quiet-reveal");
     root.classList.remove("is-ritual");
     root.classList.add("is-revealed");
     if (site) {
       site.removeAttribute("aria-hidden");
     }
-    showSection("home", { updateHash: false });
+    showSection(targetSection, { updateHash: false });
   }
 
   function smoothstep(edge0, edge1, value) {
@@ -194,7 +202,6 @@
       return;
     }
     isIntroTransitioning = true;
-    activeSection = "home";
     setFireScale(messages.length - 1);
     runClassicTransition({
       className: "is-intro-fade",
@@ -364,6 +371,31 @@
         return;
       }
       setMuted(!soundMuted);
+    });
+  }
+
+  if (contactForm) {
+    contactForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      const data = new FormData(contactForm);
+      const lines = [
+        ["Name", data.get("name")],
+        ["Email", data.get("email")],
+        ["Organization or creative practice", data.get("organization")],
+        ["What are you trying to build, understand or preserve?", data.get("challenge")],
+        ["Who is it intended to serve?", data.get("audience")],
+        ["Relevant support", data.get("support")],
+        ["Meaningful progress in the next 90 days", data.get("progress")],
+      ]
+        .filter(function (entry) {
+          return String(entry[1] || "").trim();
+        })
+        .map(function (entry) {
+          return entry[0] + ":\n" + String(entry[1]).trim();
+        });
+      const subject = encodeURIComponent("Protopica project signal");
+      const body = encodeURIComponent(lines.join("\n\n"));
+      window.location.href = "mailto:hello@protopica.com?subject=" + subject + "&body=" + body;
     });
   }
 

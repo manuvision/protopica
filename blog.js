@@ -75,7 +75,8 @@
     return records.slice().sort(function (a, b) {
       return (
         String(b.date || "").localeCompare(String(a.date || "")) ||
-        String(b.updatedAt || b.createdAt || "").localeCompare(String(a.updatedAt || a.createdAt || ""))
+        String(b.createdAt || b.updatedAt || "").localeCompare(String(a.createdAt || a.updatedAt || "")) ||
+        String(b.updatedAt || "").localeCompare(String(a.updatedAt || ""))
       );
     });
   }

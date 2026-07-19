@@ -312,7 +312,7 @@
   }
 
   function articlePublishDate(article) {
-    const date = new Date((article.date || article.createdAt || article.updatedAt || new Date().toISOString()) + (article.date ? "T12:00:00Z" : ""));
+    const date = new Date(article.createdAt || article.updatedAt || (article.date ? article.date + "T12:00:00Z" : new Date().toISOString()));
     return Number.isNaN(date.getTime()) ? new Date().toUTCString() : date.toUTCString();
   }
 
@@ -467,7 +467,12 @@
 
   function sortArticles(records) {
     return records.slice().sort(function (a, b) {
-      return String(b.date || "").localeCompare(String(a.date || "")) || String(a.title).localeCompare(String(b.title));
+      return (
+        String(b.date || "").localeCompare(String(a.date || "")) ||
+        String(b.createdAt || b.updatedAt || "").localeCompare(String(a.createdAt || a.updatedAt || "")) ||
+        String(b.updatedAt || "").localeCompare(String(a.updatedAt || "")) ||
+        String(a.title).localeCompare(String(b.title))
+      );
     });
   }
 

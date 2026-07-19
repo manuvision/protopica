@@ -1168,6 +1168,34 @@ video {
   margin-bottom: 0;
 }
 
+.screen--research .research-notes {
+  min-height: auto;
+  overflow: visible;
+}
+
+.rss-subscribe {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 11px;
+  border: 1px solid rgba(78, 205, 196, 0.42);
+  border-radius: 4px;
+  color: var(--cyan);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.rss-subscribe:hover,
+.rss-subscribe:focus-visible {
+  border-color: var(--cyan);
+  background: rgba(78, 205, 196, 0.1);
+  color: var(--bone);
+  outline: none;
+}
+
 .blog-head {
   display: flex;
   align-items: end;
@@ -1177,8 +1205,43 @@ video {
 
 .blog-list {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+
+.screen--research .blog-list {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.blog-entry {
+  width: 100%;
+  padding: 34px 0 52px;
+  border-top: 1px solid var(--line);
+}
+
+.blog-entry:first-child {
+  padding-top: 20px;
+}
+
+.blog-entry__header {
+  max-width: 960px;
+  margin-bottom: 24px;
+}
+
+.blog-entry__header .eyebrow {
+  margin-bottom: 10px;
+}
+
+.blog-entry__header h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 2.8vw, 2.75rem);
+  line-height: 1.06;
+}
+
+.blog-entry__content {
+  max-width: 960px;
+  margin-top: 0;
+  font-size: 1.04rem;
 }
 
 .blog-card {
@@ -2663,6 +2726,11 @@ a.story-card:focus-visible {
 }
 
 @media (max-width: 620px) {
+  .rss-subscribe {
+    width: 100%;
+    margin-top: 12px;
+  }
+
   .screen-head--compact h2 {
     font-size: 2.25rem;
   }
@@ -2753,6 +2821,30 @@ a.story-card:focus-visible {
   .education-archive .university-talk {
     min-height: 0;
     grid-template-columns: 58px minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .screen--home .home-teaser {
+    align-content: center;
+    padding-top: max(34px, 7svh);
+    padding-bottom: max(70px, 10svh);
+  }
+
+  .screen--home .home-copy {
+    width: 100%;
+    max-width: 620px;
+    margin-inline: auto;
+    text-align: center;
+    transform: translateY(clamp(18px, 4svh, 36px));
+  }
+
+  .screen--home .home-copy p:not(.eyebrow) {
+    margin-inline: auto;
+  }
+
+  .screen--home .home-actions {
+    justify-content: center;
   }
 }
 

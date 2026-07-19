@@ -37,13 +37,14 @@
     />
     <meta name="twitter:image" content="https://protopica.com/protopica/og.png" />
     <link rel="canonical" href="https://protopica.com/" />
+    <link rel="alternate" type="application/rss+xml" title="Protopica Research" href="https://protopica.com/blog/rss.xml" />
     <link rel="icon" href="favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Manrope:wght@400;500;600;700;800&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=20260719-research1" />
+    <link rel="stylesheet" href="styles.css?v=20260719-research-feed2" />
     <script defer src="dither.js?v=20260719-fire-form1"></script>
-    <script defer src="blog.js?v=20260719-research1"></script>
+    <script defer src="blog.js?v=20260719-research-feed2"></script>
   </head>
   <body>
     <audio data-fire-audio src="protopica/firepit-loop.m4a" autoplay loop preload="auto"></audio>
@@ -182,9 +183,15 @@
               </p>
             </header>
 
+            <div class="section-actions" aria-label="Continue from Research">
+              <button class="button button--primary" type="button" data-section-target="about">Learn More About the Team</button>
+              <button class="button" type="button" data-section-target="contact">Start a Conversation</button>
+            </div>
+
             <section class="blog-workspace research-notes" aria-label="Research notes">
               <div class="education-group__heading research-notes__heading" data-blog-list-heading hidden>
                 <p class="eyebrow">Latest Articles</p>
+                <a class="rss-subscribe" href="/blog/rss.xml" target="_blank" rel="noopener noreferrer">Subscribe via RSS</a>
               </div>
               <div class="blog-list" data-blog-list aria-live="polite"></div>
               <div class="blog-empty" data-blog-empty hidden>
@@ -192,17 +199,7 @@
                 <h3>Notes will appear here soon.</h3>
                 <p>Published research, experiments and process notes will show up here once they are live.</p>
               </div>
-              <article class="blog-reader" data-blog-reader hidden>
-                <button class="blog-back" type="button" data-blog-back>Back to notes</button>
-                <p class="eyebrow" data-blog-meta></p>
-                <h3 data-blog-title></h3>
-                <div class="blog-content" data-blog-content></div>
-              </article>
             </section>
-            <div class="section-actions" aria-label="Continue from Research">
-              <button class="button button--primary" type="button" data-section-target="about">Learn More About the Team</button>
-              <button class="button" type="button" data-section-target="contact">Start a Conversation</button>
-            </div>
           </div>
         </section>
 

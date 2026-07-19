@@ -5,8 +5,10 @@
     branch: "main",
     apiVersion: "2026-03-10",
     articlesPath: "blog/articles.json",
+    rssPath: "blog/rss.xml",
     assetsRoot: "blog/assets",
     publicAssetRoot: "/blog/assets",
+    siteUrl: "https://protopica.com",
   };
   const tokenStorageKey = "protopicaCmsToken";
   const defaultAuthorKey = "protopicaCmsAuthor";
@@ -62,6 +64,7 @@
     token: "",
     articles: [],
     articlesSha: null,
+    rssSha: null,
     currentId: null,
     connected: false,
     busy: false,
@@ -276,6 +279,80 @@
     return escapeHtml(value).replace(/"/g, "&quot;");
   }
 
+  function escapeXml(value) {
+    return String(value || "").replace(/[<>&'\"]/g, function (character) {
+      return {
+        "<": "&lt;",
+        ">": "&gt;",
+        "&": "&amp;",
+        "'": "&apos;",
+        '"': "&quot;",
+      }[character];
+    });
+  }
+
+  function cdata(value) {
+    return String(value || "").replace(/]]>/g, "]]]]><![CDATA[>");
+  }
+
+  function articleUrl(article) {
+    return config.siteUrl + "/?article=" + encodeURIComponent(article.id) + "#research";
+  }
+
+  function articleDescription(html) {
+    const template = document.createElement("template");
+    template.innerHTML = preserveLineBreaks(html);
+    template.content.querySelectorAll("img").forEach(function (image) {
+      image.remove();
+    });
+    template.content.querySelectorAll("br, h2, h3, h4, p, li, blockquote, figure, pre, hr").forEach(function (node) {
+      node.after(document.createTextNode(" "));
+    });
+    return (template.content.textContent || "").trim().replace(/\s+/g, " ").slice(0, 280);
+  }
+
+  function articlePublishDate(article) {
+    const date = new Date((article.date || article.createdAt || article.updatedAt || new Date().toISOString()) + (article.date ? "T12:00:00Z" : ""));
+    return Number.isNaN(date.getTime()) ? new Date().toUTCString() : date.toUTCString();
+  }
+
+  function buildRssFeed() {
+    const items = sortArticles(state.articles)
+      .map(function (article) {
+        const url = articleUrl(article);
+        const content = preserveLineBreaks(article.content);
+        return [
+          "    <item>",
+          "      <title>" + escapeXml(article.title) + "</title>",
+          "      <link>" + escapeXml(url) + "</link>",
+          "      <guid isPermaLink=\"true\">" + escapeXml(url) + "</guid>",
+          "      <pubDate>" + articlePublishDate(article) + "</pubDate>",
+          "      <dc:creator>" + escapeXml(article.author || "Protopica") + "</dc:creator>",
+          "      <description>" + escapeXml(articleDescription(content)) + "</description>",
+          "      <content:encoded><![CDATA[" + cdata(content) + "]]></content:encoded>",
+          "    </item>",
+        ].join("\n");
+      })
+      .join("\n");
+
+    return [
+      '<?xml version="1.0" encoding="UTF-8"?>',
+      '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">',
+      "  <channel>",
+      "    <title>Protopica Research</title>",
+      "    <link>" + config.siteUrl + "/#research</link>",
+      "    <description>Research, experiments and field notes from Protopica.</description>",
+      "    <language>en-ca</language>",
+      "    <lastBuildDate>" + new Date().toUTCString() + "</lastBuildDate>",
+      '    <atom:link href="' + config.siteUrl + '/blog/rss.xml" rel="self" type="application/rss+xml" />',
+      "    <generator>Protopica CMS</generator>",
+      items,
+      "  </channel>",
+      "</rss>",
+      "",
+    ].join("\n");
+  }
+
   function sanitizeInlineHtml(html) {
     const inlineTags = new Set(["A", "B", "BR", "CODE", "DEL", "EM", "I", "IMG", "STRONG", "U"]);
     const template = document.createElement("template");
@@ -459,7 +536,10 @@
     setStatus("Loading articles from GitHub...");
 
     try {
-      const response = await getContent(config.articlesPath, true);
+      const responses = await Promise.all([getContent(config.articlesPath, true), getContent(config.rssPath, true)]);
+      const response = responses[0];
+      const rssResponse = responses[1];
+      state.rssSha = rssResponse ? rssResponse.sha : null;
 
       if (!response) {
         state.articles = [];
@@ -500,6 +580,14 @@
       state.articlesSha
     );
     state.articlesSha = response.content.sha;
+
+    const rssResponse = await putContent(
+      config.rssPath,
+      encodeBase64Text(buildRssFeed()),
+      "Update Protopica research RSS feed",
+      state.rssSha
+    );
+    state.rssSha = rssResponse.content.sha;
   }
 
   async function saveArticle() {

@@ -1,5 +1,15 @@
 {
   "version": 1,
-  "updatedAt": null,
-  "articles": []
+  "updatedAt": "2026-07-19T03:47:49.687Z",
+  "articles": [
+    {
+      "id": "test",
+      "title": "Test",
+      "date": "2026-07-19",
+      "author": "Protopica",
+      "content": "Hello world.\n<figure>\n  <img src=\"/2026-beta/blog/assets/test/1784432865140-1-dream-art-2026-07-14-7.png\" alt=\"dreamart\" loading=\"lazy\">\n  <figcaption></figcaption>\n</figure>",
+      "createdAt": "2026-07-19T03:47:49.686Z",
+      "updatedAt": "2026-07-19T03:47:49.686Z"
+    }
+  ]
 }

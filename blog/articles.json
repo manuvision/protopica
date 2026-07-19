@@ -1,15 +1,15 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-19T09:35:38.485Z",
+  "updatedAt": "2026-07-19T09:41:33.940Z",
   "articles": [
     {
       "id": "follow-protopica-by-rss",
-      "title": "Follow Protopica by RSS",
+      "title": "Follow Protopica's RSS feed",
       "date": "2026-07-19",
       "author": "Manuel Sainsily & Will Selviz",
       "content": "<figure>\n  <img src=\"/blog/assets/follow-protopica-by-rss/1784452869261-1-rss-radio-wave-icon-and-rss-logo-feeds-and-news-vector.jpg\" alt=\"rss-radio-wave-icon-and-rss-logo-feeds-and-news-vector.jpg\" loading=\"lazy\">\n  <figcaption></figcaption>\n</figure>\n\n<h3>Our Research page now has an RSS feed.</h3>\n\n<p>We added a small RSS subscribe button so people can follow Protopica updates without needing to check the website manually.</p>\n\n<p>Whenever we publish a new article, field note, experiment, or process update, the feed will update automatically. It is a simple way to keep a slower, more intentional connection to our work without depending only on social platforms or algorithms.</p>\n\n<h4>How to subscribe on desktop</h4>\n\n<p>1. Install an RSS reader extension such as <a href=\"https://feeder.co\" target=\"_blank\" rel=\"noopener noreferrer\">Feeder</a> for Chrome.</p>\n\n<p>2. Open the Protopica Research page and click <strong>Subscribe via RSS</strong>, or paste this feed URL into your reader:</p>\n\n<p><a href=\"https://protopica.com/blog/rss.xml\" target=\"_blank\" rel=\"noopener noreferrer\">https://protopica.com/blog/rss.xml</a></p>\n\n<p>3. New Protopica articles will appear directly in your reader when they are published.</p>\n\n<h4>How to subscribe on iPhone or iPad</h4>\n\n<p>1. Download an RSS app such as the <a href=\"https://feeder.co/ios\" target=\"_blank\" rel=\"noopener noreferrer\">Feeder.co iOS app</a>.</p>\n\n<p>2. Add a new feed and paste:</p>\n\n<p><a href=\"https://protopica.com/blog/rss.xml\" target=\"_blank\" rel=\"noopener noreferrer\">https://protopica.com/blog/rss.xml</a></p>\n\n<p>3. You can now receive Protopica updates from your phone, without waiting for a social media post to surface.</p>\n\n<p><em>RSS is old internet infrastructure, but it still feels right for what we are building: a quieter way to gather around the work, follow the signal, and return when something new is ready.</em></p>",
       "createdAt": "2026-07-19T09:35:38.484Z",
-      "updatedAt": "2026-07-19T09:35:38.484Z"
+      "updatedAt": "2026-07-19T09:41:33.940Z"
     },
     {
       "id": "field-note",

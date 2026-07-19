@@ -19,6 +19,7 @@
     "BLOCKQUOTE",
     "BR",
     "CODE",
+    "DEL",
     "EM",
     "FIGCAPTION",
     "FIGURE",
@@ -34,6 +35,7 @@
     "PRE",
     "STRONG",
     "UL",
+    "U",
   ]);
   const allowedAttributes = {
     A: new Set(["href", "target", "rel"]),
@@ -140,9 +142,45 @@
     return template.innerHTML;
   }
 
-  function createExcerpt(html) {
+  function preserveLineBreaks(html) {
     const template = document.createElement("template");
     template.innerHTML = sanitizeHtml(html);
+    const walker = document.createTreeWalker(template.content, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    let node = walker.nextNode();
+
+    while (node) {
+      textNodes.push(node);
+      node = walker.nextNode();
+    }
+
+    textNodes.forEach(function (textNode) {
+      const parent = textNode.parentElement;
+      const value = textNode.nodeValue || "";
+
+      if (!value.includes("\n") || !value.trim() || (parent && parent.closest("pre, code"))) {
+        return;
+      }
+
+      const fragment = document.createDocumentFragment();
+      value.replace(/\r/g, "").split("\n").forEach(function (line, index, lines) {
+        fragment.appendChild(document.createTextNode(line));
+        if (index < lines.length - 1) {
+          fragment.appendChild(document.createElement("br"));
+        }
+      });
+      textNode.replaceWith(fragment);
+    });
+
+    return template.innerHTML.trim();
+  }
+
+  function createExcerpt(html) {
+    const template = document.createElement("template");
+    template.innerHTML = preserveLineBreaks(html);
+    template.content.querySelectorAll("br").forEach(function (lineBreak) {
+      lineBreak.replaceWith(document.createTextNode(" "));
+    });
     const text = template.content.textContent || "";
     return text.trim().replace(/\s+/g, " ").slice(0, 168);
   }
@@ -178,7 +216,7 @@
     }
     readerTitle.textContent = article.title || "Untitled note";
     readerMeta.textContent = [formatDate(article.date), article.author].filter(Boolean).join(" / ");
-    readerContent.innerHTML = sanitizeHtml(article.content);
+    readerContent.innerHTML = preserveLineBreaks(article.content);
     reader.hidden = false;
   }
 

@@ -9,8 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&amp;family=Fragment+Mono:ital@0;1&amp;family=Spline+Sans:wght@400..700&amp;display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="cms.css?v=20260719-purple-type1" />
-    <script defer src="cms.js?v=20260719-root1"></script>
+    <link rel="stylesheet" href="cms.css?v=20260719-editor1" />
+    <script defer src="cms.js?v=20260719-editor1"></script>
   </head>
   <body>
     <main class="cms-shell">
@@ -88,12 +88,21 @@
             </div>
 
             <div class="content-toolbar" aria-label="Formatting helpers">
-              <button type="button" data-insert="h2">H2</button>
-              <button type="button" data-insert="h3">H3</button>
-              <button type="button" data-insert="p">P</button>
-              <button type="button" data-insert="blockquote">Quote</button>
-              <button type="button" data-insert="ul">List</button>
-              <button type="button" data-insert="link">Link</button>
+              <button type="button" data-insert="h2" title="Heading 2">H2</button>
+              <button type="button" data-insert="h3" title="Heading 3">H3</button>
+              <button type="button" data-insert="h4" title="Heading 4">H4</button>
+              <button type="button" data-insert="p" title="Paragraph">P</button>
+              <button type="button" data-insert="strong" title="Bold" aria-label="Bold"><strong>B</strong></button>
+              <button type="button" data-insert="em" title="Italic" aria-label="Italic"><em>I</em></button>
+              <button type="button" data-insert="u" title="Underline" aria-label="Underline"><u>U</u></button>
+              <button type="button" data-insert="del" title="Strikethrough" aria-label="Strikethrough"><del>S</del></button>
+              <button type="button" data-insert="blockquote" title="Blockquote">Quote</button>
+              <button type="button" data-insert="ul" title="Bulleted list">Bullets</button>
+              <button type="button" data-insert="ol" title="Numbered list">Numbers</button>
+              <button type="button" data-insert="link" title="Add a URL">URL</button>
+              <button type="button" data-insert="code" title="Inline code">Code</button>
+              <button type="button" data-insert="pre" title="Code block">Code Block</button>
+              <button type="button" data-insert="hr" title="Horizontal divider">Divider</button>
             </div>
 
             <label>

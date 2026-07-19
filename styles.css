@@ -1267,6 +1267,49 @@ video {
   text-transform: uppercase;
 }
 
+.blog-content blockquote {
+  margin: 24px 0;
+  padding-left: 18px;
+  border-left: 2px solid var(--cyan);
+}
+
+.blog-content ul,
+.blog-content ol {
+  margin: 18px 0;
+  padding-left: 26px;
+}
+
+.blog-content code,
+.blog-content pre {
+  font-family: var(--mono);
+}
+
+.blog-content code {
+  padding: 0.12em 0.32em;
+  border-radius: 3px;
+  background: rgba(159, 134, 255, 0.14);
+}
+
+.blog-content pre {
+  overflow-x: auto;
+  margin: 24px 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: rgba(5, 4, 10, 0.76);
+}
+
+.blog-content pre code {
+  padding: 0;
+  background: transparent;
+}
+
+.blog-content hr {
+  margin: 28px 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
 .method-grid article {
   min-height: 200px;
 }

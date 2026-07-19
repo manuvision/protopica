@@ -16,6 +16,7 @@
     "BLOCKQUOTE",
     "BR",
     "CODE",
+    "DEL",
     "EM",
     "FIGCAPTION",
     "FIGURE",
@@ -31,6 +32,7 @@
     "PRE",
     "STRONG",
     "UL",
+    "U",
   ]);
   const allowedAttributes = {
     A: new Set(["href", "target", "rel"]),
@@ -231,6 +233,39 @@
     return template.innerHTML.trim();
   }
 
+  function preserveLineBreaks(html) {
+    const template = document.createElement("template");
+    template.innerHTML = sanitizeHtml(html);
+    const walker = document.createTreeWalker(template.content, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    let node = walker.nextNode();
+
+    while (node) {
+      textNodes.push(node);
+      node = walker.nextNode();
+    }
+
+    textNodes.forEach(function (textNode) {
+      const parent = textNode.parentElement;
+      const value = textNode.nodeValue || "";
+
+      if (!value.includes("\n") || !value.trim() || (parent && parent.closest("pre, code"))) {
+        return;
+      }
+
+      const fragment = document.createDocumentFragment();
+      value.replace(/\r/g, "").split("\n").forEach(function (line, index, lines) {
+        fragment.appendChild(document.createTextNode(line));
+        if (index < lines.length - 1) {
+          fragment.appendChild(document.createElement("br"));
+        }
+      });
+      textNode.replaceWith(fragment);
+    });
+
+    return template.innerHTML.trim();
+  }
+
   function escapeHtml(value) {
     const span = document.createElement("span");
     span.textContent = value;
@@ -402,7 +437,7 @@
 
     title.textContent = titleInput.value.trim() || "Untitled article";
     meta.textContent = [formatDate(dateInput.value), authorInput.value.trim()].filter(Boolean).join(" / ");
-    content.innerHTML = sanitizeHtml(contentInput.value);
+    content.innerHTML = preserveLineBreaks(contentInput.value);
   }
 
   async function loadArticles() {
@@ -476,7 +511,7 @@
       title: title,
       date: dateInput.value || today(),
       author: authorInput.value.trim() || "Protopica",
-      content: sanitizeHtml(contentInput.value),
+      content: preserveLineBreaks(contentInput.value),
       createdAt: existing ? existing.createdAt : now,
       updatedAt: now,
     };
@@ -589,21 +624,55 @@
       markup = "<h2>" + escaped + "</h2>\n";
     } else if (type === "h3") {
       markup = "<h3>" + escaped + "</h3>\n";
+    } else if (type === "h4") {
+      markup = "<h4>" + escaped + "</h4>\n";
     } else if (type === "p") {
       markup = "<p>" + escaped + "</p>\n";
+    } else if (type === "strong") {
+      markup = "<strong>" + escaped + "</strong>";
+    } else if (type === "em") {
+      markup = "<em>" + escaped + "</em>";
+    } else if (type === "u") {
+      markup = "<u>" + escaped + "</u>";
+    } else if (type === "del") {
+      markup = "<del>" + escaped + "</del>";
     } else if (type === "blockquote") {
       markup = "<blockquote><p>" + escaped + "</p></blockquote>\n";
     } else if (type === "ul") {
-      markup = "<ul>\n  <li>" + escaped + "</li>\n</ul>\n";
+      markup = createListMarkup("ul", text);
+    } else if (type === "ol") {
+      markup = createListMarkup("ol", text);
     } else if (type === "link") {
       const href = window.prompt("Paste the link URL");
       if (!href) {
         return;
       }
       markup = '<a href="' + escapeAttribute(href) + '">' + escaped + "</a>";
+    } else if (type === "code") {
+      markup = "<code>" + escaped + "</code>";
+    } else if (type === "pre") {
+      markup = "<pre><code>" + escaped + "</code></pre>\n";
+    } else if (type === "hr") {
+      markup = "\n<hr>\n";
     }
 
     replaceSelection(markup);
+  }
+
+  function createListMarkup(tagName, value) {
+    const items = String(value || "")
+      .split(/\r?\n/)
+      .map(function (item) {
+        return item.trim();
+      })
+      .filter(Boolean);
+    const listItems = (items.length ? items : ["List item"])
+      .map(function (item) {
+        return "  <li>" + escapeHtml(item) + "</li>";
+      })
+      .join("\n");
+
+    return "<" + tagName + ">\n" + listItems + "\n</" + tagName + ">\n";
   }
 
   async function uploadImages() {

@@ -376,6 +376,49 @@ textarea:focus {
   text-transform: uppercase;
 }
 
+.preview-content blockquote {
+  margin: 20px 0;
+  padding-left: 16px;
+  border-left: 2px solid var(--cyan);
+}
+
+.preview-content ul,
+.preview-content ol {
+  margin: 16px 0;
+  padding-left: 24px;
+}
+
+.preview-content code,
+.preview-content pre {
+  font-family: var(--mono);
+}
+
+.preview-content code {
+  padding: 0.12em 0.32em;
+  border-radius: 3px;
+  background: rgba(159, 134, 255, 0.14);
+}
+
+.preview-content pre {
+  overflow-x: auto;
+  margin: 20px 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: rgba(5, 4, 10, 0.76);
+}
+
+.preview-content pre code {
+  padding: 0;
+  background: transparent;
+}
+
+.preview-content hr {
+  margin: 24px 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
 .status {
   position: sticky;
   bottom: 0;

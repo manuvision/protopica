@@ -149,13 +149,19 @@ video {
   image-rendering: pixelated;
   mix-blend-mode: screen;
   background:
-    linear-gradient(0deg, transparent 0 25%, rgba(255, 122, 53, 0.1) 38%, rgba(216, 255, 61, 0.2) 49%, rgba(247, 240, 220, 0.14) 54%, rgba(255, 122, 53, 0.08) 66%, transparent 79%),
-    repeating-linear-gradient(90deg, rgba(247, 240, 220, 0.1) 0 1px, transparent 1px 12px),
-    repeating-linear-gradient(0deg, rgba(216, 255, 61, 0.075) 0 1px, transparent 1px 10px),
-    radial-gradient(ellipse at 50% 52%, rgba(255, 122, 53, 0.24) 0 9%, transparent 33%);
-  background-size: auto, 18px 18px, 16px 16px, auto;
+    radial-gradient(circle, rgba(247, 240, 220, 0.26) 0 1.2px, transparent 1.5px),
+    radial-gradient(circle, rgba(216, 255, 61, 0.2) 0 1px, transparent 1.35px),
+    repeating-linear-gradient(90deg, rgba(255, 122, 53, 0.18) 0 1px, transparent 1px 13px),
+    linear-gradient(0deg, transparent 0 23%, rgba(255, 122, 53, 0.2) 39%, rgba(216, 255, 61, 0.32) 49%, rgba(247, 240, 220, 0.16) 58%, rgba(255, 122, 53, 0.12) 69%, transparent 82%);
+  background-size: 9px 9px, 15px 15px, 21px 21px, auto;
   background-position: 0 0, 0 0, 0 0, 0 0;
   transform: translateY(54%) scale(1.01);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0 28%, #000 40%, #000 61%, transparent 76%);
+  mask-image: linear-gradient(to bottom, transparent 0 28%, #000 40%, #000 61%, transparent 76%);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
   will-change: opacity, transform, background-position;
   transition: none;
 }
@@ -180,14 +186,14 @@ video {
     background-position: 0 0, 0 0, 0 0, 0 0;
   }
   18% {
-    opacity: 0.44;
+    opacity: 0.62;
   }
   48% {
-    opacity: 0.58;
+    opacity: 0.78;
     transform: translateY(0) scale(1);
   }
   72% {
-    opacity: 0.5;
+    opacity: 0.66;
   }
   100% {
     opacity: 0;
@@ -209,6 +215,43 @@ video {
     opacity: 0;
   }
   50% { opacity: 0.4; }
+}
+
+@supports ((-webkit-mask-image: linear-gradient(#000, transparent)) or (mask-image: linear-gradient(#000, transparent))) {
+  .js.is-dissolving.is-intro-swap .ritual,
+  .js.is-room-swap .screen.is-dissolving-out {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0 47%, rgba(0, 0, 0, 0.82) 53%, rgba(0, 0, 0, 0.46) 59%, rgba(0, 0, 0, 0.16) 66%, transparent 74% 100%);
+    mask-image: linear-gradient(to bottom, #000 0 47%, rgba(0, 0, 0, 0.82) 53%, rgba(0, 0, 0, 0.46) 59%, rgba(0, 0, 0, 0.16) 66%, transparent 74% 100%);
+    -webkit-mask-size: 100% 300%;
+    mask-size: 100% 300%;
+    -webkit-mask-position: 0 0;
+    mask-position: 0 0;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    animation: ditherRevealOut 1120ms steps(18, end) both;
+  }
+
+  .js.is-dissolving.is-intro-swap .ritual {
+    animation-duration: 1240ms;
+  }
+}
+
+@keyframes ditherRevealOut {
+  0% {
+    opacity: 1;
+    -webkit-mask-position: 0 0;
+    mask-position: 0 0;
+  }
+  96% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    -webkit-mask-position: 0 140%;
+    mask-position: 0 140%;
+  }
 }
 
 .ritual {

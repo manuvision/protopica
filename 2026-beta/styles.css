@@ -2422,7 +2422,7 @@ a.story-card:focus-visible {
   filter: saturate(0.88) contrast(1.06);
 }
 
-.person-card--manu > img { object-position: center 22%; }
+.person-card--manu > img { object-position: 40% center; }
 .person-card--will > img { object-position: center 18%; }
 .person-card--debi > img { object-position: center 20%; }
 

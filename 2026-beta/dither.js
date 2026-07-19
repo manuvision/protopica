@@ -17,12 +17,10 @@
   const screens = Array.from(document.querySelectorAll("[data-section]"));
 
   const messages = [
-    "Hello storyteller...",
-    "Build what comes next without losing what makes it human.",
-    "Tools come after the question.",
-    "Some ideas do not fit inside one discipline.",
+    "Since the dawn of humanity, we have gathered around a fire to tell stories.",
+    "Whether you want to build a new world, or preserve what already exists...",
+    "...you are in the right place.",
     "Today, the fire is a network.",
-    "Bring us what you are trying to move forward.",
   ];
 
   const bayer = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];

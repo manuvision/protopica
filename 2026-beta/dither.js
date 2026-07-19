@@ -14,7 +14,7 @@
   const navLinks = document.querySelector("#nav-links");
   const navButtons = Array.from(document.querySelectorAll("[data-section-target]"));
   const screens = Array.from(document.querySelectorAll("[data-section]"));
-  const sectionAliases = { frameworks: "collaborate", learn: "education" };
+  const sectionAliases = { frameworks: "collaboration", collaborate: "collaboration", learn: "education" };
 
   const messages = [
     "Since the dawn of humanity, we have gathered around a fire to tell stories.",
@@ -499,11 +499,8 @@
       const lines = [
         ["Name", data.get("name")],
         ["Email", data.get("email")],
-        ["Organization or creative practice", data.get("organization")],
-        ["What are you trying to build, understand or preserve?", data.get("challenge")],
-        ["Who is it intended to serve?", data.get("audience")],
-        ["Relevant support", data.get("support")],
-        ["Meaningful progress in the next 90 days", data.get("progress")],
+        ["Theme", data.get("theme")],
+        ["Message", data.get("message")],
       ]
         .filter(function (entry) {
           return String(entry[1] || "").trim();

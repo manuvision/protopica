@@ -58,7 +58,7 @@
   let targetPaletteMix = 0;
   let currentPaletteMix = 0;
   let activeSection = initialSection;
-  let soundMuted = window.localStorage.getItem("protopicaFireMuted") === "true";
+  let soundMuted = initialSection !== "home";
   let soundWaiting = false;
   let isIntroTransitioning = false;
   let isRoomTransitioning = false;
@@ -244,6 +244,7 @@
       site.removeAttribute("aria-hidden");
     }
     showSection(activeSection || "home");
+    muteSoundForSite();
   }
 
   function finishIntroReveal() {
@@ -255,6 +256,7 @@
       site.removeAttribute("aria-hidden");
     }
     showSection(targetSection, { updateHash: false });
+    muteSoundForSite();
   }
 
   function smoothstep(edge0, edge1, value) {
@@ -346,6 +348,13 @@
     isIntroTransitioning = false;
     isRoomTransitioning = false;
     activeSection = "home";
+    soundMuted = false;
+    soundWaiting = false;
+    if (audio) {
+      audio.currentTime = 0;
+      audio.muted = false;
+    }
+    updateSoundUi(false);
     setFireScale(messageIndex);
     renderMessage(messages[messageIndex]);
     root.classList.add("is-ritual");
@@ -429,9 +438,18 @@
     }
   }
 
+  function muteSoundForSite() {
+    soundMuted = true;
+    soundWaiting = false;
+    if (audio) {
+      audio.pause();
+      audio.muted = true;
+    }
+    updateSoundUi(false);
+  }
+
   function setMuted(nextMuted) {
     soundMuted = nextMuted;
-    window.localStorage.setItem("protopicaFireMuted", String(soundMuted));
     if (!audio) {
       updateSoundUi(false);
       return;
@@ -600,7 +618,7 @@
     button.addEventListener("click", function () {
       const selector = button.dataset.carouselNext;
       const carousel = selector ? document.querySelector(selector) : null;
-      const firstCard = carousel ? carousel.querySelector(".story-card") : null;
+      const firstCard = carousel ? carousel.querySelector(".story-card, .blog-preview-card") : null;
       if (!carousel || !firstCard) {
         return;
       }

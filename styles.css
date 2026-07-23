@@ -2715,7 +2715,8 @@ a.story-card:focus-visible {
   }
 
   .carousel-cue--work,
-  .carousel-cue--pillars {
+  .carousel-cue--pillars,
+  .carousel-cue--team {
     display: flex;
     align-items: center;
     justify-content: flex-end;

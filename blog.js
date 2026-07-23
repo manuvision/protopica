@@ -194,8 +194,8 @@
   function textFromHtml(html) {
     const template = document.createElement("template");
     template.innerHTML = preserveLineBreaks(html);
-    template.content.querySelectorAll("img").forEach(function (image) {
-      image.remove();
+    template.content.querySelectorAll("figure, figcaption, img").forEach(function (node) {
+      node.remove();
     });
     template.content.querySelectorAll("br, h2, h3, h4, p, li, blockquote, figure, pre, hr").forEach(function (node) {
       node.after(document.createTextNode(" "));

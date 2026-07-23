@@ -2928,26 +2928,24 @@ a.story-card:focus-visible {
 
   .blog-preview-card {
     flex-basis: min(76vw, 315px);
-    min-height: 0;
-    height: min(62vh, 460px);
-    display: block;
-    isolation: isolate;
+    min-height: 430px;
+    height: auto;
+    display: grid;
+    grid-template-rows: 210px minmax(0, 1fr);
   }
 
   .blog-preview-card__image {
-    position: absolute;
-    inset: 0;
+    position: relative;
     height: 100%;
-    min-height: 0;
-    border-bottom: 0;
+    min-height: 210px;
+    object-position: center 38%;
+    border-bottom: 1px solid rgba(159, 134, 255, 0.24);
   }
 
   .blog-preview-card__copy {
-    position: absolute;
-    inset: auto 0 0;
-    z-index: 2;
-    padding: 64px 16px 16px;
-    background: linear-gradient(180deg, transparent, rgba(5, 4, 10, 0.82) 32%, rgba(5, 4, 10, 0.96));
+    position: relative;
+    padding: 16px;
+    background: transparent;
   }
 
   .blog-preview-card h2 {

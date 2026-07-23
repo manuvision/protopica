@@ -608,15 +608,17 @@
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
       const isAtEnd = carousel.scrollLeft >= maxScrollLeft - 8;
+      const moreLabel = button.dataset.carouselMoreLabel || "Show more carousel items";
+      const returnLabel = button.dataset.carouselReturnLabel || "Return to the first carousel item";
       carousel.scrollTo({
         left: isAtEnd ? 0 : Math.min(maxScrollLeft, carousel.scrollLeft + firstCard.getBoundingClientRect().width + gap),
         behavior: prefersReducedMotion ? "auto" : "smooth",
       });
-      button.setAttribute("aria-label", isAtEnd ? "Show more Protopica work" : "Continue through Protopica work");
+      button.setAttribute("aria-label", isAtEnd ? moreLabel : "Continue through carousel items");
       window.setTimeout(function () {
         const nextMaxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
         const nextAtEnd = carousel.scrollLeft >= nextMaxScrollLeft - 8;
-        button.setAttribute("aria-label", nextAtEnd ? "Return to the first Protopica work item" : "Show more Protopica work");
+        button.setAttribute("aria-label", nextAtEnd ? returnLabel : moreLabel);
       }, prefersReducedMotion ? 0 : 420);
     });
   });

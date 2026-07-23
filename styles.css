@@ -2714,7 +2714,8 @@ a.story-card:focus-visible {
     flex-basis: min(78vw, 360px);
   }
 
-  .carousel-cue--work {
+  .carousel-cue--work,
+  .carousel-cue--pillars {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -2825,6 +2826,10 @@ a.story-card:focus-visible {
   }
 
   .story-carousel--work .story-card {
+    flex-basis: min(76vw, 315px);
+  }
+
+  .story-carousel--pillars .story-card {
     flex-basis: min(76vw, 315px);
   }
 

@@ -2268,6 +2268,10 @@ video {
   background: linear-gradient(90deg, var(--cyan), var(--acid));
 }
 
+.carousel-cue {
+  display: none;
+}
+
 .story-card {
   position: relative;
   flex: 0 0 clamp(350px, 29vw, 430px);
@@ -2706,6 +2710,40 @@ a.story-card:focus-visible {
     min-height: 420px;
   }
 
+  .story-carousel--work .story-card {
+    flex-basis: min(78vw, 360px);
+  }
+
+  .carousel-cue--work {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 9px;
+    width: 100%;
+    margin: 10px 0 0;
+    border: 0;
+    background: transparent;
+    color: var(--cyan);
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .carousel-cue__icon {
+    display: inline-grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border: 1px solid rgba(79, 226, 222, 0.55);
+    border-radius: 999px;
+    background: rgba(79, 226, 222, 0.08);
+    color: var(--cyan);
+    font-size: 1rem;
+    line-height: 1;
+  }
+
   .team-carousel {
     min-height: 510px;
   }
@@ -2784,6 +2822,10 @@ a.story-card:focus-visible {
   .team-carousel .story-card {
     flex-basis: min(86vw, 350px);
     min-height: 410px;
+  }
+
+  .story-carousel--work .story-card {
+    flex-basis: min(76vw, 315px);
   }
 
   .story-card__overlay {

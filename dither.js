@@ -15,6 +15,7 @@
   const menuToggle = document.querySelector("#menu-toggle");
   const navLinks = document.querySelector("#nav-links");
   const navButtons = Array.from(document.querySelectorAll("[data-section-target]"));
+  const carouselNextButtons = Array.from(document.querySelectorAll("[data-carousel-next]"));
   const screens = Array.from(document.querySelectorAll("[data-section]"));
   const sectionAliases = { frameworks: "collaboration", collaborate: "collaboration", learn: "education" };
 
@@ -592,6 +593,22 @@
       }
       transitionToSection(target);
       playSound();
+    });
+  });
+
+  carouselNextButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      const selector = button.dataset.carouselNext;
+      const carousel = selector ? document.querySelector(selector) : null;
+      const firstCard = carousel ? carousel.querySelector(".story-card") : null;
+      if (!carousel || !firstCard) {
+        return;
+      }
+      const gap = Number.parseFloat(window.getComputedStyle(carousel).columnGap || "0") || 0;
+      carousel.scrollBy({
+        left: firstCard.getBoundingClientRect().width + gap,
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      });
     });
   });
 

@@ -397,7 +397,7 @@
 
     return [
       "<!doctype html>",
-      '<html lang="en" class="js is-revealed is-quiet-reveal">',
+      '<html lang="en" class="js is-revealed is-quiet-reveal article-document">',
       "  <head>",
       '    <meta charset="utf-8" />',
       '    <meta name="viewport" content="width=device-width, initial-scale=1" />',
@@ -419,7 +419,7 @@
       '    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Manrope:wght@400;500;600;700;800&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet" />',
       '    <link rel="stylesheet" href="/styles.css?v=20260723-blog-pages1" />',
       "  </head>",
-      "  <body>",
+      '  <body class="article-body">',
       '    <main class="article-page">',
       '      <article class="article-page__inner">',
       '        <a class="blog-back" href="/#blog">Back to Blog</a>',

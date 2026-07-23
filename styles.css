@@ -33,6 +33,15 @@ body {
   overflow: hidden;
 }
 
+html.article-document,
+html:has(.article-body),
+body.article-body {
+  height: auto;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
 body {
   margin: 0;
   min-width: 320px;
@@ -1237,7 +1246,7 @@ video {
   flex: 0 0 clamp(320px, 31vw, 430px);
   min-height: 390px;
   display: grid;
-  grid-template-rows: minmax(170px, 0.9fr) auto;
+  grid-template-rows: 190px minmax(0, 1fr);
   border: 1px solid rgba(159, 134, 255, 0.24);
   border-radius: 8px;
   overflow: hidden;
@@ -1268,6 +1277,7 @@ video {
 .blog-preview-card__copy {
   display: grid;
   align-content: start;
+  min-height: 0;
   padding: 18px;
 }
 
@@ -2918,7 +2928,22 @@ a.story-card:focus-visible {
 
   .blog-preview-card {
     flex-basis: min(76vw, 315px);
-    min-height: 380px;
+    min-height: 420px;
+    grid-template-rows: 172px minmax(220px, 1fr);
+  }
+
+  .blog-preview-card__copy {
+    padding: 16px;
+  }
+
+  .blog-preview-card h2 {
+    font-size: 1.45rem;
+    line-height: 1.05;
+  }
+
+  .blog-preview-card p:not(.eyebrow) {
+    font-size: 0.92rem;
+    line-height: 1.38;
   }
 
   .story-card__overlay {

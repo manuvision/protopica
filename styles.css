@@ -3519,10 +3519,10 @@ a.story-card:focus-visible {
 @media (max-width: 620px) {
   .screen--blog .blog-preview-card {
     flex: 0 0 min(76vw, 315px);
-    min-height: 430px;
+    min-height: 0;
     height: auto;
     display: grid;
-    grid-template-rows: 190px minmax(0, 1fr);
+    grid-template-rows: 190px auto;
     overflow: hidden;
   }
 
@@ -3546,7 +3546,7 @@ a.story-card:focus-visible {
     display: grid;
     align-content: start;
     min-height: 0;
-    padding: 16px;
+    padding: 16px 16px 18px;
     background: transparent;
   }
 

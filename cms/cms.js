@@ -133,6 +133,18 @@
     return candidate;
   }
 
+  function articleSlug(article) {
+    return slugify(article && (article.title || article.id));
+  }
+
+  function articlePagePath(article) {
+    return "blog/" + articleSlug(article) + ".html";
+  }
+
+  function articleUrl(article) {
+    return config.siteUrl + "/" + articlePagePath(article);
+  }
+
   function safeFileName(file, index) {
     const parts = file.name.split(".");
     const extension = parts.length > 1 ? parts.pop().toLowerCase().replace(/[^a-z0-9]/g, "") : "jpg";
@@ -295,10 +307,6 @@
     return String(value || "").replace(/]]>/g, "]]]]><![CDATA[>");
   }
 
-  function articleUrl(article) {
-    return config.siteUrl + "/?article=" + encodeURIComponent(article.id) + "#research";
-  }
-
   function articleDescription(html) {
     const template = document.createElement("template");
     template.innerHTML = preserveLineBreaks(html);
@@ -339,9 +347,9 @@
       '<?xml version="1.0" encoding="UTF-8"?>',
       '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">',
       "  <channel>",
-      "    <title>Protopica Research</title>",
-      "    <link>" + config.siteUrl + "/#research</link>",
-      "    <description>Research, experiments and field notes from Protopica.</description>",
+      "    <title>Protopica Blog</title>",
+      "    <link>" + config.siteUrl + "/#blog</link>",
+      "    <description>Articles, experiments and field notes from Protopica.</description>",
       "    <language>en-ca</language>",
       "    <lastBuildDate>" + new Date().toUTCString() + "</lastBuildDate>",
       '    <atom:link href="' + config.siteUrl + '/blog/rss.xml" rel="self" type="application/rss+xml" />',
@@ -351,6 +359,105 @@
       "</rss>",
       "",
     ].join("\n");
+  }
+
+  function firstImageFromArticle(article) {
+    const template = document.createElement("template");
+    template.innerHTML = preserveLineBreaks(article.content);
+    const image = template.content.querySelector("img");
+    return image ? sanitizeUrl(image.getAttribute("src"), "image") : "";
+  }
+
+  function articlePageNavigation(article, sortedArticles) {
+    const index = sortedArticles.findIndex(function (record) {
+      return record.id === article.id;
+    });
+    const previous = index > 0 ? sortedArticles[index - 1] : null;
+    const next = index >= 0 && index < sortedArticles.length - 1 ? sortedArticles[index + 1] : null;
+
+    return [
+      '<nav class="article-page__pager" aria-label="Article navigation">',
+      previous
+        ? '  <a class="button" href="/' + escapeAttribute(articlePagePath(previous)) + '">Previous Article</a>'
+        : '  <span class="button article-page__pager-disabled" aria-disabled="true">Previous Article</span>',
+      next
+        ? '  <a class="button button--primary" href="/' + escapeAttribute(articlePagePath(next)) + '">Next Article</a>'
+        : '  <span class="button button--primary article-page__pager-disabled" aria-disabled="true">Next Article</span>',
+      "</nav>",
+    ].join("\n");
+  }
+
+  function buildArticlePage(article, sortedArticles) {
+    const url = articleUrl(article);
+    const title = article.title || "Untitled article";
+    const description = articleDescription(article.content);
+    const image = firstImageFromArticle(article) || "/protopica/og-logo-2026-v2.png";
+    const absoluteImage = /^https?:\/\//i.test(image) ? image : config.siteUrl + image;
+    const navigation = articlePageNavigation(article, sortedArticles);
+
+    return [
+      "<!doctype html>",
+      '<html lang="en" class="js is-revealed is-quiet-reveal">',
+      "  <head>",
+      '    <meta charset="utf-8" />',
+      '    <meta name="viewport" content="width=device-width, initial-scale=1" />',
+      "    <title>" + escapeHtml(title) + " - Protopica Blog</title>",
+      '    <meta name="description" content="' + escapeAttribute(description) + '" />',
+      '    <meta property="og:title" content="' + escapeAttribute(title) + '" />',
+      '    <meta property="og:description" content="' + escapeAttribute(description) + '" />',
+      '    <meta property="og:type" content="article" />',
+      '    <meta property="og:url" content="' + escapeAttribute(url) + '" />',
+      '    <meta property="og:image" content="' + escapeAttribute(absoluteImage) + '" />',
+      '    <meta name="twitter:card" content="summary_large_image" />',
+      '    <meta name="twitter:title" content="' + escapeAttribute(title) + '" />',
+      '    <meta name="twitter:description" content="' + escapeAttribute(description) + '" />',
+      '    <meta name="twitter:image" content="' + escapeAttribute(absoluteImage) + '" />',
+      '    <link rel="canonical" href="' + escapeAttribute(url) + '" />',
+      '    <link rel="icon" href="/favicon.png" />',
+      '    <link rel="preconnect" href="https://fonts.googleapis.com" />',
+      '    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />',
+      '    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Manrope:wght@400;500;600;700;800&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet" />',
+      '    <link rel="stylesheet" href="/styles.css?v=20260723-blog-pages1" />',
+      "  </head>",
+      "  <body>",
+      '    <main class="article-page">',
+      '      <article class="article-page__inner">',
+      '        <a class="blog-back" href="/#blog">Back to Blog</a>',
+      '        <header class="article-page__header">',
+      '          <p class="eyebrow">' + escapeHtml([formatDate(article.date), article.author].filter(Boolean).join(" / ")) + "</p>",
+      "          <h2>" + escapeHtml(title) + "</h2>",
+      "        </header>",
+      '        <div class="blog-content article-page__content">',
+      preserveLineBreaks(article.content),
+      "        </div>",
+      '        <a class="blog-back" href="/#blog">Back to Blog</a>',
+      navigation,
+      "      </article>",
+      "    </main>",
+      "  </body>",
+      "</html>",
+      "",
+    ].join("\n");
+  }
+
+  async function putArticlePages(sortedArticles) {
+    for (const article of sortedArticles) {
+      const path = articlePagePath(article);
+      const latest = await getContent(path, true);
+      await putContentWithCurrentSha(
+        path,
+        encodeBase64Text(buildArticlePage(article, sortedArticles)),
+        "Update Protopica blog page: " + article.title,
+        latest ? latest.sha : null
+      );
+    }
+  }
+
+  async function deleteArticlePage(article) {
+    const latest = await getContent(articlePagePath(article), true);
+    if (latest && latest.sha) {
+      await deleteContent(latest.path, latest.sha, "Delete Protopica blog page: " + article.title);
+    }
   }
 
   function sanitizeInlineHtml(html) {
@@ -587,10 +694,11 @@
   }
 
   async function saveArticleIndex(message) {
+    const sortedArticles = sortArticles(state.articles);
     const payload = {
       version: 1,
       updatedAt: new Date().toISOString(),
-      articles: sortArticles(state.articles),
+      articles: sortedArticles,
     };
 
     const response = await putContentWithCurrentSha(
@@ -604,10 +712,11 @@
     const rssResponse = await putContentWithCurrentSha(
       config.rssPath,
       encodeBase64Text(buildRssFeed()),
-      "Update Protopica research RSS feed",
+      "Update Protopica blog RSS feed",
       state.rssSha
     );
     state.rssSha = rssResponse.content.sha;
+    await putArticlePages(sortedArticles);
   }
 
   async function saveArticle() {
@@ -627,6 +736,7 @@
     const existing = state.articles.find(function (article) {
       return article.id === state.currentId;
     });
+    const previousPagePath = existing ? articlePagePath(existing) : "";
     const id = state.currentId || uniqueSlug(title);
     const article = {
       id: id,
@@ -654,6 +764,12 @@
       state.currentId = id;
       contentInput.value = article.content;
       await saveArticleIndex("Update Protopica blog article: " + title);
+      if (previousPagePath && previousPagePath !== articlePagePath(article)) {
+        const latestPreviousPage = await getContent(previousPagePath, true);
+        if (latestPreviousPage && latestPreviousPage.sha) {
+          await deleteContent(latestPreviousPage.path, latestPreviousPage.sha, "Delete renamed Protopica blog page: " + existing.title);
+        }
+      }
       setCurrentArticle(article);
       setStatus("Saved. GitHub Pages will publish the update shortly.", "success");
     } catch (error) {
@@ -699,6 +815,7 @@
         return record.id !== article.id;
       });
       await saveArticleIndex("Delete Protopica blog article: " + article.title);
+      await deleteArticlePage(article);
       await deleteAssetFolder(article.id);
       setCurrentArticle(state.articles[0] || null);
       setStatus("Deleted. GitHub Pages will publish the update shortly.", "success");

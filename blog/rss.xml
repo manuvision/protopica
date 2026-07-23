@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
-    <title>Protopica Research</title>
-    <link>https://protopica.com/#research</link>
-    <description>Research, experiments and field notes from Protopica.</description>
+    <title>Protopica Blog</title>
+    <link>https://protopica.com/#blog</link>
+    <description>Articles, experiments and field notes from Protopica.</description>
     <language>en-ca</language>
-    <lastBuildDate>Sun, 19 Jul 2026 15:20:06 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 23 Jul 2026 14:17:52 GMT</lastBuildDate>
     <atom:link href="https://protopica.com/blog/rss.xml" rel="self" type="application/rss+xml" />
     <generator>Protopica CMS</generator>
     <item>
       <title>Introducing Protopica 2.0</title>
-      <link>https://protopica.com/?article=field-note#research</link>
-      <guid isPermaLink="true">https://protopica.com/?article=field-note#research</guid>
+      <link>https://protopica.com/blog/introducing-protopica-2-0.html</link>
+      <guid isPermaLink="true">https://protopica.com/blog/introducing-protopica-2-0.html</guid>
       <pubDate>Sun, 19 Jul 2026 08:39:23 GMT</pubDate>
       <dc:creator>Manuel Sainsily &amp; Will Selviz</dc:creator>
-      <description>Protopica logo Today, we are launching Protopica 2.0: A clearer home for the work we do and the people we hope to build with. Protopica is a design research lab that turns emerging technologies into meaningful public experiences. We consult, build, and teach across immersive exhi</description>
+      <description>Today, we are launching Protopica 2.0: A clearer home for the work we do and the people we hope to build with. Protopica is a design research lab that turns emerging technologies into meaningful public experiences. We consult, build, and teach across immersive exhibitions, worldb</description>
       <content:encoded><![CDATA[<figure>
   <img src="/blog/assets/field-note/1784474390886-1-og.png" alt="og.png" loading="lazy">
   <figcaption>Protopica logo</figcaption>

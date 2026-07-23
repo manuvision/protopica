@@ -17,7 +17,7 @@
   const navButtons = Array.from(document.querySelectorAll("[data-section-target]"));
   const carouselNextButtons = Array.from(document.querySelectorAll("[data-carousel-next]"));
   const screens = Array.from(document.querySelectorAll("[data-section]"));
-  const sectionAliases = { frameworks: "collaboration", collaborate: "collaboration", learn: "education" };
+  const sectionAliases = { frameworks: "collaboration", collaborate: "collaboration", learn: "education", research: "blog" };
 
   const messages = [
     "Since the beginning, people have gathered to tell stories.",
@@ -449,11 +449,11 @@
     if (initialSection === "home") {
       return;
     }
-    if (initialSection === "research" && researchAvailability === null) {
+    if (initialSection === "blog" && researchAvailability === null) {
       return;
     }
 
-    const resolvedSection = initialSection === "research" && !researchAvailability ? "about" : initialSection;
+    const resolvedSection = initialSection === "blog" && !researchAvailability ? "about" : initialSection;
 
     root.classList.remove("is-ritual", "is-route-pending");
     root.classList.add("is-revealed", "is-quiet-reveal");
@@ -573,11 +573,11 @@
   document.addEventListener("protopica:research-availability", function (event) {
     const isAvailable = Boolean(event.detail && event.detail.available);
     researchAvailability = isAvailable;
-    if (initialSection === "research" && root.classList.contains("is-route-pending")) {
+    if (initialSection === "blog" && root.classList.contains("is-route-pending")) {
       revealInitialSectionFromHash();
       return;
     }
-    if (!isAvailable && activeSection === "research") {
+    if (!isAvailable && activeSection === "blog") {
       transitionToSection("about");
     }
   });

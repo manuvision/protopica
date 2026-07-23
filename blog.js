@@ -9,6 +9,7 @@
   const listHeading = document.querySelector("[data-blog-list-heading]");
   const researchNav = document.querySelector("[data-research-nav]");
   const educationNext = document.querySelector("[data-education-next]");
+  const blogCarouselCue = document.querySelector(".carousel-cue--blog");
   const allowedTags = new Set([
     "A",
     "B",
@@ -44,8 +45,8 @@
       researchNav.hidden = !isAvailable;
     }
     if (educationNext) {
-      educationNext.dataset.sectionTarget = isAvailable ? "research" : "about";
-      educationNext.textContent = isAvailable ? "Follow the Research" : "Learn More About the Team";
+      educationNext.dataset.sectionTarget = isAvailable ? "blog" : "about";
+      educationNext.textContent = isAvailable ? "Read the Blog" : "Learn More About the Team";
     }
     document.dispatchEvent(
       new CustomEvent("protopica:research-availability", {
@@ -79,6 +80,21 @@
         String(b.updatedAt || "").localeCompare(String(a.updatedAt || ""))
       );
     });
+  }
+
+  function slugify(value) {
+    const slug = String(value || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+    return slug || "field-note";
+  }
+
+  function articlePath(article) {
+    return "blog/" + slugify(article.title || article.id) + ".html";
   }
 
   function sanitizeUrl(value, type) {
@@ -175,8 +191,35 @@
     return template.innerHTML.trim();
   }
 
+  function textFromHtml(html) {
+    const template = document.createElement("template");
+    template.innerHTML = preserveLineBreaks(html);
+    template.content.querySelectorAll("img").forEach(function (image) {
+      image.remove();
+    });
+    template.content.querySelectorAll("br, h2, h3, h4, p, li, blockquote, figure, pre, hr").forEach(function (node) {
+      node.after(document.createTextNode(" "));
+    });
+    return (template.content.textContent || "").trim().replace(/\s+/g, " ");
+  }
+
+  function articleExcerpt(article) {
+    const text = textFromHtml(article.content);
+    return text.length > 150 ? text.slice(0, 150).replace(/\s+\S*$/, "") + "..." : text;
+  }
+
+  function articleThumbnail(article) {
+    const template = document.createElement("template");
+    template.innerHTML = preserveLineBreaks(article.content);
+    const image = template.content.querySelector("img");
+    return image ? sanitizeUrl(image.getAttribute("src"), "image") : "";
+  }
+
   function showEmpty() {
     list.hidden = true;
+    if (blogCarouselCue) {
+      blogCarouselCue.hidden = true;
+    }
     if (listHeading) {
       listHeading.hidden = true;
     }
@@ -190,6 +233,9 @@
       empty.hidden = articles.length > 0;
     }
     list.hidden = articles.length === 0;
+    if (blogCarouselCue) {
+      blogCarouselCue.hidden = articles.length < 2;
+    }
     if (listHeading) {
       listHeading.hidden = articles.length === 0;
     }
@@ -206,12 +252,10 @@
     }
 
     articles.forEach(function (article) {
-      const entry = document.createElement("article");
-      entry.className = "blog-entry";
+      const entry = document.createElement("a");
+      entry.className = "blog-preview-card";
       entry.id = "article-" + article.id;
-
-      const header = document.createElement("header");
-      header.className = "blog-entry__header";
+      entry.href = articlePath(article);
 
       const meta = document.createElement("span");
       meta.className = "eyebrow";
@@ -220,24 +264,28 @@
       const title = document.createElement("h2");
       title.textContent = article.title || "Untitled note";
 
-      const content = document.createElement("div");
-      content.className = "blog-content blog-entry__content";
-      content.innerHTML = preserveLineBreaks(article.content);
+      const thumbnail = articleThumbnail(article);
+      if (thumbnail) {
+        const image = document.createElement("img");
+        image.className = "blog-preview-card__image";
+        image.src = thumbnail;
+        image.alt = "";
+        image.loading = "lazy";
+        entry.appendChild(image);
+      }
 
-      header.append(meta, title);
-      entry.append(header, content);
+      const copy = document.createElement("div");
+      copy.className = "blog-preview-card__copy";
+
+      const excerpt = document.createElement("p");
+      excerpt.textContent = articleExcerpt(article);
+
+      copy.append(meta, title, excerpt);
+      entry.appendChild(copy);
       list.appendChild(entry);
     });
 
     showList();
-
-    const requestedArticle = new URLSearchParams(window.location.search).get("article");
-    const requestedEntry = requestedArticle ? document.getElementById("article-" + requestedArticle) : null;
-    if (requestedEntry) {
-      window.requestAnimationFrame(function () {
-        requestedEntry.scrollIntoView({ block: "start" });
-      });
-    }
   }
 
   fetch("blog/articles.json?v=" + Date.now(), { cache: "no-store" })

@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
       (function () {
-        var directSections = ["work", "collaboration", "education", "research", "about", "contact"];
-        var aliases = { frameworks: "collaboration", collaborate: "collaboration", learn: "education" };
+        var directSections = ["work", "collaboration", "education", "blog", "about", "contact"];
+        var aliases = { frameworks: "collaboration", collaborate: "collaboration", learn: "education", research: "blog" };
         var requestedHash = window.location.hash.replace("#", "");
         var initialHash = aliases[requestedHash] || requestedHash;
         document.documentElement.className = directSections.indexOf(initialHash) > -1
@@ -38,14 +38,14 @@
     />
     <meta name="twitter:image" content="https://protopica.com/protopica/og-logo-2026-v2.png" />
     <link rel="canonical" href="https://protopica.com/" />
-    <link rel="alternate" type="application/rss+xml" title="Protopica Research" href="https://protopica.com/blog/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Protopica Blog" href="https://protopica.com/blog/rss.xml" />
     <link rel="icon" href="favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Manrope:wght@400;500;600;700;800&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css?v=20260719-home-center1" />
     <script defer src="dither.js?v=20260719-fire-baseline1"></script>
-    <script defer src="blog.js?v=20260719-research-sort1"></script>
+    <script defer src="blog.js?v=20260723-blog-carousel1"></script>
   </head>
   <body>
     <audio data-fire-audio src="protopica/firepit-loop.m4a" autoplay loop preload="auto"></audio>
@@ -88,7 +88,7 @@
           <button class="nav-link" type="button" data-section-target="work">Work</button>
           <button class="nav-link" type="button" data-section-target="collaboration">Collaborate</button>
           <button class="nav-link" type="button" data-section-target="education">Education</button>
-          <button class="nav-link" type="button" data-section-target="research" data-research-nav hidden>Research</button>
+          <button class="nav-link" type="button" data-section-target="blog" data-research-nav hidden>Blog</button>
           <button class="nav-link" type="button" data-section-target="about">About</button>
           <button class="nav-link nav-link--cta" type="button" data-section-target="contact">Start a Conversation</button>
         </div>
@@ -178,33 +178,37 @@
           </div>
         </section>
 
-        <section class="screen screen--research" id="research" data-section="research" data-research-section aria-labelledby="research-title" hidden>
+        <section class="screen screen--blog" id="blog" data-section="blog" data-research-section aria-labelledby="blog-title" hidden>
           <div class="screen__inner research-shell">
             <header class="screen-head screen-head--compact">
-              <p class="eyebrow">Research</p>
-              <h2 id="research-title">Research should not stay behind closed doors.</h2>
+              <p class="eyebrow">Blog</p>
+              <h2 id="blog-title">Field notes should not stay behind closed doors.</h2>
               <p>
                 We share what we learn so others can understand, question, and
                 shape emerging technologies.
               </p>
             </header>
 
-            <div class="section-actions" aria-label="Continue from Research">
-              <button class="button button--primary" type="button" data-section-target="about">Learn More About the Team</button>
-              <button class="button" type="button" data-section-target="contact">Start a Conversation</button>
-            </div>
-
-            <section class="blog-workspace research-notes" aria-label="Research notes">
+            <section class="blog-workspace research-notes" aria-label="Blog articles">
               <div class="education-group__heading research-notes__heading" data-blog-list-heading hidden>
                 <p class="eyebrow">Latest Articles</p>
               </div>
-              <div class="blog-list" data-blog-list aria-live="polite"></div>
+              <div class="blog-list story-carousel blog-carousel" data-blog-list aria-live="polite"></div>
+              <button class="carousel-cue carousel-cue--blog" type="button" data-carousel-next=".blog-carousel" data-carousel-more-label="Show more articles" data-carousel-return-label="Return to the first article" aria-label="Show more articles" hidden>
+                <span>Swipe for more</span>
+                <span class="carousel-cue__icon" aria-hidden="true">→</span>
+              </button>
               <div class="blog-empty" data-blog-empty hidden>
-                <p class="eyebrow">Research Notes</p>
+                <p class="eyebrow">Blog</p>
                 <h3>Notes will appear here soon.</h3>
-                <p>Published research, experiments and process notes will show up here once they are live.</p>
+                <p>Published articles, experiments and process notes will show up here once they are live.</p>
               </div>
             </section>
+
+            <div class="section-actions" aria-label="Continue from Blog">
+              <button class="button button--primary" type="button" data-section-target="about">Learn More About the Team</button>
+              <button class="button" type="button" data-section-target="contact">Start a Conversation</button>
+            </div>
           </div>
         </section>
 

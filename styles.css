@@ -1187,7 +1187,7 @@ video {
   margin-bottom: 0;
 }
 
-.screen--research .research-notes {
+.screen--blog .research-notes {
   min-height: auto;
   overflow: visible;
 }
@@ -1223,44 +1223,69 @@ video {
 }
 
 .blog-list {
+  display: flex;
+  min-height: 410px;
+  margin-top: 10px;
+}
+
+.screen--blog .blog-list {
+  grid-template-columns: none;
+}
+
+.blog-preview-card {
+  position: relative;
+  flex: 0 0 clamp(320px, 31vw, 430px);
+  min-height: 390px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 0;
+  grid-template-rows: minmax(170px, 0.9fr) auto;
+  border: 1px solid rgba(159, 134, 255, 0.24);
+  border-radius: 8px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(247, 240, 220, 0.04), rgba(247, 240, 220, 0)),
+    rgba(16, 13, 25, 0.78);
+  color: var(--bone);
+  scroll-snap-align: start;
+  transition: border-color 180ms ease, transform 180ms ease;
 }
 
-.screen--research .blog-list {
-  grid-template-columns: minmax(0, 1fr);
+.blog-preview-card:hover,
+.blog-preview-card:focus-visible {
+  border-color: rgba(79, 226, 222, 0.58);
+  outline: none;
+  transform: translateY(-2px);
 }
 
-.blog-entry {
+.blog-preview-card__image {
   width: 100%;
-  padding: 34px 0 52px;
-  border-top: 1px solid var(--line);
+  height: 100%;
+  min-height: 170px;
+  object-fit: cover;
+  border-bottom: 1px solid rgba(159, 134, 255, 0.24);
+  filter: saturate(0.9) contrast(1.08);
 }
 
-.blog-entry:first-child {
-  padding-top: 20px;
+.blog-preview-card__copy {
+  display: grid;
+  align-content: start;
+  padding: 18px;
 }
 
-.blog-entry__header {
-  max-width: 960px;
-  margin-bottom: 24px;
-}
-
-.blog-entry__header .eyebrow {
-  margin-bottom: 10px;
-}
-
-.blog-entry__header h2 {
+.blog-preview-card h2 {
   margin: 0;
-  font-size: clamp(1.8rem, 2.8vw, 2.75rem);
-  line-height: 1.06;
+  font-size: clamp(1.45rem, 2.2vw, 2.2rem);
+  line-height: 1.04;
 }
 
-.blog-entry__content {
-  max-width: 960px;
-  margin-top: 0;
-  font-size: 1.04rem;
+.blog-preview-card p:not(.eyebrow) {
+  display: -webkit-box;
+  margin: 14px 0 0;
+  overflow: hidden;
+  color: rgba(247, 240, 220, 0.72);
+  font-size: 0.98rem;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .blog-card {
@@ -1394,6 +1419,62 @@ video {
   margin: 28px 0;
   border: 0;
   border-top: 1px solid var(--line);
+}
+
+.article-page {
+  min-height: 100svh;
+  padding: clamp(22px, 5vw, 56px);
+  background:
+    linear-gradient(rgba(159, 134, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79, 226, 222, 0.035) 1px, transparent 1px),
+    radial-gradient(circle at 50% 110%, rgba(79, 226, 222, 0.16), transparent 36%),
+    var(--black);
+  background-size: 34px 34px, 34px 34px, auto, auto;
+  color: var(--bone);
+}
+
+.article-page__inner {
+  width: min(100%, 920px);
+  margin: 0 auto;
+}
+
+.article-page__header {
+  margin: clamp(28px, 7vw, 74px) 0 26px;
+}
+
+.article-page__header h2 {
+  margin: 0;
+  font-size: clamp(2.35rem, 6vw, 5rem);
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+.article-page__content {
+  max-width: none;
+  margin: 0 0 34px;
+  padding: clamp(18px, 4vw, 34px);
+  border: 1px solid rgba(159, 134, 255, 0.24);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(247, 240, 220, 0.04), rgba(247, 240, 220, 0)),
+    rgba(16, 13, 25, 0.76);
+}
+
+.article-page__content > :first-child {
+  margin-top: 0;
+}
+
+.article-page__pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.article-page__pager-disabled {
+  cursor: default;
+  opacity: 0.42;
+  pointer-events: none;
 }
 
 .method-grid article {
@@ -2716,7 +2797,8 @@ a.story-card:focus-visible {
 
   .carousel-cue--work,
   .carousel-cue--pillars,
-  .carousel-cue--team {
+  .carousel-cue--team,
+  .carousel-cue--blog {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -2832,6 +2914,11 @@ a.story-card:focus-visible {
 
   .story-carousel--pillars .story-card {
     flex-basis: min(76vw, 315px);
+  }
+
+  .blog-preview-card {
+    flex-basis: min(76vw, 315px);
+    min-height: 380px;
   }
 
   .story-card__overlay {

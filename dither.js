@@ -605,10 +605,19 @@
         return;
       }
       const gap = Number.parseFloat(window.getComputedStyle(carousel).columnGap || "0") || 0;
-      carousel.scrollBy({
-        left: firstCard.getBoundingClientRect().width + gap,
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+      const isAtEnd = carousel.scrollLeft >= maxScrollLeft - 8;
+      carousel.scrollTo({
+        left: isAtEnd ? 0 : Math.min(maxScrollLeft, carousel.scrollLeft + firstCard.getBoundingClientRect().width + gap),
+        behavior: prefersReducedMotion ? "auto" : "smooth",
       });
+      button.setAttribute("aria-label", isAtEnd ? "Show more Protopica work" : "Continue through Protopica work");
+      window.setTimeout(function () {
+        const nextMaxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+        const nextAtEnd = carousel.scrollLeft >= nextMaxScrollLeft - 8;
+        button.setAttribute("aria-label", nextAtEnd ? "Return to the first Protopica work item" : "Show more Protopica work");
+      }, prefersReducedMotion ? 0 : 420);
     });
   });
 
